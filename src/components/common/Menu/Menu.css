@@ -1,0 +1,29 @@
+#Menu {
+    background-color: #1e1e1f;
+    margin: 0px auto;
+    width: 90vw;
+    margin-top: 0.5rem;
+    color: #ffffff;
+    padding: 0.4rem;
+    border-radius: 0.7rem;
+}
+
+.Menu__Option {
+    float: left;
+    /*font-size: large;*/
+    padding: 0.2rem;
+    opacity: 0.8;
+    transition: background 0.05s;
+    border-radius: 0.7rem;
+}
+.Menu__Option:hover
+{
+    background-color: #2e3180;
+    color: #d0ba29;
+    cursor: pointer;
+
+}
+.Menu__ActiveOption {
+    color: #ffffff87;
+    font-weight: bold;
+}
