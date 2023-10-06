@@ -1,0 +1,18 @@
+button, .btn {
+    padding: 0.2rem 1rem;
+    background: none;
+    border: 2px solid #696969;
+    cursor: pointer;
+    -webkit-border-radius: 0.6rem;
+    border-radius: 0.6rem;
+    transition: background 0.05s;
+    color: #ffbf49;
+}
+
+button:hover, .btn:hover
+{
+    background-color: #4d647a;
+    cursor: pointer;
+    /* color: #26323d; */
+    color: whitesmoke;
+}

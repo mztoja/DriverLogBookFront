@@ -1,0 +1,11 @@
+#Content {
+    padding: 0.1rem;
+    margin: 0.5rem auto;
+    min-height: 70vh;
+    width: 90vw;
+    text-align: center;
+    vertical-align: top;
+    background-color: #3f3d3d;
+    border-radius: 0.7rem;
+    color: #b3b3b3;
+}

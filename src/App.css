@@ -1,3 +1,4 @@
+/*Main App set:*/
 body {
   background-color: #161521;
 }
@@ -15,4 +16,53 @@ a {
 
 .DivClear {
   clear: both;
+}
+
+/*ScrollBar set:*/
+::-webkit-scrollbar {
+  width: 1vw;
+}
+::-webkit-scrollbar-track {
+  background: #232323;
+}
+::-webkit-scrollbar-thumb {
+  background: #14314c;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/*Fieldset&legend set:*/
+fieldset {
+  border: 0.2rem solid #1f497d99;
+  background: #0000001a;
+  border-radius: 0.6rem;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+}
+fieldset legend {
+  background: #1f497d99;
+  color: #e29800;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.6rem;
+  box-shadow: 0 0 0 0.15rem #1f497d40;
+  font-weight: bold;
+}
+
+/*Form fields set:*/
+input:-webkit-autofill {
+  background-color: #3a3636 ;
+  color: white ;
+  padding: 0.3rem ;
+  border: 0.1rem solid #ccc ;
+  -webkit-border-radius: 0.4rem ;
+  border-radius: 0.4rem ;
+}
+input, select {
+  background-color: #3a3636;
+  color: white;
+  padding: 0.3rem;
+  border: 0.1rem solid #ccc;
+  -webkit-border-radius: 0.4rem;
+  border-radius: 0.4rem;
 }
