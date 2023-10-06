@@ -1,9 +1,18 @@
 import React from "react";
 import "./Content.css";
+import {AlertProvider} from "../../../context/AlertContext";
+import {AlertPopup} from "../../common/AlertPopup";
 
 export const Content = (props:any) => {
 
-    return <div id="Content">{props.children}</div>;
+    return (
+    <AlertProvider>
+        <div id="Content">
+            <AlertPopup/>
+            {props.children}
+        </div>
+    </AlertProvider>
+    );
 
     // const txt = commons['pl'];
     //

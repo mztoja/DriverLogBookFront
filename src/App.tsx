@@ -12,14 +12,18 @@ import {RegisterView} from "./views/RegisterView";
 import {UserInterface, UserLangEnum} from "types";
 import './App.css';
 import {DownloadFromLocalStorage} from "./hooks/LocalStorageHook";
+import {LinearProgress} from "@mui/material";
 
 export const App = () => {
 
     const [userData, setUserData] = useState<UserInterface | null>(null);
-    const [lang, setLang] = useState<UserLangEnum>(0);
+    const [lang, setLang] = useState<UserLangEnum>(UserLangEnum.en);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        GetUserData().then(data => {
+        setLoading(true);
+        GetUserData()
+            .then(data => {
             if (data !== undefined) {
                 setUserData(data);
             } else {
@@ -28,8 +32,13 @@ export const App = () => {
                     setLang(Number(lang))
                 }
             }
-        });
+        })
+            .finally(() => {setLoading(false)});
     }, []);
+
+    if (loading) {
+        return <LinearProgress />;
+    }
 
 
     if ((userData !== null) && (userData !== undefined)) {

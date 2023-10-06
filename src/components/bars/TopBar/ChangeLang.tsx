@@ -21,8 +21,8 @@ export const ChangeLang = (props: Props) => {
 
     return (
         <>
-            <img className="TopBar__LangImg" src={plFlag} onClick={() => changeLang(1)} alt="pl"/>
-            <img className="TopBar__LangImg" src={enFlag} onClick={() => changeLang(0)} alt="en"/>
+            <img className="TopBar__LangImg" src={plFlag} onClick={() => changeLang(UserLangEnum.pl)} alt="pl"/>
+            <img className="TopBar__LangImg" src={enFlag} onClick={() => changeLang(UserLangEnum.en)} alt="en"/>
         </>
     )
 }

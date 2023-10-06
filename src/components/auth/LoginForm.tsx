@@ -1,10 +1,11 @@
 import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
 import {loginFormInterface, UserInterface, UserLangEnum} from 'types';
-import {Spinner} from "../common/Spinner/Spinner";
 import {Btn} from "../common/Btn";
 import {login} from "../../data/txt/login";
 import {apiURL} from "../../config/api";
 import {GetUserData} from "../../hooks/GetUserData";
+import {CircularProgress} from "@mui/material";
+import {useAlert} from "../../hooks/useAlert";
 
 
 interface Props {
@@ -13,6 +14,9 @@ interface Props {
 }
 
 export const LoginForm = (props: Props) => {
+
+    const { setAlert } = useAlert();
+    const txt = login[props.lang];
 
     const [loginForm, setLoginForm] = useState<loginFormInterface>({
         email: '',
@@ -31,30 +35,34 @@ export const LoginForm = (props: Props) => {
     const sendLoginForm = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        try {
+
+
             await fetch(apiURL+'/authentication/login', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
                 body: JSON.stringify(loginForm),
-            });
-
-            GetUserData().then(data => {
-                if (data !== undefined) {
-                    if ((props.setUserData !== undefined)){
-                        props.setUserData(data);}
-                }
-            });
-
-        } finally {
-            setLoading(false);
-        }
+            })
+                .then(() => {
+                    GetUserData()
+                        .then(data => {
+                        if (data !== undefined) {
+                            if ((props.setUserData !== undefined)){
+                                props.setUserData(data);}
+                        }
+                    });
+                })
+                .catch(err => {
+                    setAlert(txt.connectionError, 'error');
+                    console.log(err);
+                })
+                .finally(() => {setLoading(false);});
     };
 
-    const txt = login[props.lang];
+
 
     if (loading) {
-        return <Spinner/>
+        return <CircularProgress />
     }
 
 

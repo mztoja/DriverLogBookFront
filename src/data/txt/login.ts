@@ -9,6 +9,8 @@ interface Login {
     register: string;
     registerSubmit: string;
     logout: string;
+    connectionError: string;
+    responseError: string;
 }
 
 
@@ -24,6 +26,8 @@ export const login: Login[] =
         register: 'Register your Account',
         registerSubmit: 'Register',
         logout: 'Logout',
+        connectionError: 'The server is not responding. Please check your connection or try again later.',
+        responseError: 'Incorrect login details.',
     },
         {
             welcome: `Witaj w aplikacji "Dziennik Kierowcy".`,
@@ -36,4 +40,6 @@ export const login: Login[] =
             register: 'Zarejestruj nowe konto',
             registerSubmit: 'Zarejestruj',
             logout: 'Wyloguj',
+            connectionError: 'Serwer nie odpowiada. Sprawdź swoje połączenie lub próbuj ponownie później.',
+            responseError: 'Podano niepoprawne dane logowania.',
         }];
