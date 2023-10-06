@@ -11,6 +11,7 @@ interface Login {
     logout: string;
     connectionError: string;
     responseError: string;
+    unknownError: string
 }
 
 
@@ -28,6 +29,7 @@ export const login: Login[] =
         logout: 'Logout',
         connectionError: 'The server is not responding. Please check your connection or try again later.',
         responseError: 'Incorrect login details.',
+        unknownError: 'Unknown Error. Please contact Admin.'
     },
         {
             welcome: `Witaj w aplikacji "Dziennik Kierowcy".`,
@@ -41,5 +43,6 @@ export const login: Login[] =
             registerSubmit: 'Zarejestruj',
             logout: 'Wyloguj',
             connectionError: 'Serwer nie odpowiada. Sprawdź swoje połączenie lub próbuj ponownie później.',
-            responseError: 'Podano niepoprawne dane logowania.',
+            responseError: 'Podano niepoprawne dane użytkownika.',
+            unknownError: 'Wystąpił nieznany błąd. Skontaktuj się z administratorem.'
         }];

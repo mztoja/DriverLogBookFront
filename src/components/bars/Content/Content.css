@@ -1,5 +1,5 @@
 #Content {
-    padding: 0.1rem;
+    padding: 0.4rem;
     margin: 0.5rem auto;
     min-height: 70vh;
     width: 90vw;
@@ -8,4 +8,10 @@
     background-color: #3f3d3d;
     border-radius: 0.7rem;
     color: #b3b3b3;
+}
+.textfield__label {
+    color: #b3b3b3 !important;
+}
+.textfield {
+    color: white !important;
 }

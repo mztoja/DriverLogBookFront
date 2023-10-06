@@ -1,11 +1,11 @@
 import React, {FormEvent, useState} from "react";
 import './Register.css';
 import {login} from "../../../../data/txt/login";
-import {Spinner} from "../../../common/Spinner/Spinner";
 import {Btn} from "../../../common/Btn";
 import {useNavigate} from 'react-router-dom';
 import { UserLangEnum } from "types";
 import {apiURL} from "../../../../config/api";
+import {CircularProgress} from "@mui/material";
 
 interface Props {
     lang: UserLangEnum;
@@ -53,7 +53,7 @@ export const Register = (props:Props) => {
     const txt = login[props.lang];
 
     if (loading) {
-        return <Spinner/>
+        return <CircularProgress />
     }
 
 

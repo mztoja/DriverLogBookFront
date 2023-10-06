@@ -1,11 +1,11 @@
 import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
 import {loginFormInterface, UserInterface, UserLangEnum} from 'types';
-import {Btn} from "../common/Btn";
 import {login} from "../../data/txt/login";
 import {apiURL} from "../../config/api";
 import {GetUserData} from "../../hooks/GetUserData";
-import {CircularProgress} from "@mui/material";
+import {Button, CircularProgress, TextField} from "@mui/material";
 import {useAlert} from "../../hooks/useAlert";
+import SendIcon from "@mui/icons-material/Send";
 
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 
 export const LoginForm = (props: Props) => {
 
-    const { setAlert } = useAlert();
+    const {setAlert} = useAlert();
     const txt = login[props.lang];
 
     const [loginForm, setLoginForm] = useState<loginFormInterface>({
@@ -37,32 +37,37 @@ export const LoginForm = (props: Props) => {
         setLoading(true);
 
 
-            await fetch(apiURL+'/authentication/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-                body: JSON.stringify(loginForm),
-            })
-                .then(() => {
+        await fetch(apiURL + '/authentication/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+            body: JSON.stringify(loginForm),
+        })
+            .then((res) => {
+                if (res.ok) {
                     GetUserData()
                         .then(data => {
-                        if (data !== undefined) {
-                            if ((props.setUserData !== undefined)){
-                                props.setUserData(data);}
-                        }
-                    });
-                })
-                .catch(err => {
-                    setAlert(txt.connectionError, 'error');
-                    console.log(err);
-                })
-                .finally(() => {setLoading(false);});
+                            if (data !== undefined) {
+                                if ((props.setUserData !== undefined)) {
+                                    props.setUserData(data);
+                                }
+                            }
+                        })
+                } else {
+                    setAlert(txt.responseError, 'warning');
+                }
+            })
+            .catch(() => {
+                setAlert(txt.connectionError, 'error');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     };
 
 
-
     if (loading) {
-        return <CircularProgress />
+        return <CircularProgress/>
     }
 
 
@@ -74,28 +79,31 @@ export const LoginForm = (props: Props) => {
                 <legend>{txt.login}</legend>
                 <form onSubmit={sendLoginForm}>
                     <p>
-                        <label>
-                            {txt.email}:<br/>
-                            <input
-                                type="email"
-                                value={loginForm.email}
-                                onChange={e => updateForm('email', e.target.value)}
-                                required
-                            />
-                        </label>
+                        <TextField
+                            required
+                            id="outlined-required"
+                            label={txt.email}
+                            InputLabelProps={{className: 'textfield__label'}}
+                            InputProps={{className: 'textfield'}}
+                            type="email"
+                            value={loginForm.email}
+                            onChange={e => updateForm('email', e.target.value)}
+                        />
                     </p>
                     <p>
-                        <label>
-                            {txt.password}:<br/>
-                            <input
-                                type="password"
-                                value={loginForm.password}
-                                onChange={e => updateForm('password', e.target.value)}
-                                required
-                            />
-                        </label>
+                        <TextField
+                            required
+                            id="outlined-passwprd-input"
+                            label={txt.password}
+                            InputLabelProps={{className: 'textfield__label'}}
+                            InputProps={{className: 'textfield'}}
+                            type="password"
+                            autoComplete="current-password"
+                            value={loginForm.password}
+                            onChange={e => updateForm('password', e.target.value)}
+                        />
                     </p>
-                    <Btn text={txt.submit}/>
+                    <Button variant="contained" type="submit" endIcon={<SendIcon/>}>{txt.submit}</Button>
                 </form>
             </fieldset>
         </div>

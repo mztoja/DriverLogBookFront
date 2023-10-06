@@ -34,7 +34,7 @@ a {
 
 /*Fieldset&legend set:*/
 fieldset {
-  border: 0.2rem solid #1f497d99;
+  border: 0.5rem solid #1a59a757;
   background: #0000001a;
   border-radius: 0.6rem;
   padding: 0.5rem 1rem;
@@ -66,3 +66,4 @@ input, select {
   -webkit-border-radius: 0.4rem;
   border-radius: 0.4rem;
 }
+
