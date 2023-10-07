@@ -20,5 +20,5 @@ export const LogoutLink = (props: Props) => {
         props.setUserData(null);
     }
 
-    return <Link to="login" onClick={logout}>{login[props.lang].logout}</Link>
+    return <Link to="" className="Link" onClick={logout}>{login[props.lang].logout}</Link>
 }

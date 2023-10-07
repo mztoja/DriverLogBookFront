@@ -14,6 +14,17 @@ a {
   text-decoration: inherit;
 }
 
+.Link {
+  font: inherit;
+  color: rgb(64 120 165);
+  text-decoration: underline rgba(144, 202, 249, 0.4);
+}
+
+.Link:hover{
+  color: rgb(144, 202, 249);
+  text-decoration: underline rgba(144, 202, 249, 0.7);
+}
+
 .DivClear {
   clear: both;
 }
@@ -49,21 +60,14 @@ fieldset legend {
   font-weight: bold;
 }
 
-/*Form fields set:*/
-input:-webkit-autofill {
-  background-color: #3a3636 ;
-  color: white ;
-  padding: 0.3rem ;
-  border: 0.1rem solid #ccc ;
-  -webkit-border-radius: 0.4rem ;
-  border-radius: 0.4rem ;
-}
-input, select {
-  background-color: #3a3636;
-  color: white;
-  padding: 0.3rem;
-  border: 0.1rem solid #ccc;
-  -webkit-border-radius: 0.4rem;
-  border-radius: 0.4rem;
+/*Turn off the background color change on auto complete in input forms:*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: #ffffff;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px #23232329;
 }
 

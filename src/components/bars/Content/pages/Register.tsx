@@ -6,6 +6,8 @@ import {useNavigate} from 'react-router-dom';
 import { UserLangEnum } from "types";
 import {apiURL} from "../../../../config/api";
 import {CircularProgress} from "@mui/material";
+import {EmailInput} from "../../../common/form/EmailInput";
+import {PasswordInput} from "../../../common/form/PasswordInput";
 
 interface Props {
     lang: UserLangEnum;
@@ -80,26 +82,11 @@ export const Register = (props:Props) => {
                     </label>
                 </p>
                 <p>
-                    <label>
-                        {txt.email}:<br/>
-                        <input
-                            type="email"
-                            value={form.email}
-                            onChange={e => updateForm('email', e.target.value)}
-                            required
-                        />
-                    </label>
+                    <EmailInput lang={props.lang} value={form.email} onChange={e => updateForm('email', e.target.value)} />
                 </p>
+
                 <p>
-                    <label>
-                        {txt.password}:<br/>
-                        <input
-                            type="password"
-                            value={form.password}
-                            onChange={e => updateForm('password', e.target.value)}
-                            required
-                        />
-                    </label>
+                    <PasswordInput lang={props.lang} value={form.password} onChange={e => updateForm('password', e.target.value)}/>
                 </p>
                 <p>
                     <label>
