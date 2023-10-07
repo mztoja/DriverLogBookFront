@@ -5,6 +5,8 @@ import {LoginForm} from "../components/auth/LoginForm";
 import {Content} from "../components/bars/Content/Content";
 import {UserInterface, UserLangEnum } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
+import {Heading} from "../components/bars/Content/Heading";
+import {login} from "../assets/txt/login";
 
 interface Props extends AppMainElementsTypes {
     lang: UserLangEnum;
@@ -17,6 +19,7 @@ export const LoginView = (props:Props) => (
     <>
         <TopBar page={props.page} lang={props.lang} setLang={props.setLang}/>
         <Content>
+            <Heading text={login[props.lang].welcome}/>
             <LoginForm lang={props.lang} setUserData={props.setUserData}/>
         </Content>
     </>

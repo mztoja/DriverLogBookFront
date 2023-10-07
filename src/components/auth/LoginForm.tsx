@@ -1,11 +1,20 @@
 import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
 import {loginFormInterface, UserInterface, UserLangEnum} from 'types';
-import {login} from "../../data/txt/login";
+import {login} from "../../assets/txt/login";
 import {apiURL} from "../../config/api";
 import {GetUserData} from "../../hooks/GetUserData";
-import {Button, CircularProgress, TextField} from "@mui/material";
+import {
+    Button,
+    CircularProgress, FormControl,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    OutlinedInput,
+    TextField
+} from "@mui/material";
 import {useAlert} from "../../hooks/useAlert";
 import SendIcon from "@mui/icons-material/Send";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 
 interface Props {
@@ -24,12 +33,19 @@ export const LoginForm = (props: Props) => {
     });
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [emailValidation, setEmailValidation] = useState<boolean>(false);
 
     const updateForm = (key: string, value: any) => {
         setLoginForm((loginForm: any) => ({
             ...loginForm,
             [key]: value,
         }));
+        const regexp = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{1,}))$/);
+        if (regexp.test(loginForm.email)) {
+            setEmailValidation(false);
+        } else {
+            setEmailValidation(true);
+        }
     };
 
     const sendLoginForm = async (e: FormEvent) => {
@@ -65,6 +81,14 @@ export const LoginForm = (props: Props) => {
             });
     };
 
+    const [showPassword, setShowPassword] = React.useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
 
     if (loading) {
         return <CircularProgress/>
@@ -72,8 +96,6 @@ export const LoginForm = (props: Props) => {
 
 
     return (<div id="Login">
-
-            <h2>{txt.welcome}</h2>
 
             <fieldset>
                 <legend>{txt.login}</legend>
@@ -88,6 +110,7 @@ export const LoginForm = (props: Props) => {
                             type="email"
                             value={loginForm.email}
                             onChange={e => updateForm('email', e.target.value)}
+                            error={emailValidation}
                         />
                     </p>
                     <p>
@@ -97,11 +120,34 @@ export const LoginForm = (props: Props) => {
                             label={txt.password}
                             InputLabelProps={{className: 'textfield__label'}}
                             InputProps={{className: 'textfield'}}
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             autoComplete="current-password"
                             value={loginForm.password}
                             onChange={e => updateForm('password', e.target.value)}
                         />
+                    </p>
+
+                    <p>
+                        <FormControl sx={{ m: 1, width: '25ch' }} variant="filled">
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Password"
+                        />
+                        </FormControl>
                     </p>
                     <Button variant="contained" type="submit" endIcon={<SendIcon/>}>{txt.submit}</Button>
                 </form>

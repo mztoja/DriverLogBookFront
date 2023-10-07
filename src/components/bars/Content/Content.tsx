@@ -1,7 +1,7 @@
 import React from "react";
 import "./Content.css";
 import {AlertProvider} from "../../../context/AlertContext";
-import {AlertPopup} from "../../common/AlertPopup";
+import {AlertPopup} from "../../common/AlertPopup/AlertPopup";
 
 export const Content = (props:any) => {
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { UserLangEnum } from "types";
-import {commons} from "../../../data/txt/common";
+import {commons} from "../../../assets/txt/common";
 import './Footer.css';
 
 interface Props {

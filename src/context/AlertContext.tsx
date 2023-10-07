@@ -1,6 +1,6 @@
 import {createContext, ReactNode, useState} from 'react';
+import {ALERT_TIME} from "../config/set";
 
-const ALERT_TIME = 10000;
 
 type Type = "error" | "success" | "info" | "warning" | undefined | "";
 

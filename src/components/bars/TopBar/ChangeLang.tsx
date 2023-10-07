@@ -2,8 +2,8 @@ import React, {Dispatch, SetStateAction} from "react";
 import {UserLangEnum} from "types";
 import {SaveToLocalStorage} from "../../../hooks/LocalStorageHook";
 
-const plFlag = require("../../../data/img/pl.jpg");
-const enFlag = require("../../../data/img/en.jpg");
+const plFlag = require("../../../assets/img/pl.jpg");
+const enFlag = require("../../../assets/img/en.jpg");
 
 interface Props {
     setLang?: Dispatch<SetStateAction<UserLangEnum>>

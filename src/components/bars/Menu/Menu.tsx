@@ -1,7 +1,7 @@
 import React from "react";
 import "./Menu.css";
 import {Option} from "./Option";
-import { labels } from "../../../data/txt/menuLabels";
+import { labels } from "../../../assets/txt/menuLabels";
 import { DivClear } from "../../common/DivClear";
 import { UserLangEnum } from "types";
 

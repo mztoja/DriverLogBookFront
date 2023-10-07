@@ -1,6 +1,6 @@
 import React, {FormEvent, useState} from "react";
 import './Register.css';
-import {login} from "../../../../data/txt/login";
+import {login} from "../../../../assets/txt/login";
 import {Btn} from "../../../common/Btn";
 import {useNavigate} from 'react-router-dom';
 import { UserLangEnum } from "types";

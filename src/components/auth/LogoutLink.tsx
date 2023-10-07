@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction} from "react";
 import {Link} from "react-router-dom";
 import {UserInterface, UserLangEnum} from "types";
 import {apiURL} from "../../config/api";
-import {login} from "../../data/txt/login";
+import {login} from "../../assets/txt/login";
 
 interface Props {
     lang: UserLangEnum;

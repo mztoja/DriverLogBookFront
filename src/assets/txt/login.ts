@@ -42,7 +42,7 @@ export const login: Login[] =
             register: 'Zarejestruj nowe konto',
             registerSubmit: 'Zarejestruj',
             logout: 'Wyloguj',
-            connectionError: 'Serwer nie odpowiada. Sprawdź swoje połączenie lub próbuj ponownie później.',
+            connectionError: 'Serwer nie odpowiada. Sprawdź swoje połączenie lub spróbuj ponownie później.',
             responseError: 'Podano niepoprawne dane użytkownika.',
             unknownError: 'Wystąpił nieznany błąd. Skontaktuj się z administratorem.'
         }];
