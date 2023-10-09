@@ -1,4 +1,4 @@
-import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
+import React, {Dispatch, FormEvent, SetStateAction, useEffect, useState} from "react";
 import {LoginFormInterface, UserInterface, UserLangEnum} from 'types';
 import {login} from "../../assets/txt/login";
 import {apiURL} from "../../config/api";
@@ -8,6 +8,8 @@ import {useAlert} from "../../hooks/useAlert";
 import {EmailInput} from "../common/form/EmailInput";
 import {PasswordInput} from "../common/form/PasswordInput";
 import {SubmitButton} from "../common/form/SubmitButton";
+import {useLocation} from "react-router-dom";
+import {DeleteFromLocalStorage, DownloadFromLocalStorage} from "../../hooks/LocalStorageHook";
 
 interface Props {
     lang: UserLangEnum;
@@ -17,6 +19,17 @@ interface Props {
 export const LoginForm = (props: Props) => {
 
     const {setAlert} = useAlert();
+    const location = useLocation();
+
+    useEffect(() => {
+        const alertSuccess = DownloadFromLocalStorage('alertSuccess');
+        if (alertSuccess!=null) {
+            setAlert(alertSuccess, 'success');
+            DeleteFromLocalStorage('alertSuccess');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[location]);
+
     const txt = login[props.lang];
 
     const [loginForm, setLoginForm] = useState<LoginFormInterface>({
@@ -75,14 +88,16 @@ export const LoginForm = (props: Props) => {
                 <legend>{txt.login}</legend>
 
                 <form onSubmit={sendLoginForm}>
-                    <p>
+                    <div>
                         <EmailInput lang={props.lang} value={loginForm.email}
                                     onChange={e => updateForm('email', e.target.value)}/>
-                    </p>
-                    <p>
+                    </div>
+                    <br/>
+                    <div>
                         <PasswordInput lang={props.lang} value={loginForm.password}
                                        onChange={e => updateForm('password', e.target.value)}/>
-                    </p>
+                    </div>
+                    <br/>
                     <SubmitButton text={txt.submit}/>
                 </form>
             </fieldset>

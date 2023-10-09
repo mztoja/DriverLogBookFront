@@ -13,6 +13,6 @@ interface Props extends AppMainElementsTypes {
 export const HomeView = (props: Props) => (
     <>
         <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
-        <Content>{props.userData.name}</Content>
+        <Content>{props.userData.firstName}</Content>
     </>
 );

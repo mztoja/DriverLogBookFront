@@ -20,3 +20,7 @@ export const DownloadFromLocalStorage = (key:string):string | null => {
 export const SaveToLocalStorage = (key:string, value:string):void => {
     localStorage.setItem(key, JSON.stringify(value));
 }
+
+export const DeleteFromLocalStorage = (key:string):void => {
+    localStorage.removeItem(key);
+}

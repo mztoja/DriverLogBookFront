@@ -50,6 +50,7 @@ fieldset {
   border-radius: 0.6rem;
   padding: 0.5rem 1rem;
   display: inline-block;
+  max-width: 500px;
 }
 fieldset legend {
   background: #1f497d99;
@@ -69,5 +70,9 @@ input:-webkit-autofill:active{
   -webkit-text-fill-color: #ffffff;
   transition: background-color 5000s ease-in-out 0s;
   box-shadow: inset 0 0 20px 20px #23232329;
+}
+
+.maxWidth {
+  min-width: 85%;
 }
 

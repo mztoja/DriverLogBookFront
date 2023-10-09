@@ -6,18 +6,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { UserLangEnum } from "types";
 import {form} from "../../../assets/txt/form";
 import './Form.css';
 import {passwordRegExp} from "../../../config/regexp";
+import {InputPropsTypes} from "../../../types/InputPropsTypes";
 
-interface Props {
-    lang: UserLangEnum;
-    value:string;
-    onChange: (e:any) => void;
-}
-
-export const PasswordInput = (props:Props) => {
+export const PasswordInput = (props:InputPropsTypes) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,7 +21,7 @@ export const PasswordInput = (props:Props) => {
 
     useEffect(() => {
         const regexp = passwordRegExp();
-        if (regexp.test(props.value)) {
+        if ((regexp.test(props.value)) || (props.value === '')) {
             setValidation(false);
         } else {
             setValidation(true);
@@ -35,18 +29,17 @@ export const PasswordInput = (props:Props) => {
     }, [props.value]);
 
     return (
-                <FormControl variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password" className='TextInput__Label'>{form[props.lang].password}</InputLabel>
+                <FormControl fullWidth>
+                    <InputLabel className='TextInput__Label'>{form[props.lang].password}</InputLabel>
                     <OutlinedInput
-                        id="outlined-adornment-password"
                         required
+                        id="password"
                         inputProps={{className: 'TextInput'}}
                         type={showPassword ? 'text' : 'password'}
                         autoComplete="current-password"
                         value={props.value}
                         onChange={props.onChange}
                         error={validation}
-                        fullWidth
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton
@@ -60,6 +53,7 @@ export const PasswordInput = (props:Props) => {
                             </InputAdornment>
                         }
                     />
+                    {form[props.lang].passwordHelper}
                 </FormControl>
     );
 }

@@ -12,7 +12,6 @@ interface Props {
 export const ChangeLang = (props: Props) => {
 
     const changeLang = (lang: number): void => {
-        console.log('zmieniłem na ', lang);
         if (props.setLang !== undefined) {
             props.setLang(lang);
         }

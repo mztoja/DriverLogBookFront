@@ -14,6 +14,7 @@ import './App.css';
 import {DownloadFromLocalStorage} from "./hooks/LocalStorageHook";
 import {LinearProgress} from "@mui/material";
 
+
 export const App = () => {
 
     const [userData, setUserData] = useState<UserInterface | null>(null);

@@ -2,16 +2,15 @@ import React, {useEffect, useState} from "react";
 import {TextField} from "@mui/material";
 import { form } from "../../../assets/txt/form";
 import './Form.css';
-import {emailRegExp} from "../../../config/regexp";
 import {InputPropsTypes} from "../../../types/InputPropsTypes";
 
-export const EmailInput = (props:InputPropsTypes) => {
+
+export const DefaultCustomerInput = (props:InputPropsTypes) => {
 
     const [validation, setValidation] = useState<boolean>(false);
 
     useEffect(() => {
-        const regexp = emailRegExp();
-        if ((regexp.test(props.value)) || (props.value === '')) {
+        if ((props.value.length <= 20) || (props.value === '')) {
             setValidation(false);
         } else {
             setValidation(true);
@@ -20,17 +19,16 @@ export const EmailInput = (props:InputPropsTypes) => {
 
     return (
         <TextField
-            required
-            id="email"
-            label={form[props.lang].email}
+            id="defaultCustomer"
+            label={form[props.lang].defaultCustomer}
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput'}}
-            type="email"
+            type="text"
             value={props.value}
             onChange={props.onChange}
-            error={validation}
             fullWidth
-            autoComplete=''
+            error={validation}
+            autoComplete="nope"
         />
     );
 }

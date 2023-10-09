@@ -2,8 +2,6 @@ interface Login {
     welcome: string;
     login: string;
     submit: string;
-    name: string;
-    lang: string;
     register: string;
     registerSubmit: string;
     logout: string;
@@ -12,16 +10,26 @@ interface Login {
     unknownError: string;
     registerPar: string;
     here: string;
+    loginPar: string;
+    belowReqDesc: string;
+    companyData: string;
+    registerSuccess: string;
+    registerResInvEmail: string;
+    registerResInvPassword: string;
+    dbConnectionError: string;
+    registerResEmailExist: string;
+    companyInfo: string;
+    registerCompanyNameNotExist: string;
+    registerCompanyCityNotExist: string;
+    registerCountryNotExist: string;
 }
 
 
 export const login: Login[] =
-    [{
+    [{//en
         welcome: `Welcome in Driver's Log Book App.`,
         login: 'Login',
         submit: 'Login',
-        name: 'Your Name and Surname',
-        lang: 'App Language',
         register: 'Register your Account',
         registerSubmit: 'Register',
         logout: 'Logout',
@@ -30,19 +38,41 @@ export const login: Login[] =
         unknownError: 'Unknown Error. Please contact Admin.',
         registerPar: `If you don't have an account yet, you can register`,
         here: 'here',
+        loginPar: 'If you have an account, please go to login page',
+        belowReqDesc: 'The data below is used for additional functions, they are not required. You will be able to edit them later.',
+        companyData: `Company's data`,
+        registerSuccess: 'You have been registered successfully. You can login now.',
+        registerResInvEmail: 'You have entered an incorrect e-mail address format.',
+        registerResInvPassword: 'You have entered an incorrect password format.',
+        dbConnectionError: 'Database connection error. Please try again later.',
+        registerResEmailExist: 'The e-mail address you entered already exists. If this is your e-mail - please contact the administrator.',
+        companyInfo: 'Enter the address of the first company you currently work for. It will by available only in you private address book in app.',
+        registerCompanyNameNotExist: 'Please enter the company name.',
+        registerCompanyCityNotExist: 'Please enter the company city.',
+        registerCountryNotExist: 'Please select country.',
     },
-        {
+        {//pl
             welcome: `Witaj w aplikacji "Dziennik Kierowcy".`,
             login: 'Logowanie',
             submit: 'Zaloguj',
-            name: 'Imię i Nazwisko',
-            lang: 'Język aplikacji',
             register: 'Zarejestruj nowe konto',
             registerSubmit: 'Zarejestruj',
             logout: 'Wyloguj',
             connectionError: 'Serwer nie odpowiada. Sprawdź swoje połączenie lub spróbuj ponownie później.',
             responseError: 'Podano niepoprawne dane użytkownika.',
             unknownError: 'Wystąpił nieznany błąd. Skontaktuj się z administratorem.',
-            registerPar: 'Jeżeli nie masz u nas jeszcze konta to możesz się zarejestrować',
+            registerPar: 'Jeżeli nie masz u nas jeszcze konta, to możesz się zarejestrować',
             here: 'tutaj',
+            loginPar: 'Jeżeli masz już konto, to przejdź do ekranu logowania',
+            belowReqDesc: 'Dane poniżej są wykorzystywane do dodatkowych funkcji, jednak nie są wymagane. Będziesz mógł je edytować później.',
+            companyData: 'Dane firmy',
+            registerSuccess: 'Zostałeś zarejestrowany pomyślnie. Teraz możesz się zalogować.',
+            registerResInvEmail: 'Podałeś niepoprawny format adresu e-mail.',
+            registerResInvPassword: 'Podałeś niepoprawny format hasła.',
+            dbConnectionError: 'Problem z połączeniem z bazą danych. Spróbuj ponownie później.',
+            registerResEmailExist: 'Podany adres e-mail już istnieje. Jeżeli masz problem z logowaniem - skontaktuj się z administratorem.',
+            companyInfo: 'Podaj dane twojej pierwszej firmy w której teraz pracujesz. Będą one dostępne tylko w twojej książce adresowej.',
+            registerCompanyNameNotExist: 'Musisz wpisać nazwę firmy.',
+            registerCompanyCityNotExist: 'Musisz wpisać nazwę miejsowości siedziby firmy.',
+            registerCountryNotExist: 'Musisz wybrać kraj.',
         }];
