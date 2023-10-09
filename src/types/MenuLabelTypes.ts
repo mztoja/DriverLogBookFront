@@ -5,4 +5,5 @@ export interface MenuLabelTypes {
     logs: string;
     days: string;
     finances: string;
+    blockedUser: string;
 }

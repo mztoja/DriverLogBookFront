@@ -28,7 +28,7 @@ export const form: Form[] =
     [{ //en
         email: 'E-mail',
         password: 'Password',
-        passwordHelper: 'Password must consist of minimum 8 characters, at least one uppercase letter and one number.',
+        passwordHelper: 'Password must consist of minimum 8 characters, at least one uppercase letter, one number and one special character.',
         firstName: 'First Name',
         lastName: 'Last Name',
         lang: 'App Language',
@@ -52,7 +52,7 @@ export const form: Form[] =
         {//pl
             email: 'E-mail',
             password: 'Hasło',
-            passwordHelper: 'Hasło musi składać się z min. 8 znaków, jednej dużej litery i jednej cyfry.',
+            passwordHelper: 'Hasło musi składać się z min. 8 znaków, jednej dużej litery, jednej cyfry i jednego znaku specjalnego.',
             firstName: 'Imię',
             lastName: 'Nazwisko',
             lang: 'Język aplikacji',
