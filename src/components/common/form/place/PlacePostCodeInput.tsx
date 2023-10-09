@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {TextField} from "@mui/material";
-import { form } from "../../../assets/txt/form";
-import './Form.css';
-import {InputPropsTypes} from "../../../types/InputPropsTypes";
+import { form } from "../../../../assets/txt/form";
+import '../Form.css';
+import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
-
-export const CompanyNameInput = (props:InputPropsTypes) => {
+export const PlacePostCodeInput = (props:InputPropsTypes) => {
 
     const [validation, setValidation] = useState<boolean>(false);
 
     useEffect(() => {
-        if ((props.value.length <= 30) || (props.value === '')) {
+        if ((props.value.length <= 10) || (props.value === '')) {
             setValidation(false);
         } else {
             setValidation(true);
@@ -19,17 +18,15 @@ export const CompanyNameInput = (props:InputPropsTypes) => {
 
     return (
         <TextField
-            id="companyName"
-            required
-            label={form[props.lang].companyName}
+            id="postCode"
+            label={form[props.lang].companyCode}
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput'}}
             type="text"
             value={props.value}
             onChange={props.onChange}
-            fullWidth
             error={validation}
-            autoComplete="nope"
+            autoComplete='off'
         />
     );
 }

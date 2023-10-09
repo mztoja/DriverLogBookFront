@@ -9,6 +9,15 @@ interface Form {
     companyStreet: string;
     companyCode: string;
     companyCity: string;
+    placeType: string;
+    placeType0: string;
+    placeType1: string;
+    placeType2: string;
+    placeType3: string;
+    placeType4: string;
+    placeType5: string;
+    placeType6: string;
+    placeType7: string;
     country: string;
     defaultCustomer: string;
     bidType: string;
@@ -21,7 +30,8 @@ interface Form {
     fuelConsumptionType:string;
     fuelConType1: string;
     fuelConType2: string;
-    companyIsFavoriteSwitchLabel: string;
+
+
 }
 
 
@@ -37,6 +47,15 @@ export const form: Form[] =
         companyStreet: 'Street',
         companyCode: 'Post Code',
         companyCity: 'Town/City',
+        placeType: 'Group',
+        placeType0: 'Other',
+        placeType1: 'Transport Company (base)',
+        placeType2: 'Loading place',
+        placeType3: 'Unloading place',
+        placeType4: 'Loading&Unloading place',
+        placeType5: 'Parking',
+        placeType6: 'Workshop/Dealer',
+        placeType7: 'Customs',
         country: 'Country',
         defaultCustomer: 'Default Customer',
         bidType: 'type of remuneration',
@@ -49,7 +68,7 @@ export const form: Form[] =
         fuelConsumptionType: 'Fuel entry format',
         fuelConType1: 'liters (quantity)',
         fuelConType2: 'l/100km (usage)',
-        companyIsFavoriteSwitchLabel: 'Add to favorite',
+
     },
         {//pl
             email: 'E-mail',
@@ -62,6 +81,15 @@ export const form: Form[] =
             companyStreet: 'Ulica',
             companyCode: 'Kod pocztowy',
             companyCity: 'Miejscowość',
+            placeType: 'Grupa',
+            placeType0: 'Inne',
+            placeType1: 'Firma transportowa (baza)',
+            placeType2: 'Miejsce załadunku',
+            placeType3: 'Miejsce rozładunku',
+            placeType4: 'Załadunek i Rozładunek',
+            placeType5: 'Parking',
+            placeType6: 'Warsztat/Serwis',
+            placeType7: 'Urząd/Agencja celna',
             country: 'Kraj',
             defaultCustomer: 'Domyślny zleceniodawca',
             bidType: 'Rodzaj wynagrodzenia',
@@ -74,5 +102,5 @@ export const form: Form[] =
             fuelConsumptionType: 'Format wpisywania paliwa',
             fuelConType1: 'litry (ilość)',
             fuelConType2: 'l/100km (spalanie)',
-            companyIsFavoriteSwitchLabel: 'Dodaj do ulubionych',
+
         }];

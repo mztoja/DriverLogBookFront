@@ -10,10 +10,10 @@ import {FirstNameInput} from "../common/form/FirstNameInput";
 import {LastNameInput} from '../common/form/LastNameInput';
 import {LanguageSelect} from "../common/form/LanguageSelect";
 import {SubmitButton} from "../common/form/SubmitButton";
-import {CompanyNameInput} from "../common/form/CompanyNameInput";
-import {CompanyStreetInput} from "../common/form/CompanyStreetInput";
-import {CompanyPostCodeInput} from "../common/form/CompanyPostCodeInput";
-import {CompanyCityInput} from "../common/form/CompanyCityInput";
+import {PlaceNameInput} from "../common/form/place/PlaceNameInput";
+import {PlaceStreetInput} from "../common/form/place/PlaceStreetInput";
+import {PlacePostCodeInput} from "../common/form/place/PlacePostCodeInput";
+import {PlaceCityInput} from "../common/form/place/PlaceCityInput";
 import {CountrySelect} from "../common/form/CountrySelect";
 import {DefaultCustomerInput} from "../common/form/DefaultCustomerInput";
 import {BidTypeSelect} from "../common/form/BidTypeSelect";
@@ -133,23 +133,23 @@ export const RegisterForm = (props: Props) => {
                     {login[props.lang].companyInfo}<br/><br/>
 
                     <div>
-                        <CompanyNameInput lang={props.lang} value={registerForm.companyName}
-                                          onChange={e => updateForm('companyName', e.target.value)}/>
+                        <PlaceNameInput lang={props.lang} value={registerForm.companyName}
+                                        onChange={e => updateForm('companyName', e.target.value)}/>
                     </div>
                     <br/>
                     <div>
-                        <CompanyStreetInput lang={props.lang} value={registerForm.companyStreet}
-                                            onChange={e => updateForm('companyStreet', e.target.value)}/>
+                        <PlaceStreetInput lang={props.lang} value={registerForm.companyStreet}
+                                          onChange={e => updateForm('companyStreet', e.target.value)}/>
                     </div>
                     <br/>
                     <div>
-                        <CompanyPostCodeInput lang={props.lang} value={registerForm.companyPostCode}
-                                              onChange={e => updateForm('companyPostCode', e.target.value)}/>
+                        <PlacePostCodeInput lang={props.lang} value={registerForm.companyPostCode}
+                                            onChange={e => updateForm('companyPostCode', e.target.value)}/>
                     </div>
                     <br/>
                     <div>
-                        <CompanyCityInput lang={props.lang} value={registerForm.companyCity}
-                                          onChange={e => updateForm('companyCity', e.target.value)}/>
+                        <PlaceCityInput lang={props.lang} value={registerForm.companyCity}
+                                        onChange={e => updateForm('companyCity', e.target.value)}/>
                     </div>
                     <br/>
                     <div>

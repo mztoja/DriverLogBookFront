@@ -1,10 +1,10 @@
 import React from "react";
 import {TextField} from "@mui/material";
-import { form } from "../../../assets/txt/form";
-import './Form.css';
-import {InputPropsTypes} from "../../../types/InputPropsTypes";
+import { form } from "../../../../assets/txt/form";
+import '../Form.css';
+import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
-export const CompanyCityInput = (props:InputPropsTypes) => {
+export const PlaceCityInput = (props:InputPropsTypes) => {
 
     return (
         <TextField
@@ -17,7 +17,7 @@ export const CompanyCityInput = (props:InputPropsTypes) => {
             value={props.value}
             onChange={props.onChange}
             fullWidth
-            autoComplete="nope"
+            autoComplete='off'
         />
     );
 }

@@ -58,7 +58,7 @@ export const AmountInput = (props: Props) => {
                     startAdornment={<InputAdornment position="start"><div className="TextInput">{symbol}</div></InputAdornment>}
                     label={form[props.lang].amount}
                     onChange={props.onChangeAmount}
-                    autoComplete='nope'
+                    autoComplete='off'
                     error={validation}
                 />
             </FormControl>

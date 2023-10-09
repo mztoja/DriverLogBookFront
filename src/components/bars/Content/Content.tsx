@@ -8,7 +8,7 @@ export const Content = (props:any) => {
     return (
     <AlertProvider>
         <div id="Content">
-            <AlertPopup/>
+            <AlertPopup/><br/>
             {props.children}
         </div>
     </AlertProvider>
