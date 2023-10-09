@@ -12,7 +12,7 @@ interface Props extends AppMainElementsTypes {
 
 export const DaysView = (props: Props) => (
     <>
-        <TopBar page={props.page} lang={props.userData.lang}/>
+        <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
         <Content></Content>
     </>
 );
