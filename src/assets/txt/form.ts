@@ -21,6 +21,7 @@ interface Form {
     fuelConsumptionType:string;
     fuelConType1: string;
     fuelConType2: string;
+    companyIsFavoriteSwitchLabel: string;
 }
 
 
@@ -48,6 +49,7 @@ export const form: Form[] =
         fuelConsumptionType: 'Fuel entry format',
         fuelConType1: 'liters (quantity)',
         fuelConType2: 'l/100km (usage)',
+        companyIsFavoriteSwitchLabel: 'Add to favorite',
     },
         {//pl
             email: 'E-mail',
@@ -72,4 +74,5 @@ export const form: Form[] =
             fuelConsumptionType: 'Format wpisywania paliwa',
             fuelConType1: 'litry (ilość)',
             fuelConType2: 'l/100km (spalanie)',
+            companyIsFavoriteSwitchLabel: 'Dodaj do ulubionych',
         }];

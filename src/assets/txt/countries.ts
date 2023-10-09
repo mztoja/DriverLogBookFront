@@ -37,7 +37,6 @@ export const countries: Countries[] =
         RU: 'Russian Federation',
         SE: 'Sweden',
         SK: 'Slovakia',
-        SZ: 'Swaziland',
         TR: 'Turkey',
         UA: 'Ukraine',
     },
@@ -74,7 +73,6 @@ export const countries: Countries[] =
             RU: 'Rosja',
             SE: 'Szwecja',
             SK: 'Słowacja',
-            SZ: 'Szwajcaria',
             TR: 'Turcja',
             UA: 'Ukraina',
         }];

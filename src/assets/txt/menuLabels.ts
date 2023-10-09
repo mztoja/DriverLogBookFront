@@ -8,6 +8,7 @@ export const labels:MenuLabelTypes[] = [{
     days: "Days",
     finances: "Finances",
     blockedUser: 'Inactive account',
+    places: 'Address List',
 },{
     register: "Rejestracja",
     login: "Logowanie",
@@ -16,6 +17,7 @@ export const labels:MenuLabelTypes[] = [{
     days: "Dni",
     finances: "Finanse",
     blockedUser: 'Konto nieaktywne',
+    places: 'Lista adresowa',
 }];
 
 

@@ -14,6 +14,7 @@ import './App.css';
 import {DownloadFromLocalStorage} from "./hooks/LocalStorageHook";
 import {LinearProgress} from "@mui/material";
 import {BlockedUserView} from "./views/BlockedUserView";
+import {PlacesView} from "./views/PlacesView";
 
 
 export const App = () => {
@@ -70,6 +71,8 @@ export const App = () => {
                                element={<DaysView page="days" userData={userData} setUserData={setUserData}/>}/>
                         <Route path="finances"
                                element={<FinancesView page="finances" userData={userData} setUserData={setUserData}/>}/>
+                        <Route path="places"
+                               element={<PlacesView page="places" userData={userData} setUserData={setUserData}/>}/>
                     </Routes>
                     <Footer lang={userData.lang}/>
                 </div>

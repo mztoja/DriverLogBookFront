@@ -43,6 +43,7 @@ export const CountrySelect = (props: InputPropsTypes) => {
     }, [value]);
 
     if (!firstRender) {
+        console.log('zmien jezyk');
             if (props.value !== '') {
                 const set = countries.find(country => country.code === props.value);
                 if (set !== undefined) {
