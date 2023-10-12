@@ -56,7 +56,7 @@ export const AddPlace = (props: Props) => {
 
         setLoading(true);
 
-        await fetch(apiURL + '/place/create', {
+        await fetch(apiURL + '/places/create', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(addPlaceForm),

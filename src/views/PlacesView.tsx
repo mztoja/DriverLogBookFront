@@ -5,6 +5,7 @@ import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import { UserInterface } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {AddPlace} from "../components/places/AddPlace";
+import {PlacesList} from "../components/places/PlacesList";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -20,6 +21,7 @@ export const PlacesView = (props: Props) => {
             <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
             <Content>
                 <AddPlace userId={props.userData.id} lang={props.userData.lang}/>
+                <PlacesList userId={props.userData.id} lang={props.userData.lang}/>
             </Content>
         </>
     );

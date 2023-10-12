@@ -35,7 +35,7 @@ export const CountrySelect = (props: InputPropsTypes) => {
             setCountries(countriesList);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[props.lang]);
+    }, [props.lang]);
 
     useEffect(() => {
         props.onChange(value?.code);
@@ -43,18 +43,17 @@ export const CountrySelect = (props: InputPropsTypes) => {
     }, [value]);
 
     if (!firstRender) {
-        console.log('zmien jezyk');
-            if (props.value !== '') {
-                const set = countries.find(country => country.code === props.value);
-                if (set !== undefined) {
-                    setDefaultValue({
-                        code: set.code,
-                        label: set.label,
-                        phone: set.phone,
-                    });
-                }
+        if (props.value !== '') {
+            const set = countries.find(country => country.code === props.value);
+            if (set !== undefined) {
+                setDefaultValue({
+                    code: set.code,
+                    label: set.label,
+                    phone: set.phone,
+                });
             }
-            setFirstRender(true);
+        }
+        setFirstRender(true);
     }
 
 
@@ -91,7 +90,8 @@ export const CountrySelect = (props: InputPropsTypes) => {
                 />
             )}
             onChange={(event: any, newValue: Country | null) => {
-                setValue(newValue);}}
+                setValue(newValue);
+            }}
         />
     );
 }
