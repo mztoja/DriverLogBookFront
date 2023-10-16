@@ -28,6 +28,7 @@ export const PlaceStreetInput = (props:InputPropsTypes) => {
             fullWidth
             error={validation}
             autoComplete='off'
+            size='small'
         />
     );
 }

@@ -35,6 +35,7 @@ export const PlaceGps = (props: Props) => {
             fullWidth
             error={validation}
             autoComplete='off'
+            size='small'
         />
     );
 

@@ -30,6 +30,7 @@ export const PlaceNameInput = (props:InputPropsTypes) => {
             fullWidth
             error={validation}
             autoComplete='off'
+            size='small'
         />
     );
 }

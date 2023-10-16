@@ -23,6 +23,7 @@ export const BidTypeSelect = (props: InputPropsTypes) => {
                 value={props.value ? props.value : '0'}
                 onChange={(e) => {setValue(Number(e.target.value));}}
                 inputProps={{className: 'TextInput'}}
+                size='small'
             >
                 <MenuItem value={0}>{form[props.lang].bidType0}</MenuItem>
                 <MenuItem value={1}>{form[props.lang].bidType1}</MenuItem>

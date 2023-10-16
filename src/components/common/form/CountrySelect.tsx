@@ -43,6 +43,7 @@ export const CountrySelect = (props: InputPropsTypes) => {
     }, [value]);
 
     if (!firstRender) {
+        console.log('Formularz: ' + props.value);
         if (props.value !== '') {
             const set = countries.find(country => country.code === props.value);
             if (set !== undefined) {
@@ -51,6 +52,13 @@ export const CountrySelect = (props: InputPropsTypes) => {
                     label: set.label,
                     phone: set.phone,
                 });
+
+                setValue({
+                    code: set.code,
+                    label: set.label,
+                    phone: set.phone,
+                });
+
             }
         }
         setFirstRender(true);
@@ -62,8 +70,11 @@ export const CountrySelect = (props: InputPropsTypes) => {
             id="country"
             options={countries}
             autoHighlight
+            size='small'
             defaultValue={defaultValue}
             getOptionLabel={(option) => option.label}
+            isOptionEqualToValue={(option, value) =>
+                (option.code === value.code)}
             renderOption={(props, option) => (
                 <Box component="li" sx={{'& > img': {mr: 2, flexShrink: 0}}} {...props}>
                     <img
@@ -82,9 +93,10 @@ export const CountrySelect = (props: InputPropsTypes) => {
                     label={form[props.lang].country}
                     InputLabelProps={{className: 'TextInput__Label'}}
                     InputProps={{...params.InputProps}}
+                    size='small'
                     inputProps={{
                         ...params.inputProps,
-                        autoComplete: 'new-password',// disable autocomplete and autofill
+                        autoComplete: 'off',// disable autocomplete and autofill
                         className: 'TextInput',
                     }}
                 />

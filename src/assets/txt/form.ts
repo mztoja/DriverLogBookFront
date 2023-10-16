@@ -30,8 +30,7 @@ interface Form {
     fuelConsumptionType:string;
     fuelConType1: string;
     fuelConType2: string;
-
-
+    search: string;
 }
 
 
@@ -68,7 +67,7 @@ export const form: Form[] =
         fuelConsumptionType: 'Fuel entry format',
         fuelConType1: 'liters (quantity)',
         fuelConType2: 'l/100km (usage)',
-
+        search: 'Search',
     },
         {//pl
             email: 'E-mail',
@@ -102,5 +101,5 @@ export const form: Form[] =
             fuelConsumptionType: 'Format wpisywania paliwa',
             fuelConType1: 'litry (ilość)',
             fuelConType2: 'l/100km (spalanie)',
-
+            search: 'Szukaj',
         }];

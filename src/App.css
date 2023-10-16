@@ -25,6 +25,23 @@ a {
     text-decoration: underline rgba(144, 202, 249, 0.7);
 }
 
+.ContentLink {
+    font: inherit;
+    color: rgb(0 33 209);
+    text-decoration: underline rgba(0, 33, 209, 0.4);
+}
+
+.ContentLink:hover {
+    color: rgb(255 255 255);
+    text-decoration: underline rgba(0, 33, 209, 0.7);
+}
+
+.DivInline {
+    display: inline-block;
+    vertical-align: top;
+    padding: 0.25rem 0.25rem;
+}
+
 .DivClear {
     clear: both;
 }
@@ -95,19 +112,33 @@ main.Table {
 .Table__Header {
     color: whitesmoke;
     width: 100%;
-    /* height: 10%; */
+    position: sticky;
+    top: 0;
     background-color: #0000008c;
     padding: 0.5rem 0.4rem;
+    z-index: 1;
+}
+
+.Table__Filter {
+    color: whitesmoke;
+    padding: 0.5rem;
 }
 
 .Table__Body {
     color: whitesmoke;
     width: 99%;
-    max-height: calc(87% - .8rem);
+    height: auto;
+    max-height: 80%;
     background-color: #ffffff40;
     margin: .8rem auto;
     border-radius: .6rem;
     overflow: auto;
+}
+
+@media screen and (max-width: 860px) {
+    .Table__Body {
+        max-height: 65%;
+    }
 }
 
 .Table__Body::-webkit-scrollbar {
@@ -143,7 +174,7 @@ thead th {
     color: whitesmoke;
     position: sticky;
     top: 0;
-    left: 0%;
+    left: 0;
     background-color: #353535e6;
     text-align: left;
 }

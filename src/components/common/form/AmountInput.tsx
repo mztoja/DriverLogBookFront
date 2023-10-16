@@ -60,6 +60,7 @@ export const AmountInput = (props: Props) => {
                     onChange={props.onChangeAmount}
                     autoComplete='off'
                     error={validation}
+                    size='small'
                 />
             </FormControl>
             <FormControl>
@@ -71,6 +72,7 @@ export const AmountInput = (props: Props) => {
                     onChange={(e) => {setValueCurrency(e.target.value);}}
                     required
                     inputProps={{className: 'TextInput'}}
+                    size='small'
                 >
                     {currencies.map(option => (
                         <MenuItem key={option.code} value={option.code}>{option.code} ({option.symbol})</MenuItem>)

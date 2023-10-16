@@ -16,6 +16,9 @@ interface Places {
     thCountry: string;
     thCity: string;
     thNameStreet: string;
+    apiError: string;
+    markedPlace: string;
+    markedPlaceError: string;
 }
 
 
@@ -38,6 +41,10 @@ export const places: Places[] =
         thCity: 'City',
         thCountry:'Country',
         thNameStreet:'Name - street',
+        apiError: 'The list could not be loaded due to a network problem. Please check your connection or try again later.',
+        markedPlace: 'Marked as destination point:',
+        markedPlaceError: 'Something went wrong with the place marking :( Check your connection or try again later.',
+
     },
         {//pl
             addPlace: `Dodaj nowy adres`,
@@ -57,4 +64,7 @@ export const places: Places[] =
             thCity: 'Miejscowość',
             thCountry:'Państwo',
             thNameStreet:'Nazwa - ulica',
+            apiError: 'Lista nie może zostać wczytana przez problem z siecią. Sprawdź swoje połączenie lub spróbuj ponownie później.',
+            markedPlace: 'Oznaczono jako miejsce docelowe:',
+            markedPlaceError: 'Coś poszło nie tak z oznaczeniem miejsca :( Problem z połączeniem.',
         }];

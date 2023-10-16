@@ -7,7 +7,7 @@ import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
 export const PlaceTypeSelect = (props: InputPropsTypes) => {
 
-    const [value, setValue] = useState<number>(Number(props.value));
+    const [value, setValue] = useState<number | null>(Number(props.value));
 
     useEffect(() => {
         props.onChange(value);
@@ -15,7 +15,7 @@ export const PlaceTypeSelect = (props: InputPropsTypes) => {
     },[value]);
 
     return (
-        <FormControl fullWidth>
+        <FormControl>
             <InputLabel id="placeType" className="TextInput__Label">{form[props.lang].placeType}</InputLabel>
             <Select
                 label={form[props.lang].placeType}
@@ -23,6 +23,7 @@ export const PlaceTypeSelect = (props: InputPropsTypes) => {
                 value={props.value ? props.value : '0'}
                 onChange={(e) => {setValue(Number(e.target.value));}}
                 inputProps={{className: 'TextInput'}}
+                size='small'
             >
                 <MenuItem value={0}>{form[props.lang].placeType0}</MenuItem>
                 <MenuItem value={1}>{form[props.lang].placeType1}</MenuItem>

@@ -18,6 +18,7 @@ export const PlaceCityInput = (props:InputPropsTypes) => {
             onChange={props.onChange}
             fullWidth
             autoComplete='off'
+            size='small'
         />
     );
 }

@@ -31,6 +31,7 @@ export const EmailInput = (props:InputPropsTypes) => {
             error={validation}
             fullWidth
             autoComplete=''
+            size='small'
         />
     );
 }

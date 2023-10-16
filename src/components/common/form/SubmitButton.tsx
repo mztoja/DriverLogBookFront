@@ -8,6 +8,6 @@ interface Props {
 
 export const SubmitButton = (props:Props) => {
     return (
-        <Button variant="contained" type="submit" endIcon={<SendIcon/>}>{props.text}</Button>
+        <Button variant="contained" type="submit" size='small' endIcon={<SendIcon/>}>{props.text}</Button>
     );
 }

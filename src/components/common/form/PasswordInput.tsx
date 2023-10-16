@@ -40,6 +40,7 @@ export const PasswordInput = (props:InputPropsTypes) => {
                         value={props.value}
                         onChange={props.onChange}
                         error={validation}
+                        size='small'
                         endAdornment={
                             <InputAdornment position="end">
                                 <IconButton

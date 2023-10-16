@@ -28,6 +28,7 @@ export const FirstNameInput = (props:InputPropsTypes) => {
             error={validation}
             fullWidth
             autoComplete="nope"
+            size='small'
         />
     );
 }

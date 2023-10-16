@@ -23,6 +23,7 @@ export const FuelConsuptionTypeSelect = (props: InputPropsTypes) => {
                 onChange={(e) => {setValue(Number(e.target.value));}}
                 value={props.value ? props.value : '1'}
                 inputProps={{className: 'TextInput'}}
+                size='small'
             >
                 <MenuItem value={1}>{form[props.lang].fuelConType1}</MenuItem>
                 <MenuItem value={2}>{form[props.lang].fuelConType2}</MenuItem>

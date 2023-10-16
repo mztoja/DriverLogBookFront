@@ -27,6 +27,7 @@ export const PlacePostCodeInput = (props:InputPropsTypes) => {
             onChange={props.onChange}
             error={validation}
             autoComplete='off'
+            size='small'
         />
     );
 }

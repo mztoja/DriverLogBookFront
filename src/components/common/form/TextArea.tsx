@@ -22,6 +22,7 @@ export const TextArea = (props:Props) => {
             value={props.value}
             onChange={props.onChange}
             maxRows={8}
+            size='small'
         />
     );
 }

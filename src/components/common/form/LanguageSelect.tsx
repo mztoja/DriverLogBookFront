@@ -28,6 +28,7 @@ export const LanguageSelect = (props: InputPropsTypes) => {
                 autoWidth
                 required
                 inputProps={{className: 'TextInput'}}
+                size='small'
             >
                 <MenuItem key={0} value={0}>{commons[props.lang].en}</MenuItem>
                 <MenuItem key={1} value={1}>{commons[props.lang].pl}</MenuItem>
