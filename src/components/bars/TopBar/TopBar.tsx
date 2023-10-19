@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction, useEffect} from "react";
 import './TopBar.css';
 import {AppMainElementsTypes} from "../../../types/AppMainElementsTypes";
 import {labels} from "../../../assets/txt/menuLabels";
-import {commons} from "../../../assets/txt/common";
+import {commons} from "../../../assets/txt/commons";
 import {DivClear} from "../../common/DivClear";
 import { UserLangEnum } from "types";
 import {MenuLabelTypes} from "../../../types/MenuLabelTypes";

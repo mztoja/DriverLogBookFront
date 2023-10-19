@@ -103,6 +103,7 @@ export const PlacesList = (props: Props) => {
                         <SearchInput lang={props.userData.lang} value={filterSearch}
                                      onChange={e => setFilterSearch(e.target.value)}/>
                     </div>
+                    <div className="DivClear"/>
                 </section>
                 <section className="Table__Body">
                     <table>
@@ -129,7 +130,7 @@ export const PlacesList = (props: Props) => {
                                                 <td>{place.code} {place.city}</td>
                                                 <td>{place.name} - {place.street}</td>
                                                 <td>
-                                                    {place.description.length > 1 && <DetailsIcon/>}
+                                                    {place.description !== null && <DetailsIcon/>}
                                                     {Number(place.lat) > 0.00001 && <RoomIcon/>}
                                                 </td>
                                             </tr>

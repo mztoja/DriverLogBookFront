@@ -1,12 +1,9 @@
-import {login} from "../assets/txt/login";
-import {Link} from "react-router-dom";
-import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import {TopBar} from "../components/bars/TopBar/TopBar";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
-import { UserLangEnum, UserInterface } from "types";
+import { UserInterface } from "types";
 import {Dispatch, SetStateAction} from "react";
 import {Content} from "../components/bars/Content/Content";
-import {commons} from "../assets/txt/common";
+import {commons} from "../assets/txt/commons";
 
 interface Props {
     page: keyof MenuLabelTypes;

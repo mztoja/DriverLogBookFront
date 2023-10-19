@@ -34,6 +34,8 @@ export const AlertProvider = ({ children }:Props) => {
             setText(text);
             setType(type);
 
+
+
             setTimeout(() => {
                 setText('');
                 setType('');

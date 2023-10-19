@@ -102,14 +102,15 @@ export const AddPlace = (props: Props) => {
                 <div><PlaceNameInput lang={props.lang} value={addPlaceForm.name}
                                      onChange={e => updateForm('name', e.target.value)}/></div>
                 <br/>
-                <div><PlaceStreetInput lang={props.lang} value={addPlaceForm.street}
+                <div className="DivInline"><PlaceStreetInput lang={props.lang} value={addPlaceForm.street}
                                        onChange={e => updateForm('street', e.target.value)}/></div>
-                <br/>
-                <div><PlacePostCodeInput lang={props.lang} value={addPlaceForm.code}
+
+                <div className="DivInline"><PlacePostCodeInput lang={props.lang} value={addPlaceForm.code}
                                          onChange={e => updateForm('code', e.target.value)}/></div>
-                <br/>
-                <div><PlaceCityInput lang={props.lang} value={addPlaceForm.city}
+
+                <div className="DivInline"><PlaceCityInput lang={props.lang} value={addPlaceForm.city}
                                      onChange={e => updateForm('city', e.target.value)}/></div>
+                <div className="DivClear"/>
                 <br/>
                 <div><CountrySelect lang={props.lang} value={addPlaceForm.country}
                                     onChange={e => updateForm('country', e)}/></div>
@@ -123,11 +124,12 @@ export const AddPlace = (props: Props) => {
                 <div><OnOffSwitch label={places[props.lang].navigateSwitchLabel} value={addPlaceForm.mark}
                                   onChange={e => updateForm('mark', e)}/></div>
                 <br/>
-                <div><PlaceGps label={places[props.lang].lat} value={addPlaceForm.lat}
+                <div className="DivInline"><PlaceGps label={places[props.lang].lat} value={addPlaceForm.lat}
                                   onChange={e => updateForm('lat', e.target.value)}/></div>
-                <br/>
-                <div><PlaceGps label={places[props.lang].lon} value={addPlaceForm.lon}
+
+                <div className="DivInline"><PlaceGps label={places[props.lang].lon} value={addPlaceForm.lon}
                                onChange={e => updateForm('lon', e.target.value)}/></div>
+                <div className="DivClear"/>
                 <br/>
                 <SubmitButton text={places[props.lang].submit}/>
             </form>
