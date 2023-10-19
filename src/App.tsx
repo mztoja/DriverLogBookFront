@@ -1,28 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {Navigate, Route, Routes} from "react-router-dom";
-import {Footer} from "./components/bars/Footer/Footer";
-import {GetUserData} from "./hooks/GetUserData";
-import {HomeView} from "./views/HomeView";
-import {LogsView} from "./views/LogsView";
-import {Menu} from "./components/bars/Menu/Menu";
-import {DaysView} from "./views/DaysView";
-import {FinancesView} from "./views/FinancesView";
-import {LoginView} from "./views/LoginView";
-import {RegisterView} from "./views/RegisterView";
-import {UserInterface, UserLangEnum, UserStatusEnum} from "types";
+import {UserInterface, UserLangEnum, UserStatusEnum, TourInterface} from "types";
 import './App.css';
 import {DownloadFromLocalStorage} from "./hooks/LocalStorageHook";
 import {LinearProgress} from "@mui/material";
-import {BlockedUserView} from "./views/BlockedUserView";
-import {PlacesView} from "./views/PlacesView";
+import {BlockedUserView} from "./views/general/BlockedUserView";
+import {useApiGetData} from "./hooks/useApiGetData";
+import {GetUserData} from "./hooks/GetUserData";
+import {LoggedOutView} from "./views/general/LoggedOutView";
+import {LoggedInView} from "./views/general/LoggedInView";
 
+enum AppView {
+    loggedOut,
+    loggedIn,
+    blocked,
+}
 
 export const App = () => {
 
-    const [userData, setUserData] = useState<UserInterface | null>(null);
     const [lang, setLang] = useState<UserLangEnum>(UserLangEnum.en);
+    const [appView, setAppView] = useState<AppView>(AppView.loggedOut);
+    const [userData, setUserData] = useState<UserInterface | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [tourData, setTourData] = useState<TourInterface | null>(null);
 
+    // setUserData
     useEffect(() => {
         setLoading(true);
         GetUserData()
@@ -41,57 +42,44 @@ export const App = () => {
             });
     }, []);
 
-    if (loading) {
+    useEffect(() => {
+        if (userData) {
+            if (userData.status === UserStatusEnum.blocked) {
+                setAppView(AppView.blocked);
+            } else {
+                setAppView(AppView.loggedIn);
+            }
+        } else {
+            const lang = DownloadFromLocalStorage('lang');
+            if (lang !== null) {
+                setLang(Number(lang))
+            }
+            setAppView(AppView.loggedOut);
+        }
+
+    }, [userData]);
+
+
+    //setTourData
+    const {data: fetchedTourData, loading: tourLoading} = useApiGetData<TourInterface>('/tours/getActiveRoute', false);
+
+    useEffect(() => {
+        if (fetchedTourData) {
+            setTourData(fetchedTourData);
+        }
+    }, [fetchedTourData]);
+
+
+    if (loading || tourLoading) {
         return <LinearProgress/>;
     }
 
-
-    if ((userData !== null) && (userData !== undefined)) {
-        if (userData.status === UserStatusEnum.blocked) {
-            return (
-                <div className="App">
-                    <Routes>
-                        <Route path="*"
-                               element={<BlockedUserView page="blockedUser" userData={userData} setUserData={setUserData}/>}/>
-                    </Routes>
-                    <Footer lang={userData.lang}/>
-                </div>
-            );
-        } else {
-            return (
-                <div className="App">
-                    <Menu lang={userData.lang}/>
-                    <Routes>
-                        <Route path="*" element={<Navigate to="/"/>}/>
-                        <Route path="/"
-                               element={<HomeView page="home" userData={userData} setUserData={setUserData}/>}/>
-                        <Route path="logs"
-                               element={<LogsView page="logs" userData={userData} setUserData={setUserData}/>}/>
-                        <Route path="days"
-                               element={<DaysView page="days" userData={userData} setUserData={setUserData}/>}/>
-                        <Route path="finances"
-                               element={<FinancesView page="finances" userData={userData} setUserData={setUserData}/>}/>
-                        <Route path="places"
-                               element={<PlacesView page="places" userData={userData} setUserData={setUserData}/>}/>
-                    </Routes>
-                    <Footer lang={userData.lang}/>
-                </div>
-            );
-        }
-    }
-
-
     return (
-        <div className="App">
-            <Routes>
-                <Route path="login"
-                       element={<LoginView page="login" lang={lang} setLang={setLang} setUserData={setUserData}/>}/>
-                <Route path="*"
-                       element={<LoginView page="login" lang={lang} setLang={setLang} setUserData={setUserData}/>}/>
-                <Route path="register" element={<RegisterView page="register" lang={lang} setLang={setLang}/>}/>
-            </Routes>
-            <Footer lang={lang}/>
-        </div>
+        <>
+            {appView === AppView.blocked && userData ? BlockedUserView(userData, setUserData) : null}
+            {appView === AppView.loggedIn && userData ? LoggedInView(userData, setUserData, tourData) : null}
+            {appView === AppView.loggedOut ? LoggedOutView(lang, setLang, setUserData) : null}
+        </>
     );
 }
 

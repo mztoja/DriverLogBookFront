@@ -28,7 +28,7 @@ export const PlacesList = (props: Props) => {
     const [filterSearch, setFilterSearch] = useState<string>('');
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
-    const {data, loading, error} = useApiGetData<PlaceInterface>('/places');
+    const {data, loading, error} = useApiGetData<PlaceInterface[]>('/places', true);
 
     const markPlace = async (id: number, info: string) => {
         const sendData: MarkDepartInterface = {
@@ -49,29 +49,31 @@ export const PlacesList = (props: Props) => {
     }
 
     useEffect(() => {
-        if (filterSearch.length > 1) {
-            const filteredData = data.filter((place) => {
-                const searchRegex = new RegExp(filterSearch, 'i');
-                return (
-                    searchRegex.test(place.name) ||
-                    searchRegex.test(place.city) ||
-                    searchRegex.test(place.street) ||
-                    searchRegex.test(place.code) ||
-                    searchRegex.test(place.description)
-                );
-            });
-            if (filteredData) {
-                setShowData(filteredData);
-            }
-        } else if (filterCountry === undefined) {
-            const filteredData = data.filter((place) => (place.type === Number(filterType)));
-            if (filteredData) {
-                setShowData(filteredData);
-            }
-        } else {
-            const filteredData = data.filter((place) => (place.type === Number(filterType) && place.country === filterCountry));
-            if (filteredData) {
-                setShowData(filteredData);
+        if (data) {
+            if (filterSearch.length > 1) {
+                const filteredData = data.filter((place) => {
+                    const searchRegex = new RegExp(filterSearch, 'i');
+                    return (
+                        searchRegex.test(place.name) ||
+                        searchRegex.test(place.city) ||
+                        searchRegex.test(place.street) ||
+                        searchRegex.test(place.code) ||
+                        searchRegex.test(place.description)
+                    );
+                });
+                if (filteredData) {
+                    setShowData(filteredData);
+                }
+            } else if (filterCountry === undefined) {
+                const filteredData = data.filter((place) => (place.type === Number(filterType)));
+                if (filteredData) {
+                    setShowData(filteredData);
+                }
+            } else {
+                const filteredData = data.filter((place) => (place.type === Number(filterType) && place.country === filterCountry));
+                if (filteredData) {
+                    setShowData(filteredData);
+                }
             }
         }
     }, [filterType, data, filterCountry, filterSearch]);
