@@ -12,7 +12,7 @@ import {Link} from "react-router-dom";
 import {SearchInput} from "../common/form/SearchInput";
 import {useApiGetData} from "../../hooks/useApiGetData";
 import {useAlert} from "../../hooks/useAlert";
-import {apiURL} from "../../config/api";
+import {apiLocation, apiURL} from "../../config/api";
 
 interface Props {
     userData: UserInterface;
@@ -28,7 +28,7 @@ export const PlacesList = (props: Props) => {
     const [filterSearch, setFilterSearch] = useState<string>('');
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
-    const {data, loading, error} = useApiGetData<PlaceInterface[]>('/places', true);
+    const {data, loading, error} = useApiGetData<PlaceInterface[]>(apiLocation.getPlaces, true);
 
     const markPlace = async (id: number, info: string) => {
         const sendData: MarkDepartInterface = {

@@ -6,7 +6,7 @@ import {MenuItem, OutlinedInput, Select} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import {currencies} from "../../../data/currencies";
 import InputAdornment from "@mui/material/InputAdornment";
-import {amountRegExp} from "../../../config/regexp";
+import {extractNumberWithDecimal} from "../../../utils/extractNumberWithDecimal";
 
 interface Props {
     lang: UserLangEnum;
@@ -21,7 +21,6 @@ export const AmountInput = (props: Props) => {
 
     const [symbol,setSymbol] = useState<string>('€');
     const [amount,setAmount] = useState<string>(props.valueAmount);
-    const [validation, setValidation] = useState<boolean>(false);
     const [valueCurrency, setValueCurrency] = useState<string>(props.valueCurrency || 'EUR');
 
     useEffect(() => {
@@ -36,15 +35,7 @@ export const AmountInput = (props: Props) => {
     }, [valueCurrency]);
 
     useEffect(() => {
-        const newValue = props.valueAmount
-            .replace(',','.');
-        setAmount(newValue);
-        const regexp = amountRegExp();
-        if ((regexp.test(props.valueAmount)) || (props.valueAmount === '')) {
-            setValidation(false);
-        } else {
-            setValidation(true);
-        }
+        setAmount(extractNumberWithDecimal(props.valueAmount));
     }, [props.valueAmount]);
 
     return (
@@ -59,7 +50,6 @@ export const AmountInput = (props: Props) => {
                     label={form[props.lang].amount}
                     onChange={props.onChangeAmount}
                     autoComplete='off'
-                    error={validation}
                     size='small'
                 />
             </FormControl>

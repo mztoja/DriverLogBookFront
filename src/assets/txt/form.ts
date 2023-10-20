@@ -27,10 +27,21 @@ interface Form {
     bidType3: string;
     amount: string;
     currency: string;
-    fuelConsumptionType:string;
+    fuelConsumptionType: string;
     fuelConType1: string;
     fuelConType2: string;
     search: string;
+    date: string;
+    truck: string;
+    trailer: string;
+    fuelQuantity: string;
+    fuelCombustion: string;
+    fuelConTypeHelper1: string;
+    fuelConTypeHelper2: string;
+    odometer: string;
+    place: string;
+    switchToPlace: string;
+    switchToPlaceId: string;
 }
 
 
@@ -68,6 +79,17 @@ export const form: Form[] =
         fuelConType1: 'liters (quantity)',
         fuelConType2: 'l/100km (usage)',
         search: 'Search',
+        date: 'Date',
+        truck: 'Truck reg. plate',
+        trailer: 'Trailer reg. plate',
+        fuelCombustion: 'Amount of fuel consumed',
+        fuelQuantity: 'Fuel level',
+        fuelConTypeHelper1: 'W ustawieniach profilu wybrano wpisywanie spalania po ilości paliwa',
+        fuelConTypeHelper2: 'W ustawieniach profilu wybrano wpisywanie spalania po średnim spalaniu',
+        odometer: 'Odometer',
+        place: 'Place',
+        switchToPlace: 'Change to manual enter',
+        switchToPlaceId: 'Switch to selection from the address list',
     },
         {//pl
             email: 'E-mail',
@@ -102,4 +124,15 @@ export const form: Form[] =
             fuelConType1: 'litry (ilość)',
             fuelConType2: 'l/100km (spalanie)',
             search: 'Szukaj',
+            date: 'Data',
+            truck: 'Nr. rej. ciężarówki',
+            trailer: 'Nr. rej. naczepy/przyczepy',
+            fuelQuantity: 'Poziom paliwa',
+            fuelCombustion: 'Ilość spalonego paliwa',
+            fuelConTypeHelper1: 'W ustawieniach profilu wybrano wpisywanie spalania po ilości paliwa',
+            fuelConTypeHelper2: 'W ustawieniach profilu wybrano wpisywanie spalania po średnim spalaniu',
+            odometer: 'Stan licznika',
+            place: 'Miejsce',
+            switchToPlace: 'Przełącz na wpis manualny',
+            switchToPlaceId: 'Przełącz na wybór z listy adresowej',
         }];
