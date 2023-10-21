@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {PlaceInterface, UserLangEnum} from "types";
+import {PlaceInterface, PlaceTypeEnum, UserLangEnum} from "types";
 import {CountrySelect} from "./CountrySelect";
 import {CircularProgress, FormHelperText, TextField} from "@mui/material";
 import {form} from "../../../assets/txt/form";
@@ -48,7 +48,11 @@ export const PlaceInput = (props: Props) => {
     }
 
     useEffect(() => {
-        const filteredData = placesList?.filter(place => place.country === country);
+        const filteredData = placesList?.filter(place => place.country === country).sort((a, b) => {
+            if (a.isFavorite && !b.isFavorite) return -1;
+            if (!a.isFavorite && b.isFavorite) return 1;
+            return a.type - b.type;
+        });
         if (filteredData) setPlaces(filteredData);
     }, [placesList, places, country]);
 
@@ -125,6 +129,29 @@ export const PlaceInput = (props: Props) => {
                             id="place"
                             key={clear}
                             options={places}
+                            groupBy={(option) => {
+                                if (option.isFavorite) {
+                                return form[props.lang].favorite;
+                                } else {
+                                    if (option.type === PlaceTypeEnum.other) {
+                                        return form[props.lang].placeType0;
+                                    } else if (option.type === PlaceTypeEnum.base) {
+                                        return form[props.lang].placeType1;
+                                    } else if ((option.type === PlaceTypeEnum.loadingPlace) ||
+                                        (option.type === PlaceTypeEnum.unloadingPlace) ||
+                                        (option.type === PlaceTypeEnum.loadAndunloadPlace)) {
+                                        return form[props.lang].placeType4;
+                                    } else if (option.type === PlaceTypeEnum.parking) {
+                                        return form[props.lang].placeType5;
+                                    } else if (option.type === PlaceTypeEnum.service) {
+                                        return form[props.lang].placeType6;
+                                    } else if (option.type === PlaceTypeEnum.customs) {
+                                        return form[props.lang].placeType7;
+                                    } else {
+                                        return '';
+                                    }
+                                }
+                            }}
                             autoHighlight
                             size='small'
                             defaultValue={defaultPlaceValue}
