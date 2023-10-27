@@ -3,15 +3,15 @@ import {TopBar} from "../components/bars/TopBar/TopBar";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import {LoginForm} from "../components/auth/LoginForm";
 import {Content} from "../components/bars/Content/Content";
-import {UserInterface, UserLangEnum } from "types";
+import {UserInterface, userLangEnum } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {Heading} from "../components/bars/Content/Heading";
 import {login} from "../assets/txt/login";
 import {Link} from "react-router-dom";
 
 interface Props extends AppMainElementsTypes {
-    lang: UserLangEnum;
-    setLang: Dispatch<SetStateAction<UserLangEnum>>;
+    lang: userLangEnum;
+    setLang: Dispatch<SetStateAction<userLangEnum>>;
     page: keyof MenuLabelTypes;
     setUserData?: Dispatch<SetStateAction<UserInterface | null>>;
 }

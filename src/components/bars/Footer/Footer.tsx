@@ -1,10 +1,10 @@
 import React from "react";
-import { UserLangEnum } from "types";
+import { userLangEnum } from "types";
 import {commons} from "../../../assets/txt/commons";
 import './Footer.css';
 
 interface Props {
-    lang: UserLangEnum;
+    lang: userLangEnum;
 }
 
 export const Footer = (props:Props) => {

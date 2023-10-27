@@ -3,9 +3,9 @@ import {Route, Routes} from "react-router-dom";
 import {LoginView} from "../LoginView";
 import {RegisterView} from "../RegisterView";
 import {Footer} from "../../components/bars/Footer/Footer";
-import {UserInterface, UserLangEnum} from "types";
+import {UserInterface, userLangEnum} from "types";
 
-export const LoggedOutView = (lang: UserLangEnum, setLang: Dispatch<SetStateAction<UserLangEnum>>, setUserData: Dispatch<SetStateAction<UserInterface | null>>) => (
+export const LoggedOutView = (lang: userLangEnum, setLang: Dispatch<SetStateAction<userLangEnum>>, setUserData: Dispatch<SetStateAction<UserInterface | null>>) => (
     <div className="App">
         <Routes>
             <Route path="login"

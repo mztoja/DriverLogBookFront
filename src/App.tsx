@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {UserInterface, UserLangEnum, UserStatusEnum, TourInterface} from "types";
+import {UserInterface, userLangEnum, userStatusEnum, TourInterface} from "types";
 import './App.css';
 import {DownloadFromLocalStorage} from "./hooks/LocalStorageHook";
 import {LinearProgress} from "@mui/material";
 import {BlockedUserView} from "./views/general/BlockedUserView";
-import {useApiGetData} from "./hooks/useApiGetData";
-import {GetUserData} from "./hooks/GetUserData";
 import {LoggedOutView} from "./views/general/LoggedOutView";
 import {LoggedInView} from "./views/general/LoggedInView";
+import {useApi} from './hooks/useApi';
+import {apiPaths} from "./config/api";
 
 enum AppView {
     loggedOut,
@@ -17,34 +17,33 @@ enum AppView {
 
 export const App = () => {
 
-    const [lang, setLang] = useState<UserLangEnum>(UserLangEnum.en);
+    const [lang, setLang] = useState<userLangEnum>(userLangEnum.en);
     const [appView, setAppView] = useState<AppView>(AppView.loggedOut);
     const [userData, setUserData] = useState<UserInterface | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
     const [tourData, setTourData] = useState<TourInterface | null>(null);
+    const {loading, fetchData} = useApi();
 
     // setUserData
     useEffect(() => {
-        setLoading(true);
-        GetUserData()
-            .then(data => {
-                if (data !== undefined) {
-                    setUserData(data);
-                } else {
-                    const lang = DownloadFromLocalStorage('lang');
-                    if (lang !== null) {
-                        setLang(Number(lang))
-                    }
-                }
-            })
-            .finally(() => {
-                setLoading(false)
+        (async () => {
+            const result = await fetchData(apiPaths.get, {
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
             });
+            if ((result && result.data) && (!result.data.dtc)) {
+                setUserData(result.data);
+            } else {
+                const lang = DownloadFromLocalStorage('lang');
+                if (lang !== null) {
+                    setLang(Number(lang))
+                }
+            }
+        })();
     }, []);
 
     useEffect(() => {
         if (userData) {
-            if (userData.status === UserStatusEnum.blocked) {
+            if (userData.status === userStatusEnum.blocked) {
                 setAppView(AppView.blocked);
             } else {
                 setAppView(AppView.loggedIn);
@@ -61,23 +60,28 @@ export const App = () => {
 
 
     //setTourData
-    const {data: fetchedTourData, loading: tourLoading} = useApiGetData<TourInterface>('/tours/getActiveRoute', false);
 
-    useEffect(() => {
-        if (fetchedTourData) {
-            setTourData(fetchedTourData);
-        }
-    }, [fetchedTourData]);
+    // useEffect(() => {
+    //     (async () => {
+    //         const result = await fetchData(apiPaths.getActiveRoute, {
+    //             headers: {Accept: 'application/json'},
+    //             credentials: "include",
+    //         });
+    //         if (result.success) {
+    //             setTourData(result.data);
+    //         }
+    //     })();
+    //     // eslint-disable-next-line
+    // },[]);
 
-
-    if (loading || tourLoading) {
+    if (loading) {
         return <LinearProgress/>;
     }
 
     return (
         <>
             {appView === AppView.blocked && userData ? BlockedUserView(userData, setUserData) : null}
-            {appView === AppView.loggedIn && userData ? LoggedInView(userData, setUserData, tourData) : null}
+            {appView === AppView.loggedIn && userData ? LoggedInView(userData, setUserData, tourData, setTourData) : null}
             {appView === AppView.loggedOut ? LoggedOutView(lang, setLang, setUserData) : null}
         </>
     );

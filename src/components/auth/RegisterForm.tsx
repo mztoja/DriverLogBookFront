@@ -1,8 +1,8 @@
 import React, {FormEvent, useState} from "react";
 import {useNavigate} from 'react-router-dom';
-import {UserLangEnum} from "types";
+import {userLangEnum} from "types";
 import {CircularProgress} from "@mui/material";
-import {apiURL} from "../../config/api";
+import {apiPaths} from "../../config/api";
 import {login} from "../../assets/txt/login";
 import {EmailInput} from "../common/form/EmailInput";
 import {PasswordInput} from "../common/form/PasswordInput";
@@ -22,15 +22,18 @@ import {FuelConsuptionTypeSelect} from "../common/form/FuelConsuptionTypeSelect"
 import {useAlert} from "../../hooks/useAlert";
 import {RegisterFormInterface} from "types";
 import {SaveToLocalStorage} from "../../hooks/LocalStorageHook";
+import {useApi} from "../../hooks/useApi";
+import {commons} from "../../assets/txt/commons";
 
 interface Props {
-    lang: UserLangEnum;
+    lang: userLangEnum;
 }
 
 export const RegisterForm = (props: Props) => {
 
     const navigate = useNavigate();
     const {setAlert} = useAlert();
+    const {loading, fetchData} = useApi();
 
     const [registerForm, setRegisterForm] = useState<RegisterFormInterface>({
         firstName: '',
@@ -45,12 +48,10 @@ export const RegisterForm = (props: Props) => {
         country: '',
         defaultCustomer: '',
         bidType: '',
-        amount: '',
+        bid: '',
         currency: '',
         fuelConsumptionType: '',
     });
-
-    const [loading, setLoading] = useState<boolean>(false);
 
     const updateForm = (key: string, value: string) => {
         setRegisterForm((form: RegisterFormInterface) => ({
@@ -62,43 +63,39 @@ export const RegisterForm = (props: Props) => {
     const sendForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        setLoading(true);
-
-        await fetch(apiURL + '/authentication/register', {
+        const result = await fetchData(apiPaths.register, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(registerForm),
-        }).then(async (res) => {
-            const data = await res.json();
-            console.log(res);
-            console.log(data);
-            if (res.ok) {
-                SaveToLocalStorage('alertSuccess', login[props.lang].registerSuccess);
-                setAlert(login[props.lang].registerSuccess, 'success');
-                navigate("/login");
-            } else {
-                if (data.message === 'invalid email') {
-                    setAlert(login[props.lang].registerResInvEmail, 'warning');
-                } else if (data.message === 'invalid password') {
-                    setAlert(login[props.lang].registerResInvPassword, 'warning');
-                } else if (data.message === 'email exist') {
-                    setAlert(login[props.lang].registerResEmailExist, 'info');
-                } else if (data.message === 'company name not specified') {
-                    setAlert(login[props.lang].registerCompanyNameNotExist, 'warning');
-                } else if (data.message === 'city not specified') {
-                    setAlert(login[props.lang].registerCompanyCityNotExist, 'warning');
-                } else if (data.message === 'country not specified') {
-                    setAlert(login[props.lang].registerCountryNotExist, 'warning');
+        });
+
+        if (result && !result.success) {
+            setAlert(commons[props.lang].apiConnectionError, 'error');
+        } else {
+            if (result && result.data) {
+                if (!result.data.dtc) {
+                    SaveToLocalStorage('alertSuccess', login[props.lang].registerSuccess);
+                    setAlert(login[props.lang].registerSuccess, 'success');
+                    navigate("/login");
                 } else {
-                    setAlert(login[props.lang].dbConnectionError, 'error');
+                    if (result.data.dtc === 'country') {
+                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
+                    } else if (result.data.dtc === 'email') {
+                        setAlert(login[props.lang].registerResInvEmail, 'warning');
+                    } else if (result.data.dtc === 'email exist') {
+                        setAlert(login[props.lang].registerResEmailExist, 'warning');
+                    } else if (result.data.dtc === 'password') {
+                        setAlert(login[props.lang].registerResInvPassword, 'warning');
+                    } else if (result.data.dtc === 'companyName') {
+                        setAlert(login[props.lang].registerCompanyNameNotExist, 'warning');
+                    } else if (result.data.dtc === 'companyCity') {
+                        setAlert(login[props.lang].registerCompanyCityNotExist, 'warning');
+                    } else {
+                        setAlert(commons[props.lang].apiUnknownError, 'error');
+                    }
                 }
             }
-
-        }).catch(() => {
-            setAlert(login[props.lang].connectionError, 'error');
-        }).finally(() => {
-            setLoading(false);
-        });
+        }
     };
 
     if (loading) {
@@ -185,9 +182,9 @@ export const RegisterForm = (props: Props) => {
                 <br/>
                 <div>
                     <AmountInput lang={props.lang}
-                                 valueAmount={registerForm.amount}
+                                 valueAmount={registerForm.bid}
                                  valueCurrency={registerForm.currency}
-                                 onChangeAmount={e => updateForm('amount', e.target.value)}
+                                 onChangeAmount={e => updateForm('bid', e.target.value)}
                                  onChangeCurrency={e => updateForm('currency', e)}
                                  nameId='bid'
                     />

@@ -2,15 +2,15 @@ import React, {Dispatch, SetStateAction} from "react";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import {TopBar} from "../components/bars/TopBar/TopBar";
 import {Content} from "../components/bars/Content/Content";
-import { UserLangEnum } from "types";
+import { userLangEnum } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {login} from "../assets/txt/login";
 import {Link} from "react-router-dom";
 import {RegisterForm} from "../components/auth/RegisterForm";
 
 interface Props extends AppMainElementsTypes {
-    lang: UserLangEnum;
-    setLang: Dispatch<SetStateAction<UserLangEnum>>;
+    lang: userLangEnum;
+    setLang: Dispatch<SetStateAction<userLangEnum>>;
     page: keyof MenuLabelTypes;
 }
 

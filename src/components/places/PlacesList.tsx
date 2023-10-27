@@ -10,25 +10,43 @@ import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
 import {CountrySelect} from "../common/form/CountrySelect";
 import {Link} from "react-router-dom";
 import {SearchInput} from "../common/form/SearchInput";
-import {useApiGetData} from "../../hooks/useApiGetData";
 import {useAlert} from "../../hooks/useAlert";
-import {apiLocation, apiURL} from "../../config/api";
+import {useApi} from '../../hooks/useApi';
+import {apiPaths, apiURL} from "../../config/api";
 
 interface Props {
     userData: UserInterface;
+    refresh: boolean;
 }
 
 export const PlacesList = (props: Props) => {
 
     const {setAlert} = useAlert();
+    const {loading, fetchData} = useApi();
 
+    const [data, setData] = useState<PlaceInterface[] | null>(null);
     const [showData, setShowData] = useState<PlaceInterface[] | null>(null);
     const [filterType, setFilterType] = useState<string>('4');
     const [filterCountry, setFilterCountry] = useState<string>(props.userData.country);
     const [filterSearch, setFilterSearch] = useState<string>('');
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
-    const {data, loading, error} = useApiGetData<PlaceInterface[]>(apiLocation.getPlaces, true);
+    useEffect(() => {
+        (async () => {
+            const result = await fetchData(apiPaths.getPlaces, {
+                headers: {Accept: 'application/json'},
+                credentials: "include",
+            });
+            if (result && result.data) {
+                if (!result.data.status) {
+                    setData(result.data);
+                } else {
+                    setAlert(places[props.userData.lang].apiError, 'error');
+                }
+            }
+        })();
+        // eslint-disable-next-line
+    }, [props.refresh]);
 
     const markPlace = async (id: number, info: string) => {
         const sendData: MarkDepartInterface = {
@@ -76,14 +94,10 @@ export const PlacesList = (props: Props) => {
                 }
             }
         }
-    }, [filterType, data, filterCountry, filterSearch]);
+    }, [props.refresh, filterType, data, filterCountry, filterSearch]);
 
     if (loading) {
         return <CircularProgress/>
-    }
-
-    if (error) {
-        setAlert(places[props.userData.lang].apiError, 'error');
     }
 
     return (

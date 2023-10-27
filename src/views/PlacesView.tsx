@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {TopBar} from "../components/bars/TopBar/TopBar";
 import {Content} from "../components/bars/Content/Content";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
@@ -14,14 +14,14 @@ interface Props extends AppMainElementsTypes {
 
 export const PlacesView = (props: Props) => {
 
-
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     return (
         <>
             <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
             <Content>
-                <AddPlace userId={props.userData.id} lang={props.userData.lang}/>
-                <PlacesList userData={props.userData}/>
+                <AddPlace userId={props.userData.id} lang={props.userData.lang} setRefresh={setRefresh}/>
+                <PlacesList userData={props.userData} refresh={refresh}/>
             </Content>
         </>
     );

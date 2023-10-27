@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {UserLangEnum} from "types";
+import {userLangEnum} from "types";
 import InputLabel from "@mui/material/InputLabel";
 import {form} from "../../../assets/txt/form";
 import {MenuItem, OutlinedInput, Select} from "@mui/material";
@@ -9,7 +9,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import {extractNumberWithDecimal} from "../../../utils/extractNumberWithDecimal";
 
 interface Props {
-    lang: UserLangEnum;
+    lang: userLangEnum;
     valueAmount: string;
     valueCurrency: string;
     onChangeAmount: (e: any) => void;

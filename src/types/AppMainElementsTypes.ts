@@ -1,11 +1,11 @@
 import { MenuLabelTypes } from "./MenuLabelTypes";
-import { UserInterface, UserLangEnum } from "types";
+import { UserInterface, userLangEnum } from "types";
 import { Dispatch, SetStateAction } from "react";
 
 export interface AppMainElementsTypes {
     page?: keyof MenuLabelTypes;
     action?: void;
     userData?: UserInterface;
-    lang?: UserLangEnum;
+    lang?: userLangEnum;
     setUserData?: Dispatch<SetStateAction<UserInterface | null>>;
 }

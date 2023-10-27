@@ -72,7 +72,7 @@ export const CountrySelect = (props: InputPropsTypes) => {
             autoHighlight
             size='small'
             defaultValue={defaultValue}
-            getOptionLabel={(option) => option.label}
+            getOptionLabel={(option) => option.label+' ('+option.code+')'}
             isOptionEqualToValue={(option, value) =>
                 (option.code === value.code)}
             renderOption={(props, option) => (

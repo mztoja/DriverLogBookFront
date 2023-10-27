@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {PlaceInterface, PlaceTypeEnum, UserLangEnum} from "types";
+import {PlaceInterface, placeTypeEnum, userLangEnum} from "types";
 import {CountrySelect} from "./CountrySelect";
 import {CircularProgress, FormHelperText, TextField} from "@mui/material";
 import {form} from "../../../assets/txt/form";
@@ -7,11 +7,13 @@ import {Link} from "react-router-dom";
 import {DownloadFromLocalStorage, SaveToLocalStorage} from "../../../hooks/LocalStorageHook";
 import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
-import {useApiGetData} from "../../../hooks/useApiGetData";
-import {apiLocation} from "../../../config/api";
+import {apiPaths} from "../../../config/api";
+import {useApi} from '../../../hooks/useApi';
+import {places as placesTxt} from "../../../assets/txt/places";
+import {useAlert} from "../../../hooks/useAlert";
 
 interface Props {
-    lang: UserLangEnum;
+    lang: userLangEnum;
     defaultCountry: string;
     countryValue: string;
     countryOnChange: (e: any) => void;
@@ -27,11 +29,27 @@ export const PlaceInput = (props: Props) => {
     const [autoCompleteFormSwitch, setAutoCompleteFormSwitch] = useState<boolean>(true);
     const [firstRender, setFirstRender] = useState<boolean>(true);
     const [placeIdValue, setPlaceIdValue] = useState<string>(props.placeIdValue === '' ? '0' : props.placeIdValue);
+    const [placesList, setPlacesList] = useState<PlaceInterface[] | null>(null);
     const [places, setPlaces] = useState<PlaceInterface[] | null>(null);
     const [defaultPlaceValue, setDefaultPlaceValue] = useState<PlaceInterface | null>(null);
     const [clear, setClear] = useState<number>(0);
+    const { loading, fetchData } = useApi();
+    const {setAlert} = useAlert();
 
-    const {data: placesList, loading} = useApiGetData<PlaceInterface[]>(apiLocation.getPlaces, true);
+    useEffect(() => {
+        (async () => {
+            const result = await fetchData(apiPaths.getPlaces, {
+                headers: {Accept: 'application/json'},
+                credentials: "include",
+            });
+            // if (result.success) {
+            //     setPlacesList(result.data);
+            // } else {
+            //     setAlert(placesTxt[props.lang].apiError, 'error');
+            // }
+        })();
+        // eslint-disable-next-line
+    },[]);
 
     if (firstRender) {
         const placeId = Number(placeIdValue);
@@ -133,19 +151,19 @@ export const PlaceInput = (props: Props) => {
                                 if (option.isFavorite) {
                                 return form[props.lang].favorite;
                                 } else {
-                                    if (option.type === PlaceTypeEnum.other) {
+                                    if (option.type === placeTypeEnum.other) {
                                         return form[props.lang].placeType0;
-                                    } else if (option.type === PlaceTypeEnum.base) {
+                                    } else if (option.type === placeTypeEnum.base) {
                                         return form[props.lang].placeType1;
-                                    } else if ((option.type === PlaceTypeEnum.loadingPlace) ||
-                                        (option.type === PlaceTypeEnum.unloadingPlace) ||
-                                        (option.type === PlaceTypeEnum.loadAndunloadPlace)) {
+                                    } else if ((option.type === placeTypeEnum.loadingPlace) ||
+                                        (option.type === placeTypeEnum.unloadingPlace) ||
+                                        (option.type === placeTypeEnum.loadAndunloadPlace)) {
                                         return form[props.lang].placeType4;
-                                    } else if (option.type === PlaceTypeEnum.parking) {
+                                    } else if (option.type === placeTypeEnum.parking) {
                                         return form[props.lang].placeType5;
-                                    } else if (option.type === PlaceTypeEnum.service) {
+                                    } else if (option.type === placeTypeEnum.service) {
                                         return form[props.lang].placeType6;
-                                    } else if (option.type === PlaceTypeEnum.customs) {
+                                    } else if (option.type === placeTypeEnum.customs) {
                                         return form[props.lang].placeType7;
                                     } else {
                                         return '';

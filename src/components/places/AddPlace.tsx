@@ -1,5 +1,5 @@
-import React, {FormEvent, useState} from "react";
-import {AddPlaceFormInterface, UserLangEnum} from 'types';
+import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
+import {AddPlaceFormInterface, userLangEnum} from 'types';
 import {CircularProgress, Fab} from "@mui/material";
 import {SubmitButton} from "../common/form/SubmitButton";
 import {places} from "../../assets/txt/places";
@@ -12,19 +12,23 @@ import {CountrySelect} from "../common/form/CountrySelect";
 import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
 import {TextArea} from "../common/form/TextArea";
 import {PlaceGps} from "../common/form/place/PlaceGps";
-import {apiURL} from "../../config/api";
 import {login} from "../../assets/txt/login";
 import AddIcon from "@mui/icons-material/Add";
 import {useAlert} from "../../hooks/useAlert";
+import {useApi} from '../../hooks/useApi';
+import {apiPaths} from "../../config/api";
 
 interface Props {
-    lang: UserLangEnum;
+    lang: userLangEnum;
     userId: string;
+    setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AddPlace = (props: Props) => {
 
     const {setAlert} = useAlert();
+    const { loading, fetchData } = useApi();
+    const [addPlaceShow, setAddPlaceShow] = useState<boolean>(false);
 
     const [addPlaceForm, setAddPlaceForm] = useState<AddPlaceFormInterface>({
         userId: props.userId,
@@ -41,9 +45,6 @@ export const AddPlace = (props: Props) => {
         mark: '',
     });
 
-    const [loading, setLoading] = useState<boolean>(false);
-    const [addPlaceShow, setAddPlaceShow] = useState<boolean>(false);
-
     const updateForm = (key: string, value: string) => {
         setAddPlaceForm((addPlaceForm: AddPlaceFormInterface) => ({
             ...addPlaceForm,
@@ -54,34 +55,28 @@ export const AddPlace = (props: Props) => {
     const sendAddPlaceForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        setLoading(true);
+        const result = await fetchData(apiPaths.createPlace, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(addPlaceForm),
+            });
 
-        await fetch(apiURL + '/places/create', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(addPlaceForm),
-        }).then(async (res) => {
-            const data = await res.json();
-            if (res.ok) {
-                setAddPlaceShow(false);
-                setAlert(places[props.lang].addSuccess, 'success');
-            } else {
-                if (data.message === 'place name not specified') {
-                    setAlert(places[props.lang].placeNameNotExist, 'warning');
-                } else if (data.message === 'city not specified') {
-                    setAlert(places[props.lang].placeCityNotExist, 'warning');
-                } else if (data.message === 'country not specified') {
-                    setAlert(places[props.lang].countryNotExist, 'warning');
-                } else {
-                    setAlert(login[props.lang].dbConnectionError, 'error');
-                }
-            }
-        }).catch(() => {
-            setAlert(login[props.lang].connectionError, 'error');
-        }).finally(() => {
-            setLoading(false);
-        });
-
+        // if (result.success) {
+        //     setAddPlaceShow(false);
+        //     props.setRefresh((prev) => !prev);
+        //     setAlert(places[props.lang].addSuccess, 'success');
+        //
+        // } else {
+        //     if (result.error === 'place name not specified') {
+        //         setAlert(places[props.lang].placeNameNotExist, 'warning');
+        //     } else if (result.error === 'city not specified') {
+        //         setAlert(places[props.lang].placeCityNotExist, 'warning');
+        //     } else if (result.error === 'country not specified') {
+        //         setAlert(places[props.lang].countryNotExist, 'warning');
+        //     } else {
+        //         setAlert(login[props.lang].dbConnectionError, 'error');
+        //     }
+        // }
     };
 
     if (loading) {

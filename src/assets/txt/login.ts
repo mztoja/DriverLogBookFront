@@ -5,9 +5,7 @@ interface Login {
     register: string;
     registerSubmit: string;
     logout: string;
-    connectionError: string;
     responseError: string;
-    unknownError: string;
     registerPar: string;
     here: string;
     loginPar: string;
@@ -33,9 +31,7 @@ export const login: Login[] =
         register: 'Register your Account',
         registerSubmit: 'Register',
         logout: 'Logout',
-        connectionError: 'The server is not responding. Please check your connection or try again later.',
         responseError: 'Incorrect login details.',
-        unknownError: 'Unknown Error. Please contact Admin.',
         registerPar: `If you don't have an account yet, you can register`,
         here: 'here',
         loginPar: 'If you have an account, please go to login page',
@@ -58,9 +54,7 @@ export const login: Login[] =
             register: 'Zarejestruj nowe konto',
             registerSubmit: 'Zarejestruj',
             logout: 'Wyloguj',
-            connectionError: 'Serwer nie odpowiada. Sprawdź swoje połączenie lub spróbuj ponownie później.',
             responseError: 'Podano niepoprawne dane użytkownika.',
-            unknownError: 'Wystąpił nieznany błąd. Skontaktuj się z administratorem.',
             registerPar: 'Jeżeli nie masz u nas jeszcze konta, to możesz się zarejestrować',
             here: 'tutaj',
             loginPar: 'Jeżeli masz już konto, to przejdź do ekranu logowania',

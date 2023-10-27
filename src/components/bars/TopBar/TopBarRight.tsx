@@ -1,10 +1,10 @@
 import React, {Dispatch, SetStateAction} from "react";
-import {UserInterface, UserLangEnum } from "types";
+import {UserInterface, userLangEnum } from "types";
 import {ChangeLang} from "./ChangeLang";
 import {LogoutLink} from "../../auth/LogoutLink";
 
 interface Props {
-    setLang?: Dispatch<SetStateAction<UserLangEnum>>;
+    setLang?: Dispatch<SetStateAction<userLangEnum>>;
     userData?: UserInterface;
     setUserData?: Dispatch<SetStateAction<UserInterface | null>>;
 }

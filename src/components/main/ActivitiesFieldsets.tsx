@@ -1,5 +1,5 @@
-import React, {FormEvent, useState} from "react";
-import {ActivitiesTypes, UserLangEnum, TourInterface, GeneralFormData, UserInterface} from "types";
+import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
+import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface} from "types";
 import {home} from "../../assets/txt/home";
 import {DivClear} from "../common/DivClear";
 import {NavigateButton} from "./NavigateButton";
@@ -12,23 +12,32 @@ import {OdometerInput} from "../common/form/OdometerInput";
 import {TextArea} from "../common/form/TextArea";
 import {places} from "../../assets/txt/places";
 import {PlaceInput} from "../common/form/PlaceInput";
+import {apiPaths} from "../../config/api";
+import {useApi} from '../../hooks/useApi';
+import {useAlert} from "../../hooks/useAlert";
+import {CircularProgress} from "@mui/material";
+import {login} from "../../assets/txt/login";
 
 interface Props {
-    lang: UserLangEnum;
+    lang: userLangEnum;
     tourData?: TourInterface | null;
     userData: UserInterface;
+    setTourData: Dispatch<SetStateAction<TourInterface | null>>;
 }
 
 export const ActivitiesFieldsets = (props: Props) => {
 
     const [activityForm, setActivityForm] = useState<ActivitiesTypes | null>(null);
+    const { loading, fetchData } = useApi();
+    const {setAlert} = useAlert();
 
-    const [generalFormData, setGeneralFormData] = useState<any>({
+    const [generalFormData, setGeneralFormData] = useState<GeneralFormData>({
         userId: props.userData.id,
         data: '',
         truck: '',
         trailer: '',
         odometer: '',
+        action: '',
         fuelQuantity: '',
         fuelCombustion: '',
         place: '',
@@ -38,15 +47,44 @@ export const ActivitiesFieldsets = (props: Props) => {
     });
 
     const updateGeneralFormData = (key: string, value: string) => {
-        setGeneralFormData((addPlaceForm: GeneralFormData) => ({
-            ...addPlaceForm,
+        setGeneralFormData((values: GeneralFormData) => ({
+            ...values,
             [key]: value,
         }));
     };
 
+
+
     if (activityForm === 'tourStart') {
+
         const sendTourStart = async (e: FormEvent) => {
             e.preventDefault();
+            setGeneralFormData((values: GeneralFormData) => ({
+                ...values,
+                action: home[props.lang].startedTourAction,
+            }));
+            const result = await fetchData(apiPaths.createNewRoute, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(generalFormData),
+            });
+            // if (result.success) {
+            //     setAlert(home[props.lang].startedTour, 'success');
+            //     setActivityForm(null);
+            //     props.setTourData(result.data);
+            // } else {
+            //     if (result.error === 'no truck number provided') {
+            //         setAlert(home[props.lang].truckNoExist, 'warning');
+            //     } else if (result.error === 'no fuel quantity') {
+            //         setAlert(home[props.lang].fuelQuantityNoExist, 'warning');
+            //     } else if (result.error === 'country not specified') {
+            //         setAlert(places[props.lang].countryNotExist, 'warning');
+            //     } else if (result.error === 'no place provided') {
+            //         setAlert(home[props.lang].placeNoExist, 'warning');
+            //     } else {
+            //         setAlert(login[props.lang].dbConnectionError, 'error');
+            //     }
+            // }
         }
         return (
             <fieldset>
@@ -90,7 +128,7 @@ export const ActivitiesFieldsets = (props: Props) => {
                         countryOnChange={e => updateGeneralFormData('country', e)}
                         placeValue={generalFormData.place}
                         placeOnChange={e => updateGeneralFormData('place', e)}
-                        placeIdValue={generalFormData.placeIdValue}
+                        placeIdValue={generalFormData.placeId}
                         placeIdOnChange={e => updateGeneralFormData('placeId', e)}
                     />
                     </div>
@@ -104,6 +142,10 @@ export const ActivitiesFieldsets = (props: Props) => {
                 <Link to="" className="Link" onClick={() => setActivityForm(null)}>{home[props.lang].back}</Link>
             </fieldset>
         );
+    }
+
+    if (loading) {
+        return <CircularProgress/>
     }
 
     if (props.tourData) {

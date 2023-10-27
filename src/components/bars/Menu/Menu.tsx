@@ -3,10 +3,10 @@ import "./Menu.css";
 import {Option} from "./Option";
 import { labels } from "../../../assets/txt/menuLabels";
 import { DivClear } from "../../common/DivClear";
-import { UserLangEnum } from "types";
+import { userLangEnum } from "types";
 
 interface Props {
-    lang: UserLangEnum;
+    lang: userLangEnum;
 }
 
 export const Menu = (props: Props) => {

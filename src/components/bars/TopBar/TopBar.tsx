@@ -4,15 +4,15 @@ import {AppMainElementsTypes} from "../../../types/AppMainElementsTypes";
 import {labels} from "../../../assets/txt/menuLabels";
 import {commons} from "../../../assets/txt/commons";
 import {DivClear} from "../../common/DivClear";
-import { UserLangEnum } from "types";
+import { userLangEnum } from "types";
 import {MenuLabelTypes} from "../../../types/MenuLabelTypes";
 import {TopBarRight} from "./TopBarRight";
 
 
 
 interface Props extends AppMainElementsTypes {
-    setLang?: Dispatch<SetStateAction<UserLangEnum>>;
-    lang: UserLangEnum;
+    setLang?: Dispatch<SetStateAction<userLangEnum>>;
+    lang: userLangEnum;
     page: keyof MenuLabelTypes;
 }
 

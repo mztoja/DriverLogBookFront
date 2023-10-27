@@ -1,7 +1,7 @@
-import { UserLangEnum } from "types";
+import { userLangEnum } from "types";
 
 export interface InputPropsTypes {
-    lang: UserLangEnum;
+    lang: userLangEnum;
     value:string;
     onChange: (e:any) => void;
 }

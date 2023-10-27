@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import {TopBar} from "../components/bars/TopBar/TopBar";
 import {Content} from "../components/bars/Content/Content";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
@@ -10,13 +10,14 @@ interface Props extends AppMainElementsTypes {
     userData: UserInterface;
     page: keyof MenuLabelTypes;
     tourData: TourInterface | null;
+    setTourData: Dispatch<SetStateAction<TourInterface | null>>;
 }
 
 export const HomeView = (props: Props) => (
     <>
         <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
         <Content>
-            <ActivitiesFieldsets lang={props.userData.lang} tourData={props.tourData} userData={props.userData}/>
+            <ActivitiesFieldsets lang={props.userData.lang} tourData={props.tourData} userData={props.userData} setTourData={props.setTourData}/>
         </Content>
     </>
 );

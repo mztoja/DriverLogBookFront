@@ -9,13 +9,18 @@ import {PlacesView} from "../PlacesView";
 import {Footer} from "../../components/bars/Footer/Footer";
 import {TourInterface, UserInterface} from "types";
 
-export const LoggedInView = (userData: UserInterface, setUserData: Dispatch<SetStateAction<UserInterface | null>>, tourData: TourInterface | null) => (
+export const LoggedInView = (
+    userData: UserInterface,
+    setUserData: Dispatch<SetStateAction<UserInterface | null>>,
+    tourData: TourInterface | null,
+    setTourData: Dispatch<SetStateAction<TourInterface | null>>,
+) => (
     <div className="App">
         <Menu lang={userData.lang}/>
         <Routes>
             <Route path="*" element={<Navigate to="/"/>}/>
             <Route path="/"
-                   element={<HomeView page="home" userData={userData} setUserData={setUserData} tourData={tourData}/>}/>
+                   element={<HomeView page="home" userData={userData} setUserData={setUserData} tourData={tourData} setTourData = {setTourData}/>}/>
             <Route path="logs"
                    element={<LogsView page="logs" userData={userData} setUserData={setUserData}/>}/>
             <Route path="days"
