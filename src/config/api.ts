@@ -12,4 +12,5 @@ export const apiPaths = {
     login: '/auth/login',
     get: '/auth/user',
     logout: '/auth/logout',
+    markDepart: '/users/markDepart',
 }

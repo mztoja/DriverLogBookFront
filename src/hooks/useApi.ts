@@ -6,11 +6,9 @@ export const useApi = () => {
 
     const fetchData = async (apiPatch: string, options: any) => {
         setLoading(true);
-
         try {
             const response = await fetch(apiURL+apiPatch, options);
             const data = await response.json();
-
             if (response.ok) {
                 return { success: true, data };
             }

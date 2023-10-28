@@ -56,7 +56,6 @@ export const LoginForm = (props: Props) => {
             credentials: "include",
             body: JSON.stringify(loginForm),
         });
-
         if (result && !result.success) {
             setAlert(commons[props.lang].apiConnectionError, 'error');
         } else {

@@ -5,7 +5,11 @@ import {MenuItem, Select} from "@mui/material";
 import { form } from "../../../../assets/txt/form";
 import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
-export const PlaceTypeSelect = (props: InputPropsTypes) => {
+interface Props extends InputPropsTypes {
+    displayAll?: boolean;
+}
+
+export const PlaceTypeSelect = (props: Props) => {
 
     const [value, setValue] = useState<number | null>(Number(props.value));
 
@@ -25,6 +29,7 @@ export const PlaceTypeSelect = (props: InputPropsTypes) => {
                 inputProps={{className: 'TextInput'}}
                 size='small'
             >
+                {props.displayAll ? <MenuItem value={999}>{form[props.lang].placeTypeAll}</MenuItem> :null}
                 <MenuItem value={0}>{form[props.lang].placeType0}</MenuItem>
                 <MenuItem value={1}>{form[props.lang].placeType1}</MenuItem>
                 <MenuItem value={2}>{form[props.lang].placeType2}</MenuItem>

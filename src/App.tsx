@@ -39,6 +39,7 @@ export const App = () => {
                 }
             }
         })();
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
@@ -61,18 +62,18 @@ export const App = () => {
 
     //setTourData
 
-    // useEffect(() => {
-    //     (async () => {
-    //         const result = await fetchData(apiPaths.getActiveRoute, {
-    //             headers: {Accept: 'application/json'},
-    //             credentials: "include",
-    //         });
-    //         if (result.success) {
-    //             setTourData(result.data);
-    //         }
-    //     })();
-    //     // eslint-disable-next-line
-    // },[]);
+    useEffect(() => {
+        (async () => {
+            const result = await fetchData(apiPaths.getActiveRoute, {
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include",
+            });
+            if ((result && result.data) && (!result.data.dtc)) {
+                setUserData(result.data);
+            }
+        })();
+        // eslint-disable-next-line
+    }, []);
 
     if (loading) {
         return <LinearProgress/>;

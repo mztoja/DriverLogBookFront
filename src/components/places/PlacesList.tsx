@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {places} from "../../assets/txt/places";
-import {PlaceInterface, UserInterface, MarkDepartInterface} from "types";
+import {PlaceInterface, UserInterface} from "types";
 import {CircularProgress} from "@mui/material";
 import {form} from "../../assets/txt/form";
 import {countries} from "../../assets/txt/countries";
@@ -12,11 +12,13 @@ import {Link} from "react-router-dom";
 import {SearchInput} from "../common/form/SearchInput";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
-import {apiPaths, apiURL} from "../../config/api";
+import {apiPaths} from "../../config/api";
+import {commons} from "../../assets/txt/commons";
 
 interface Props {
     userData: UserInterface;
     refresh: boolean;
+    setUserData: Dispatch<SetStateAction<UserInterface | null>>;
 }
 
 export const PlacesList = (props: Props) => {
@@ -26,7 +28,7 @@ export const PlacesList = (props: Props) => {
 
     const [data, setData] = useState<PlaceInterface[] | null>(null);
     const [showData, setShowData] = useState<PlaceInterface[] | null>(null);
-    const [filterType, setFilterType] = useState<string>('4');
+    const [filterType, setFilterType] = useState<string>('999');
     const [filterCountry, setFilterCountry] = useState<string>(props.userData.country);
     const [filterSearch, setFilterSearch] = useState<string>('');
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
@@ -37,33 +39,37 @@ export const PlacesList = (props: Props) => {
                 headers: {Accept: 'application/json'},
                 credentials: "include",
             });
-            if (result && result.data) {
-                if (!result.data.status) {
-                    setData(result.data);
-                } else {
-                    setAlert(places[props.userData.lang].apiError, 'error');
-                }
+            console.log(result);
+            if ((result && result.data) && (!result.data.dtc)) {
+                setData(result.data);
+            } else {
+                setAlert(places[props.userData.lang].apiError, 'error');
             }
         })();
         // eslint-disable-next-line
     }, [props.refresh]);
 
     const markPlace = async (id: number, info: string) => {
-        const sendData: MarkDepartInterface = {
-            userId: props.userData.id,
-            placeId: id.toString(),
-        }
-        await fetch(apiURL + '/users/markDepart', {
+        const result = await fetchData(apiPaths.markDepart, {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-        }).then(res => {
-            if (res.ok) {
-                setAlert(places[props.userData.lang].markedPlace + ' ' + info, 'success');
-            }
-        }).catch(() => {
-            setAlert(places[props.userData.lang].markedPlaceError, 'warning');
+            credentials: "include",
+            body: JSON.stringify({placeId: id}),
         });
+        if (result && !result.success) {
+            setAlert(commons[props.userData.lang].apiConnectionError, 'error');
+        } else {
+            if (result && result.data) {
+                if (!result.data.dtc) {
+                    setAlert(places[props.userData.lang].markedPlace + ' ' + info, 'success');
+                    const changedUser = props.userData;
+                    changedUser.markedDepart = result.data;
+                    props.setUserData(changedUser);
+                } else {
+                    setAlert(places[props.userData.lang].markedPlaceError, 'warning');
+                }
+            }
+        }
     }
 
     useEffect(() => {
@@ -83,14 +89,26 @@ export const PlacesList = (props: Props) => {
                     setShowData(filteredData);
                 }
             } else if (filterCountry === undefined) {
-                const filteredData = data.filter((place) => (place.type === Number(filterType)));
-                if (filteredData) {
-                    setShowData(filteredData);
+                if (Number(filterType) !== 999) {
+                    const filteredData = data.filter((place) => (place.type === Number(filterType)));
+                    if (filteredData) {
+                        setShowData(filteredData);
+                    }
+                } else {
+                    setShowData(data);
                 }
             } else {
-                const filteredData = data.filter((place) => (place.type === Number(filterType) && place.country === filterCountry));
-                if (filteredData) {
-                    setShowData(filteredData);
+
+                if (Number(filterType) !== 999) {
+                    const filteredData = data.filter((place) => (place.type === Number(filterType) && place.country === filterCountry));
+                    if (filteredData) {
+                        setShowData(filteredData);
+                    }
+                } else {
+                    const filteredData = data.filter((place) => (place.country === filterCountry));
+                    if (filteredData) {
+                        setShowData(filteredData);
+                    }
                 }
             }
         }
@@ -109,7 +127,7 @@ export const PlacesList = (props: Props) => {
                 <section className="Table__Filter">
                     <div className="DivInline">
                         <PlaceTypeSelect lang={props.userData.lang} value={filterType}
-                                         onChange={e => setFilterType(e)}/>
+                                         onChange={e => setFilterType(e)} displayAll={true}/>
                     </div>
                     <div className="DivInline">
                         <CountrySelect lang={props.userData.lang} value={filterCountry}

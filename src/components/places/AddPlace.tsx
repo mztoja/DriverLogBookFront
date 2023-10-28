@@ -17,6 +17,7 @@ import AddIcon from "@mui/icons-material/Add";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
 import {apiPaths} from "../../config/api";
+import {commons} from "../../assets/txt/commons";
 
 interface Props {
     lang: userLangEnum;
@@ -31,8 +32,7 @@ export const AddPlace = (props: Props) => {
     const [addPlaceShow, setAddPlaceShow] = useState<boolean>(false);
 
     const [addPlaceForm, setAddPlaceForm] = useState<AddPlaceFormInterface>({
-        userId: props.userId,
-        isFavorite: '',
+        isFavorite: '0',
         type: '',
         name: '',
         street: '',
@@ -42,7 +42,7 @@ export const AddPlace = (props: Props) => {
         lat: '',
         lon: '',
         description: '',
-        mark: '',
+        isMarked: '0',
     });
 
     const updateForm = (key: string, value: string) => {
@@ -59,24 +59,30 @@ export const AddPlace = (props: Props) => {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(addPlaceForm),
+                credentials: "include",
             });
-
-        // if (result.success) {
-        //     setAddPlaceShow(false);
-        //     props.setRefresh((prev) => !prev);
-        //     setAlert(places[props.lang].addSuccess, 'success');
-        //
-        // } else {
-        //     if (result.error === 'place name not specified') {
-        //         setAlert(places[props.lang].placeNameNotExist, 'warning');
-        //     } else if (result.error === 'city not specified') {
-        //         setAlert(places[props.lang].placeCityNotExist, 'warning');
-        //     } else if (result.error === 'country not specified') {
-        //         setAlert(places[props.lang].countryNotExist, 'warning');
-        //     } else {
-        //         setAlert(login[props.lang].dbConnectionError, 'error');
-        //     }
-        // }
+        console.log(result);
+        if (result && !result.success) {
+            setAlert(commons[props.lang].apiConnectionError, 'error');
+        } else {
+            if (result && result.data) {
+                if (!result.data.dtc) {
+                        setAddPlaceShow(false);
+                        props.setRefresh((prev) => !prev);
+                        setAlert(places[props.lang].addSuccess, 'success');
+                } else {
+                    if (result.data.dtc === 'country') {
+                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
+                    } else if (result.data.dtc === 'name') {
+                        setAlert(login[props.lang].registerCompanyNameNotExist, 'warning');
+                    } else if (result.data.dtc === 'city') {
+                        setAlert(login[props.lang].registerCompanyCityNotExist, 'warning');
+                    } else {
+                        setAlert(commons[props.lang].apiUnknownError, 'error');
+                    }
+                }
+            }
+        }
     };
 
     if (loading) {
@@ -116,8 +122,8 @@ export const AddPlace = (props: Props) => {
                 <div><OnOffSwitch label={places[props.lang].isFavoriteSwitchLabel} value={addPlaceForm.isFavorite}
                                   onChange={e => updateForm('isFavorite', e)}/></div>
                 <br/>
-                <div><OnOffSwitch label={places[props.lang].navigateSwitchLabel} value={addPlaceForm.mark}
-                                  onChange={e => updateForm('mark', e)}/></div>
+                <div><OnOffSwitch label={places[props.lang].navigateSwitchLabel} value={addPlaceForm.isMarked}
+                                  onChange={e => updateForm('isMarked', e)}/></div>
                 <br/>
                 <div className="DivInline"><PlaceGps label={places[props.lang].lat} value={addPlaceForm.lat}
                                   onChange={e => updateForm('lat', e.target.value)}/></div>

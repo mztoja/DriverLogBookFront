@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import {TopBar} from "../components/bars/TopBar/TopBar";
 import {Content} from "../components/bars/Content/Content";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
@@ -10,6 +10,7 @@ import {PlacesList} from "../components/places/PlacesList";
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
     page: keyof MenuLabelTypes;
+    setUserData: Dispatch<SetStateAction<UserInterface | null>>;
 }
 
 export const PlacesView = (props: Props) => {
@@ -21,7 +22,7 @@ export const PlacesView = (props: Props) => {
             <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
             <Content>
                 <AddPlace userId={props.userData.id} lang={props.userData.lang} setRefresh={setRefresh}/>
-                <PlacesList userData={props.userData} refresh={refresh}/>
+                <PlacesList userData={props.userData} setUserData={props.setUserData} refresh={refresh}/>
             </Content>
         </>
     );
