@@ -61,7 +61,6 @@ export const AddPlace = (props: Props) => {
                 body: JSON.stringify(addPlaceForm),
                 credentials: "include",
             });
-        console.log(result);
         if (result && !result.success) {
             setAlert(commons[props.lang].apiConnectionError, 'error');
         } else {
@@ -77,6 +76,8 @@ export const AddPlace = (props: Props) => {
                         setAlert(login[props.lang].registerCompanyNameNotExist, 'warning');
                     } else if (result.data.dtc === 'city') {
                         setAlert(login[props.lang].registerCompanyCityNotExist, 'warning');
+                    } else if (result.data.dtc === 'Unauthorized') {
+                        setAlert(commons[props.lang].apiUnauthorized, 'error');
                     } else {
                         setAlert(commons[props.lang].apiUnknownError, 'error');
                     }

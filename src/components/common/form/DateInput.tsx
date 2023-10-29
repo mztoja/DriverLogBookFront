@@ -6,7 +6,7 @@ import {InputPropsTypes} from "../../../types/InputPropsTypes";
 
 export const DateInput = (props: InputPropsTypes) => {
 
-    const [selectedDate, setSelectedDate] = useState(new Date(new Date().getTime() + 2*60*60*1000).toISOString().slice(0, 16));
+    const [selectedDate, setSelectedDate] = useState(new Date(new Date().getTime() + 60*60*1000).toISOString().slice(0, 16));
 
     const handleDateChange = (e: any) => {
         setSelectedDate(e.target.value);

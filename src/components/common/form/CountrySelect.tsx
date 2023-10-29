@@ -43,7 +43,6 @@ export const CountrySelect = (props: InputPropsTypes) => {
     }, [value]);
 
     if (!firstRender) {
-        console.log('Formularz: ' + props.value);
         if (props.value !== '') {
             const set = countries.find(country => country.code === props.value);
             if (set !== undefined) {

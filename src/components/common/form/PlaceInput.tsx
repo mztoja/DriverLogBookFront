@@ -42,11 +42,11 @@ export const PlaceInput = (props: Props) => {
                 headers: {Accept: 'application/json'},
                 credentials: "include",
             });
-            // if (result.success) {
-            //     setPlacesList(result.data);
-            // } else {
-            //     setAlert(placesTxt[props.lang].apiError, 'error');
-            // }
+            if ((result && result.data) && (!result.data.dtc)) {
+                setPlacesList(result.data);
+            } else {
+                setAlert(placesTxt[props.lang].apiError, 'error');
+            }
         })();
         // eslint-disable-next-line
     },[]);
@@ -100,7 +100,6 @@ export const PlaceInput = (props: Props) => {
     }
 
     const updateCountry = (e: string) => {
-        console.log('updateCountry');
         setCountry(e);
         props.countryOnChange(e);
         setPlaceIdValue('0');

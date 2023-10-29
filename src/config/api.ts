@@ -6,7 +6,7 @@ export const apiPaths = {
     createPlace: '/places/create',
     // routes
     getActiveRoute: '/tours/getActiveRoute',
-    createNewRoute: '/tours/createNewRoute',
+    createNewRoute: '/tours/create',
     // users
     register: '/users/register',
     login: '/auth/login',

@@ -69,7 +69,7 @@ export const App = () => {
                 credentials: "include",
             });
             if ((result && result.data) && (!result.data.dtc)) {
-                setUserData(result.data);
+                setTourData(result.data);
             }
         })();
         // eslint-disable-next-line

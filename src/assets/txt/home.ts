@@ -13,8 +13,8 @@ interface Home {
     startedTour: string;
     startedTourAction: string;
     truckNoExist: string;
-    fuelQuantityNoExist: string;
     placeNoExist: string;
+    tourExist: string;
 }
 
 export const home:Home[] = [{
@@ -33,9 +33,8 @@ export const home:Home[] = [{
     startedTour: 'Your tour has started.',
     startedTourAction: 'Route no. has started',
     truckNoExist: 'Please enter truck number.',
-    fuelQuantityNoExist: 'Please enter fuel quantity',
     placeNoExist: 'Please choose or enter place activity.',
-
+    tourExist: 'You have already started a route, so you cannot start another one.',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -51,6 +50,6 @@ export const home:Home[] = [{
     startedTour: 'Twoja trasa została rozpoczęta.',
     startedTourAction: 'Trasa nr. została rozpoczęta',
     truckNoExist: 'Podaj nr rej. ciągnika.',
-    fuelQuantityNoExist: 'Podaj ilość paliwa.',
-    placeNoExist: 'Wybierz lub wpisz miejsce czynności.'
+    placeNoExist: 'Wybierz lub wpisz miejsce czynności.',
+    tourExist: 'Masz już rozpoczętą trasę, więc nie możesz rozpocząć kolejnej.',
 }];

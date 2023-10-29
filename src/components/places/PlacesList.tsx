@@ -39,7 +39,6 @@ export const PlacesList = (props: Props) => {
                 headers: {Accept: 'application/json'},
                 credentials: "include",
             });
-            console.log(result);
             if ((result && result.data) && (!result.data.dtc)) {
                 setData(result.data);
             } else {

@@ -35,12 +35,11 @@ export const FuelInput = (props: Props) => {
                 InputProps={{className: 'TextInput',
                     endAdornment: (
                         <InputAdornment className='TextInput' position="end">
-                            {props.userFuelConType === userFuelContypeEnum.per100km
-                                ?
-                                (<span>L/100km</span>)
-                                :
-                                (<span>L</span>)
-                            }
+                            {props.userFuelConType === userFuelContypeEnum.per100km ? (
+                                props.type === 'quantity' ? <span>L</span> : <span>L/100km</span>
+                            ) : (
+                                <span>L</span>
+                            )}
                         </InputAdornment>
                     ),}}
                 type="text"
