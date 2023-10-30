@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {UserInterface, userLangEnum, userStatusEnum, TourInterface} from "types";
+import {UserInterface, userLangEnum, userStatusEnum, TourInterface, DayInterface} from "types";
 import './App.css';
 import {DownloadFromLocalStorage} from "./hooks/LocalStorageHook";
 import {LinearProgress} from "@mui/material";
@@ -21,11 +21,13 @@ export const App = () => {
     const [appView, setAppView] = useState<AppView>(AppView.loggedOut);
     const [userData, setUserData] = useState<UserInterface | null>(null);
     const [tourData, setTourData] = useState<TourInterface | null>(null);
+    const [dayData, setDayData] = useState<DayInterface | null>(null);
     const {loading, fetchData} = useApi();
 
     // setUserData
     useEffect(() => {
         (async () => {
+            console.log('wczytywanie danych użytkownika');
             const result = await fetchData(apiPaths.get, {
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",
@@ -40,7 +42,7 @@ export const App = () => {
             }
         })();
         // eslint-disable-next-line
-    }, []);
+    }, [appView]);
 
     useEffect(() => {
         if (userData) {
@@ -61,7 +63,6 @@ export const App = () => {
 
 
     //setTourData
-
     useEffect(() => {
         (async () => {
             const result = await fetchData(apiPaths.getActiveRoute, {
@@ -73,7 +74,24 @@ export const App = () => {
             }
         })();
         // eslint-disable-next-line
-    }, []);
+    }, [userData]);
+
+    //setDayData
+    useEffect(() => {
+        if (tourData !== null) {
+            (async () => {
+                const result = await fetchData(apiPaths.getActiveDay, {
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: "include",
+                });
+                console.log('pobieranie danych dnia pracy');
+                if ((result && result.data) && (!result.data.dtc)) {
+                    setDayData(result.data);
+                }
+            })();
+        }
+        // eslint-disable-next-line
+    }, [tourData]);
 
     if (loading) {
         return <LinearProgress/>;
@@ -82,7 +100,7 @@ export const App = () => {
     return (
         <>
             {appView === AppView.blocked && userData ? BlockedUserView(userData, setUserData) : null}
-            {appView === AppView.loggedIn && userData ? LoggedInView(userData, setUserData, tourData, setTourData) : null}
+            {appView === AppView.loggedIn && userData ? LoggedInView(userData, setUserData, tourData, setTourData, dayData, setDayData) : null}
             {appView === AppView.loggedOut ? LoggedOutView(lang, setLang, setUserData) : null}
         </>
     );

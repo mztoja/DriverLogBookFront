@@ -44,6 +44,10 @@ interface Form {
     place: string;
     switchToPlace: string;
     switchToPlaceId: string;
+    driveTime: string;
+    driveTime2: string;
+    driveTimeHelper: string;
+    driveTimeHelper2: string;
 }
 
 
@@ -94,6 +98,10 @@ export const form: Form[] =
         place: 'Place',
         switchToPlace: 'Change to manual enter',
         switchToPlaceId: 'Switch to selection from the address list',
+        driveTime: 'Drive time',
+        driveTime2: '2nd driver drive time',
+        driveTimeHelper: 'Type your driving time from tacho throughout the day.',
+        driveTimeHelper2: 'You can also enter the co-driver driving time.',
     },
         {//pl
             email: 'E-mail',
@@ -141,4 +149,8 @@ export const form: Form[] =
             place: 'Miejsce',
             switchToPlace: 'Przełącz na wpis manualny',
             switchToPlaceId: 'Przełącz na wybór z listy adresowej',
+            driveTime: 'Czas jazdy',
+            driveTime2: 'Czas jazdy 2 kierowcy',
+            driveTimeHelper: 'Spisz swój czas jazdy z tachografu z całego dnia.',
+            driveTimeHelper2: 'Możesz też wpisać czas jazdy zmiennika celem lepszego zliczania statystyk.',
         }];

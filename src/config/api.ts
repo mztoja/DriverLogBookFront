@@ -13,4 +13,9 @@ export const apiPaths = {
     get: '/auth/user',
     logout: '/auth/logout',
     markDepart: '/users/markDepart',
+    // days
+    createNewDay: '/days/create',
+    finishDay: '/days/finish',
+    getActiveDay: '/days/getActiveDay',
+    getLastDay: '/days/getLastDay',
 }

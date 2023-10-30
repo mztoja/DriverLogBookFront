@@ -2,7 +2,7 @@ import React, {Dispatch, SetStateAction} from "react";
 import {TopBar} from "../components/bars/TopBar/TopBar";
 import {Content} from "../components/bars/Content/Content";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
-import { UserInterface, TourInterface } from "types";
+import { UserInterface, TourInterface, DayInterface } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {ActivitiesFieldsets} from "../components/main/ActivitiesFieldsets";
 
@@ -11,13 +11,15 @@ interface Props extends AppMainElementsTypes {
     page: keyof MenuLabelTypes;
     tourData: TourInterface | null;
     setTourData: Dispatch<SetStateAction<TourInterface | null>>;
+    dayData: DayInterface | null,
+    setDayData: Dispatch<SetStateAction<DayInterface | null>>,
 }
 
 export const HomeView = (props: Props) => (
     <>
         <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
         <Content>
-            <ActivitiesFieldsets lang={props.userData.lang} tourData={props.tourData} userData={props.userData} setTourData={props.setTourData}/>
+            <ActivitiesFieldsets lang={props.userData.lang} tourData={props.tourData} userData={props.userData} setTourData={props.setTourData} dayData={props.dayData} setDayData={props.setDayData}/>
         </Content>
     </>
 );

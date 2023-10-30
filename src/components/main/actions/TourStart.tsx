@@ -1,4 +1,4 @@
-import React, {Dispatch, FormEvent, SetStateAction} from "react";
+import React, {FormEvent} from "react";
 import {home} from "../../../assets/txt/home";
 import {apiPaths} from "../../../config/api";
 import {DateInput} from "../../common/form/DateInput";
@@ -10,23 +10,15 @@ import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
-import {ActivitiesTypes, GeneralFormData, StartTourData, TourInterface, UserInterface, userLangEnum} from 'types';
+import {StartTourData} from 'types';
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
 import {commons} from "../../../assets/txt/commons";
 import {login} from "../../../assets/txt/login";
+import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 
-interface Props {
-    formData: GeneralFormData;
-    lang: userLangEnum;
-    updateFormData: (key: string, value: string) => void;
-    setActivityForm: Dispatch<SetStateAction<ActivitiesTypes | null>>;
-    userData: UserInterface;
-    setTourData: Dispatch<SetStateAction<TourInterface | null>>;
-}
-
-export const TourStart = (props:Props) => {
+export const TourStart = (props:ActionsPropsTypes) => {
 
     const { loading, fetchData } = useApi();
     const {setAlert} = useAlert();
@@ -41,7 +33,7 @@ export const TourStart = (props:Props) => {
             placeId: props.formData.placeId,
             odometer: props.formData.odometer,
             notes: props.formData.notes,
-            date: props.formData.data,
+            date: props.formData.date,
             fuelStateBefore: props.formData.fuelQuantity,
         }
         const result = await fetchData(apiPaths.createNewRoute, {
@@ -50,7 +42,6 @@ export const TourStart = (props:Props) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-        console.log(result);
         if (result && !result.success) {
             setAlert(commons[props.lang].apiConnectionError, 'error');
         } else {
@@ -89,8 +80,8 @@ export const TourStart = (props:Props) => {
             <form onSubmit={sendTourStart}>
                 <div><DateInput
                     lang={props.lang}
-                    value={props.formData.data}
-                    onChange={e => props.updateFormData('data', e)}
+                    value={props.formData.date}
+                    onChange={e => props.updateFormData('date', e)}
                 />
                 </div>
                 <br/>

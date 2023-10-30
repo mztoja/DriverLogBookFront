@@ -32,7 +32,7 @@ export const AddPlace = (props: Props) => {
     const [addPlaceShow, setAddPlaceShow] = useState<boolean>(false);
 
     const [addPlaceForm, setAddPlaceForm] = useState<AddPlaceFormInterface>({
-        isFavorite: '0',
+        isFavorite: 'false',
         type: '',
         name: '',
         street: '',
@@ -42,7 +42,7 @@ export const AddPlace = (props: Props) => {
         lat: '',
         lon: '',
         description: '',
-        isMarked: '0',
+        isMarked: 'false',
     });
 
     const updateForm = (key: string, value: string) => {

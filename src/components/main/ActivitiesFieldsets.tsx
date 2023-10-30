@@ -1,22 +1,28 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
-import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface} from "types";
+import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface, DayInterface} from "types";
 import {home} from "../../assets/txt/home";
 import {DivClear} from "../common/DivClear";
 import {NavigateButton} from "./NavigateButton";
-import {TourStart} from "./Actions/TourStart";
+import {TourStart} from "./actions/TourStart";
+import {DayStart} from "./actions/DayStart";
+import {useAlert} from "../../hooks/useAlert";
+import {DayStop} from "./actions/DayStop";
 
 interface Props {
     lang: userLangEnum;
-    tourData?: TourInterface | null;
+    tourData: TourInterface | null;
     userData: UserInterface;
     setTourData: Dispatch<SetStateAction<TourInterface | null>>;
+    dayData: DayInterface | null,
+    setDayData: Dispatch<SetStateAction<DayInterface | null>>,
 }
 
 export const ActivitiesFieldsets = (props: Props) => {
 
+    const {setAlert} = useAlert();
     const [activityForm, setActivityForm] = useState<ActivitiesTypes | null>(null);
     const [generalFormData, setGeneralFormData] = useState<GeneralFormData>({
-        data: '',
+        date: '',
         truck: '',
         trailer: '',
         odometer: '',
@@ -27,6 +33,11 @@ export const ActivitiesFieldsets = (props: Props) => {
         placeId: '',
         country: '',
         notes: '',
+        doubleCrew: 'false',
+        cardInserted: 'false',
+        cardTakeOut: 'false',
+        driveTime: '',
+        driveTime2: '',
     });
 
     const updateGeneralFormData = (key: string, value: string) => {
@@ -43,7 +54,46 @@ export const ActivitiesFieldsets = (props: Props) => {
             updateFormData={updateGeneralFormData}
             setActivityForm={setActivityForm}
             userData={props.userData}
+            dayData={props.dayData}
             setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
+    if (activityForm === 'dayStart') {
+        if (props.dayData !== null) {
+            setActivityForm(null);
+            setAlert(home[props.lang].dayExist, 'info');
+        }
+        return <DayStart
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
+    if (activityForm === 'dayStop') {
+        if (props.dayData === null) {
+            setActivityForm(null);
+            setAlert(home[props.lang].dayNotExist, 'info');
+        }
+        return <DayStop
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
         />
     }
 

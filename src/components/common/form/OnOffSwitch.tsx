@@ -4,7 +4,7 @@ import './Form.css';
 
 interface Props {
     label: string;
-    value: string;
+    value: 'false' | 'true';
     onChange: (e: any) => void;
 }
 
@@ -15,15 +15,15 @@ export const OnOffSwitch = (props: Props) => {
 
     useEffect(() => {
         if (value) {
-            props.onChange('1');
+            props.onChange('true');
         } else {
-            props.onChange('0');
+            props.onChange('false');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [value]);
 
     if (!renderOnce) {
-        if (props.value === '1') {
+        if (props.value === 'true') {
             setValue(true);
         }
         setRenderOnce(true);

@@ -7,20 +7,22 @@ import {DaysView} from "../DaysView";
 import {FinancesView} from "../FinancesView";
 import {PlacesView} from "../PlacesView";
 import {Footer} from "../../components/bars/Footer/Footer";
-import {TourInterface, UserInterface} from "types";
+import {TourInterface, UserInterface, DayInterface} from "types";
 
 export const LoggedInView = (
     userData: UserInterface,
     setUserData: Dispatch<SetStateAction<UserInterface | null>>,
     tourData: TourInterface | null,
     setTourData: Dispatch<SetStateAction<TourInterface | null>>,
+    dayData: DayInterface | null,
+    setDayData: Dispatch<SetStateAction<DayInterface | null>>,
 ) => (
     <div className="App">
         <Menu lang={userData.lang}/>
         <Routes>
             <Route path="*" element={<Navigate to="/"/>}/>
             <Route path="/"
-                   element={<HomeView page="home" userData={userData} setUserData={setUserData} tourData={tourData} setTourData = {setTourData}/>}/>
+                   element={<HomeView page="home" userData={userData} setUserData={setUserData} tourData={tourData} setTourData = {setTourData} dayData={dayData} setDayData={setDayData}/>}/>
             <Route path="logs"
                    element={<LogsView page="logs" userData={userData} setUserData={setUserData}/>}/>
             <Route path="days"
