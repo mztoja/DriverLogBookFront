@@ -11,6 +11,7 @@ import {apiPaths} from "../../../config/api";
 import {useApi} from '../../../hooks/useApi';
 import {places as placesTxt} from "../../../assets/txt/places";
 import {useAlert} from "../../../hooks/useAlert";
+import {PlaceField} from "./PlaceField";
 
 interface Props {
     lang: userLangEnum;
@@ -26,14 +27,14 @@ interface Props {
 export const PlaceInput = (props: Props) => {
 
     const [country, setCountry] = useState<string>(props.countryValue ? props.countryValue : props.defaultCountry);
-    const [autoCompleteFormSwitch, setAutoCompleteFormSwitch] = useState<boolean>(true);
+    const [autoCompleteFormSwitch, setAutoCompleteFormSwitch] = useState<boolean>(props.placeValue === '');
     const [firstRender, setFirstRender] = useState<boolean>(true);
     const [placeIdValue, setPlaceIdValue] = useState<string>(props.placeIdValue === '' ? '0' : props.placeIdValue);
     const [placesList, setPlacesList] = useState<PlaceInterface[] | null>(null);
     const [places, setPlaces] = useState<PlaceInterface[] | null>(null);
     const [defaultPlaceValue, setDefaultPlaceValue] = useState<PlaceInterface | null>(null);
     const [clear, setClear] = useState<number>(0);
-    const { loading, fetchData } = useApi();
+    const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
 
     useEffect(() => {
@@ -49,9 +50,9 @@ export const PlaceInput = (props: Props) => {
             }
         })();
         // eslint-disable-next-line
-    },[]);
+    }, []);
 
-    if (firstRender) {
+    if (firstRender && placesList !== null) {
         const placeId = Number(placeIdValue);
         if (placeId !== 0) {
             const defaultValue = placesList?.find(place => place.id === placeId);
@@ -87,8 +88,8 @@ export const PlaceInput = (props: Props) => {
             }
 
         } else if (!autoCompleteFormSwitch) {
-                SaveToLocalStorage('place', props.placeValue);
-                props.placeOnChange('');
+            SaveToLocalStorage('place', props.placeValue);
+            props.placeOnChange('');
             const data = DownloadFromLocalStorage('placeId');
             if (data) {
                 setPlaceIdValue(data);
@@ -100,12 +101,14 @@ export const PlaceInput = (props: Props) => {
     }
 
     const updateCountry = (e: string) => {
-        setCountry(e);
-        props.countryOnChange(e);
-        setPlaceIdValue('0');
-        props.placeIdOnChange('0');
-        setDefaultPlaceValue(null);
-        setClear(clear + 1);
+        if (country !== e) {
+            setCountry(e);
+            props.countryOnChange(e);
+            setPlaceIdValue('0');
+            props.placeIdOnChange('0');
+            setDefaultPlaceValue(null);
+            setClear(clear + 1);
+        }
     }
 
     if (loading) {
@@ -119,17 +122,7 @@ export const PlaceInput = (props: Props) => {
                 ?
                 (
                     <>
-                        <TextField
-                            label={form[props.lang].place}
-                            id="place"
-                            InputLabelProps={{className: 'TextInput__Label'}}
-                            InputProps={{className: 'TextInput'}}
-                            type="text"
-                            value={props.placeValue}
-                            onChange={(e) => {props.placeOnChange(e.target.value)}}
-                            fullWidth
-                            size='small'
-                        />
+                        <PlaceField lang={props.lang} value={props.placeValue} onChange={e => props.placeOnChange(e)}/>
                         <FormHelperText className='TextInput__Label'>
                             <Link to="" className="Link"
                                   onClick={() => changeInput()}>{form[props.lang].switchToPlaceId}</Link>
@@ -148,7 +141,7 @@ export const PlaceInput = (props: Props) => {
                             options={places}
                             groupBy={(option) => {
                                 if (option.isFavorite) {
-                                return form[props.lang].favorite;
+                                    return form[props.lang].favorite;
                                 } else {
                                     if (option.type === placeTypeEnum.other) {
                                         return form[props.lang].placeType0;

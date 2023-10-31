@@ -7,11 +7,14 @@ import {TourStart} from "./actions/TourStart";
 import {DayStart} from "./actions/DayStart";
 import {useAlert} from "../../hooks/useAlert";
 import {DayStop} from "./actions/DayStop";
+import { AnotherLog } from "./actions/AnotherLog";
+import { BorderCross } from "./actions/BorderCross";
 
 interface Props {
     lang: userLangEnum;
     tourData: TourInterface | null;
     userData: UserInterface;
+    setUserData: Dispatch<SetStateAction<UserInterface | null>>,
     setTourData: Dispatch<SetStateAction<TourInterface | null>>;
     dayData: DayInterface | null,
     setDayData: Dispatch<SetStateAction<DayInterface | null>>,
@@ -38,6 +41,7 @@ export const ActivitiesFieldsets = (props: Props) => {
         cardTakeOut: 'false',
         driveTime: '',
         driveTime2: '',
+        addNewBorder: 'false',
     });
 
     const updateGeneralFormData = (key: string, value: string) => {
@@ -54,6 +58,7 @@ export const ActivitiesFieldsets = (props: Props) => {
             updateFormData={updateGeneralFormData}
             setActivityForm={setActivityForm}
             userData={props.userData}
+            setUserData={props.setUserData}
             dayData={props.dayData}
             setTourData={props.setTourData}
             tourData={props.tourData}
@@ -72,6 +77,7 @@ export const ActivitiesFieldsets = (props: Props) => {
             updateFormData={updateGeneralFormData}
             setActivityForm={setActivityForm}
             userData={props.userData}
+            setUserData={props.setUserData}
             dayData={props.dayData}
             setTourData={props.setTourData}
             tourData={props.tourData}
@@ -90,6 +96,37 @@ export const ActivitiesFieldsets = (props: Props) => {
             updateFormData={updateGeneralFormData}
             setActivityForm={setActivityForm}
             userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
+    if (activityForm === 'anotherLog') {
+        return <AnotherLog
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
+    if (activityForm === 'borderCross') {
+        return <BorderCross
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
             dayData={props.dayData}
             setTourData={props.setTourData}
             tourData={props.tourData}

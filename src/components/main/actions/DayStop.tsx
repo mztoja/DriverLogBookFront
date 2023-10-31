@@ -45,7 +45,6 @@ export const DayStop = (props: ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-        console.log(result);
         if (result && !result.success) {
             setAlert(commons[props.lang].apiConnectionError, 'error');
         } else {

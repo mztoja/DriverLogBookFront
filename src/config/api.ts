@@ -18,4 +18,9 @@ export const apiPaths = {
     finishDay: '/days/finish',
     getActiveDay: '/days/getActiveDay',
     getLastDay: '/days/getLastDay',
+    // logs
+    createNewLog: '/logs/create',
+    createBorderCross: '/logs/createBorderCross',
+    // borders
+    getBordersByCountry: '/borders/getByCountry',
 }

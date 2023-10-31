@@ -58,8 +58,8 @@ export const App = () => {
             }
             setAppView(AppView.loggedOut);
         }
-
-    }, [userData]);
+// eslint-disable-next-line
+    }, [userData?.currentTokenId]);
 
 
     //setTourData
@@ -74,7 +74,7 @@ export const App = () => {
             }
         })();
         // eslint-disable-next-line
-    }, [userData]);
+    }, [userData?.currentTokenId]);
 
     //setDayData
     useEffect(() => {
@@ -84,7 +84,6 @@ export const App = () => {
                     headers: {'Content-Type': 'application/json'},
                     credentials: "include",
                 });
-                console.log('pobieranie danych dnia pracy');
                 if ((result && result.data) && (!result.data.dtc)) {
                     setDayData(result.data);
                 }

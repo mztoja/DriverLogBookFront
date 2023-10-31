@@ -1,4 +1,4 @@
-import React, {FormEvent, useEffect, useState} from "react";
+import React, {FormEvent} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
@@ -11,61 +11,42 @@ import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
+import {ActionInput} from "../../common/form/ActionInput";
+import { AddLogData } from "types";
 import {apiPaths} from "../../../config/api";
 import {commons} from "../../../assets/txt/commons";
 import {login} from "../../../assets/txt/login";
-import {OnOffSwitch} from "../../common/form/OnOffSwitch";
-import {dayCardStateEnum, DayInterface, StartDayData} from "types";
 
-export const DayStart = (props: ActionsPropsTypes) => {
+export const AnotherLog = (props: ActionsPropsTypes) => {
 
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
-    const [lastDay, setLastDay] = useState<DayInterface | null>(null);
 
-    useEffect(() => {
-        (async () => {
-            const result = await fetchData(apiPaths.getLastDay, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setLastDay(result.data);
-                if (result.data.cardState === dayCardStateEnum.inserted) {
-                    props.updateFormData('cardInserted', 'true');
-                }
-            }
-        })();
-        // eslint-disable-next-line
-    }, []);
-
-    const sendDayStart = async (e: FormEvent) => {
+    const sendAnotherLog = async (e: FormEvent) => {
         e.preventDefault();
-        const sendData: StartDayData = {
+        const sendData: AddLogData = {
             date: props.formData.date,
             country: props.formData.country,
             place: props.formData.place,
             placeId: props.formData.placeId,
             odometer: props.formData.odometer,
             notes: props.formData.notes,
-            cardInserted: props.formData.cardInserted,
-            doubleCrew: props.formData.doubleCrew,
-            action: home[props.lang].startedDayAction + ' ' + (props.formData.cardInserted === 'true' ? home[props.lang].startedDayActionCardInsert : ''),
+            action: props.formData.action,
         }
-        const result = await fetchData(apiPaths.createNewDay, {
+        const result = await fetchData(apiPaths.createNewLog, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(sendData),
             credentials: "include",
         });
+
         if (result && !result.success) {
             setAlert(commons[props.lang].apiConnectionError, 'error');
         } else {
             if (result && result.data) {
                 if (!result.data.dtc) {
-                    setAlert(home[props.lang].startedDay, 'success');
+                    setAlert(home[props.lang].anotherActionSuccess, 'success');
                     props.setActivityForm(null);
-                    props.setDayData(result.data);
                 } else {
                     setAlert(commons[props.lang].apiUnknownError, 'error');
                     if (result.data.dtc === 'Unauthorized') {
@@ -77,8 +58,8 @@ export const DayStart = (props: ActionsPropsTypes) => {
                     if (result.data.dtc === 'noActiveRoute') {
                         setAlert(home[props.lang].noActiveRoute, 'info');
                     }
-                    if (result.data.dtc === 'activeDay') {
-                        setAlert(home[props.lang].dayExist, 'info');
+                    if (result.data.dtc === 'action') {
+                        setAlert(home[props.lang].actionNoExist, 'info');
                     }
                 }
             }
@@ -88,10 +69,11 @@ export const DayStart = (props: ActionsPropsTypes) => {
     if (loading) {
         return <CircularProgress/>
     }
+
     return (
         <fieldset>
-            <legend>{home[props.lang].dayStart}</legend>
-            <form onSubmit={sendDayStart}>
+            <legend>{home[props.lang].anotherLog}</legend>
+            <form onSubmit={sendAnotherLog}>
                 <div><DateInput
                     lang={props.lang}
                     value={props.formData.date}
@@ -118,17 +100,14 @@ export const DayStart = (props: ActionsPropsTypes) => {
                 />
                 </div>
                 <br/>
-                <div><OnOffSwitch label={home[props.lang].doubleCrew} value={props.formData.doubleCrew}
-                                  onChange={e => props.updateFormData('doubleCrew', e)}/></div>
+                <div>
+                    <ActionInput lang={props.lang} value={props.formData.action} onChange={e => props.updateFormData('action', e.target.value)}/>
+                </div>
                 <br/>
-                {lastDay === null || lastDay.cardState !== dayCardStateEnum.inserted ?
-                    <><div><OnOffSwitch label={home[props.lang].cardInserted} value={props.formData.cardInserted}
-                                      onChange={e => props.updateFormData('cardInserted', e)}
-                    /></div><br/></> : ''}
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
-                <SubmitButton text={home[props.lang].dayStart}/>
+                <SubmitButton text={home[props.lang].anotherLog}/>
             </form>
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>

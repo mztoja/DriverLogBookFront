@@ -48,6 +48,13 @@ interface Form {
     driveTime2: string;
     driveTimeHelper: string;
     driveTimeHelper2: string;
+    action: string;
+    bordersApiProblem: string;
+    border: string;
+    switchToNewBorder: string;
+    switchToBorderList: string;
+    yourCountry: string;
+    selectTargetCountry: string;
 }
 
 
@@ -102,6 +109,13 @@ export const form: Form[] =
         driveTime2: '2nd driver drive time',
         driveTimeHelper: 'Type your driving time from tacho throughout the day.',
         driveTimeHelper2: 'You can also enter the co-driver driving time.',
+        action: 'Activity',
+        bordersApiProblem: 'The list of border crossings cannot be loaded. Please check your connection or try again later.',
+        border: 'Border crossing',
+        switchToNewBorder: 'Add new border crossing',
+        switchToBorderList: 'Switch to border list',
+        yourCountry: 'You are now in',
+        selectTargetCountry: 'Select the country you want to enter below',
     },
         {//pl
             email: 'E-mail',
@@ -153,4 +167,11 @@ export const form: Form[] =
             driveTime2: 'Czas jazdy 2 kierowcy',
             driveTimeHelper: 'Spisz swój czas jazdy z tachografu z całego dnia.',
             driveTimeHelper2: 'Możesz też wpisać czas jazdy zmiennika celem lepszego zliczania statystyk.',
+            action: 'Czynność',
+            bordersApiProblem: 'Nie można wczytać listy przejść granicznych. Sprawdź swoje połączenie bądź spróbuj ponownie później.',
+            border: 'Przejście graniczne',
+            switchToBorderList: 'Przełącz na wybór przejścia',
+            switchToNewBorder: 'Dodaj nowe przejście',
+            yourCountry: 'Jesteś teraz w',
+            selectTargetCountry: 'Wybierz poniżej kraj do którego chcesz wjechać',
         }];

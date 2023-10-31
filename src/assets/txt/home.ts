@@ -28,6 +28,11 @@ interface Home {
     finishedDayAction: string;
     noActiveRoute: string;
     typeFuelBurned: string;
+    anotherActionSuccess: string;
+    actionNoExist: string;
+    borderCrossAction: string;
+    borderCrossSuccess: string;
+    countryConflict: string;
 }
 
 export const home:Home[] = [{
@@ -61,6 +66,11 @@ export const home:Home[] = [{
     finishedDayAction: 'End of the day',
     noActiveRoute: 'You don\'t have a route to start your working day.',
     typeFuelBurned: 'You forgot to top up the amount of fuel burned.',
+    actionNoExist: 'Please top up the activity field.',
+    anotherActionSuccess: 'The activity has been added successfully.',
+    borderCrossAction: 'Border crossing',
+    borderCrossSuccess: 'Border crossing entered successfully.',
+    countryConflict: 'The country entered is the same as the one you are currently in. You must provide the country you are entering.',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -91,4 +101,9 @@ export const home:Home[] = [{
     finishedDayAction: 'Zakończenie dnia',
     noActiveRoute: 'Nie masz rozpoczętej trasy w której można by rozpocząć dzień pracy.',
     typeFuelBurned: 'Zapomniałeś uzupełnić ilośći spalonego paliwa.',
+    actionNoExist: 'Uzupełnij czynność którą chcesz wpisać.',
+    anotherActionSuccess: 'Wpisana czynność została dodana pomyślnie.',
+    borderCrossAction: 'Przekroczenie granicy',
+    borderCrossSuccess: 'Pomyślnie wpisano przekroczenie granicy.',
+    countryConflict: 'Podany kraj jest taki sam jak ten w którym się obecnie znajdujesz. Musisz podać kraj do którego wjeżdzasz.',
 }];
