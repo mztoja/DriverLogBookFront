@@ -4,6 +4,7 @@ import {TopBar} from "../components/bars/TopBar/TopBar";
 import {Content} from "../components/bars/Content/Content";
 import { UserInterface } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
+import { DaysList } from "../components/days/DaysList";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -13,6 +14,8 @@ interface Props extends AppMainElementsTypes {
 export const DaysView = (props: Props) => (
     <>
         <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
-        <Content></Content>
+        <Content>
+            <DaysList lang={props.userData.lang}/>
+        </Content>
     </>
 );

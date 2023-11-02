@@ -4,6 +4,7 @@ import {UserInterface, userLangEnum} from "types";
 import {apiPaths} from "../../config/api";
 import {login} from "../../assets/txt/login";
 import {useApi} from "../../hooks/useApi";
+import {CircularProgress} from "@mui/material";
 
 interface Props {
     lang: userLangEnum;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export const LogoutLink = (props: Props) => {
-    const {fetchData} = useApi();
+    const {loading,fetchData} = useApi();
     const logout = async () => {
 
         const result = await fetchData(apiPaths.logout, {
@@ -23,5 +24,8 @@ export const LogoutLink = (props: Props) => {
         }
     }
 
+    if (loading) {
+        return <CircularProgress/>
+    }
     return <Link to="" className="Link" onClick={logout}>{login[props.lang].logout}</Link>
 }
