@@ -21,6 +21,7 @@ export const apiPaths = {
     // logs
     createNewLog: '/logs/create',
     createBorderCross: '/logs/createBorderCross',
+    getLogs: '/logs',
     // borders
     getBordersByCountry: '/borders/getByCountry',
 }

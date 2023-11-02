@@ -170,6 +170,11 @@ table, th, td {
     text-align: left;
 }
 
+td.extended {
+    font-size: medium;
+    text-align: center;
+}
+
 thead th {
     color: whitesmoke;
     position: sticky;

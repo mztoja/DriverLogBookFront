@@ -1,19 +1,20 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {places} from "../../assets/txt/places";
 import {PlaceInterface, UserInterface} from "types";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Fab} from "@mui/material";
 import {form} from "../../assets/txt/form";
 import {countries} from "../../assets/txt/countries";
 import DetailsIcon from '@mui/icons-material/Details';
 import RoomIcon from '@mui/icons-material/Room';
 import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
 import {CountrySelect} from "../common/form/CountrySelect";
-import {Link} from "react-router-dom";
 import {SearchInput} from "../common/form/SearchInput";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
 import {apiPaths} from "../../config/api";
 import {commons} from "../../assets/txt/commons";
+import {formatCountry} from "../../utils/formatCountry";
+import NavigationIcon from '@mui/icons-material/Navigation';
 
 interface Props {
     userData: UserInterface;
@@ -159,7 +160,7 @@ export const PlacesList = (props: Props) => {
                                             <tr onClick={() => setExpandedRow(index)}>
                                                 <td>{index}</td>
                                                 <td>{form[props.userData.lang][`placeType${place.type}`]}</td>
-                                                <td>{countries[props.userData.lang][place.country]}</td>
+                                                <td>{formatCountry(place.country, props.userData.lang)}</td>
                                                 <td>{place.code} {place.city}</td>
                                                 <td>{place.name} - {place.street}</td>
                                                 <td>
@@ -170,35 +171,39 @@ export const PlacesList = (props: Props) => {
                                         )}
                                         {expandedRow === index && (
                                             <tr onClick={() => setExpandedRow(null)}>
-                                                <td colSpan={6}>
-                                                    <center>
-                                                        <div>
-                                                            {countries[props.userData.lang][place.country]}
-                                                        </div>
-                                                        <div>
-                                                            {form[props.userData.lang][`placeType${place.type}`]}
-                                                        </div>
+                                                <td colSpan={6} className="extended">
+                                                    <div>
+                                                        {countries[props.userData.lang][place.country]}
+                                                    </div>
+                                                    <div>
+                                                        {form[props.userData.lang][`placeType${place.type}`]}
+                                                    </div>
 
-                                                        <div>
-                                                            {place.name}
-                                                        </div>
-                                                        <div>
-                                                            {place.street}, {place.code} {place.city}
-                                                        </div>
-                                                        <br/>
-                                                        <div>
-                                                            <RoomIcon/><br/>
-                                                            {place.lat}, {place.lon}
-                                                        </div>
+                                                    <div>
+                                                        {place.name}
+                                                    </div>
+                                                    <div>
+                                                        {place.street}, {place.code} {place.city}
+                                                    </div>
+                                                    <br/>
+                                                    <div>
+                                                        <RoomIcon/><br/>
+                                                        {place.lat}, {place.lon}
+                                                    </div>
+                                                    {place.description !== null && (
                                                         <div>
                                                             <DetailsIcon/><br/>
                                                             {place.description}
                                                         </div>
-                                                        <div>
-                                                            <Link to="" className="ContentLink"
-                                                                  onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>{places[props.userData.lang].navigateSwitchLabel}</Link>
-                                                        </div>
-                                                    </center>
+                                                    )}
+                                                    <br/>
+                                                    <div>
+                                                        <Fab variant="extended" size="small" color="primary"
+                                                             onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
+                                                            <NavigationIcon sx={{mr: 1}}/>
+                                                            {places[props.userData.lang].navigateSwitchLabel}
+                                                        </Fab>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         )}
