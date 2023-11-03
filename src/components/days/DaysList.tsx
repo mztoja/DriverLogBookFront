@@ -34,7 +34,6 @@ export const DaysList = (props: Props) => {
                 headers: {Accept: 'application/json'},
                 credentials: "include",
             });
-            console.log(result);
             if ((result && result.data) && (!result.data.dtc)) {
                 setData(result.data.items);
                 setTotalItems(Number(result.data.totalItems));

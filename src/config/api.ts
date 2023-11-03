@@ -4,6 +4,7 @@ export const apiPaths = {
     // places
     getPlaces: '/places',
     createPlace: '/places/create',
+    getCompanyList: '/places/companyList',
     // routes
     getActiveRoute: '/tours/getActiveRoute',
     createNewRoute: '/tours/create',
@@ -13,6 +14,7 @@ export const apiPaths = {
     get: '/auth/user',
     logout: '/auth/logout',
     markDepart: '/users/markDepart',
+    userUpdate: '/users/userUpdate',
     // days
     createNewDay: '/days/create',
     finishDay: '/days/finish',

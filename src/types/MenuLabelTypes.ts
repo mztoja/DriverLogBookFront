@@ -7,4 +7,5 @@ export interface MenuLabelTypes {
     finances: string;
     blockedUser: string;
     places: string;
+    profile: string;
 }

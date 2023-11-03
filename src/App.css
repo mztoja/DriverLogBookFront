@@ -23,6 +23,7 @@ a {
 .Link:hover {
     color: rgb(144, 202, 249);
     text-decoration: underline rgba(144, 202, 249, 0.7);
+    cursor: pointer;
 }
 
 .ContentLink {

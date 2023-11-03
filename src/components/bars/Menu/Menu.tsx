@@ -14,10 +14,10 @@ export const Menu = (props: Props) => {
     return (
         <nav id="Menu">
             <Option name={txt.home} url="/"/>
-            <Option name={txt.logs} url="logs"/>
-            <Option name={txt.days} url="days"/>
-            <Option name={txt.finances} url="finances"/>
-            <Option name={txt.places} url="places"/>
+            <Option name={txt.logs} url="/logs"/>
+            <Option name={txt.days} url="/days"/>
+            <Option name={txt.finances} url="/finances"/>
+            <Option name={txt.places} url="/places"/>
             <DivClear/>
         </nav>
     );

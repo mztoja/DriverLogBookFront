@@ -9,6 +9,7 @@ export const labels:MenuLabelTypes[] = [{
     finances: "Finances",
     blockedUser: 'Inactive account',
     places: 'Address List',
+    profile: 'Profile settings',
 },{
     register: "Rejestracja",
     login: "Logowanie",
@@ -18,6 +19,7 @@ export const labels:MenuLabelTypes[] = [{
     finances: "Finanse",
     blockedUser: 'Konto nieaktywne',
     places: 'Lista adresowa',
+    profile: 'Ustawienia profilu',
 }];
 
 

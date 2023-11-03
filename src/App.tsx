@@ -27,7 +27,6 @@ export const App = () => {
     // setUserData
     useEffect(() => {
         (async () => {
-            console.log('wczytywanie danych użytkownika');
             const result = await fetchData(apiPaths.get, {
                 headers: {'Content-Type': 'application/json'},
                 credentials: "include",

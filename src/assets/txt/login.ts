@@ -20,6 +20,9 @@ interface Login {
     registerCompanyNameNotExist: string;
     registerCompanyCityNotExist: string;
     registerCountryNotExist: string;
+    profile: string;
+    save: string;
+    saveApiSuccess: string;
 }
 
 
@@ -46,6 +49,9 @@ export const login: Login[] =
         registerCompanyNameNotExist: 'Please enter the company name.',
         registerCompanyCityNotExist: 'Please enter the company city.',
         registerCountryNotExist: 'Please select country.',
+        profile: 'Profile settings',
+        save: 'Save changes',
+        saveApiSuccess: 'Profile data has been changed.',
     },
         {//pl
             welcome: `Witaj w aplikacji "Dziennik Kierowcy".`,
@@ -69,4 +75,7 @@ export const login: Login[] =
             registerCompanyNameNotExist: 'Musisz wpisać nazwę firmy.',
             registerCompanyCityNotExist: 'Musisz wpisać nazwę miejsowości siedziby firmy.',
             registerCountryNotExist: 'Musisz wybrać kraj.',
+            profile: 'Ustawienia profilu',
+            save: 'Zapisz zmiany',
+            saveApiSuccess: 'Dane profilu zostały zmienione.',
         }];

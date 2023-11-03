@@ -1,10 +1,10 @@
 import React, {Dispatch, SetStateAction} from "react";
-import {Link} from "react-router-dom";
 import {UserInterface, userLangEnum} from "types";
 import {apiPaths} from "../../config/api";
-import {login} from "../../assets/txt/login";
 import {useApi} from "../../hooks/useApi";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
+import LogoutIcon from '@mui/icons-material/Logout';
+import {login} from "../../assets/txt/login";
 
 interface Props {
     lang: userLangEnum;
@@ -27,5 +27,7 @@ export const LogoutLink = (props: Props) => {
     if (loading) {
         return <CircularProgress/>
     }
-    return <Link to="" className="Link" onClick={logout}>{login[props.lang].logout}</Link>
+    // return <Link to="" className="Link" onClick={logout}>{login[props.lang].logout}</Link>
+    return <Tooltip title={login[props.lang].logout} arrow><LogoutIcon className="Link" onClick={logout}/></Tooltip>
+
 }

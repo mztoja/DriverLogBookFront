@@ -8,6 +8,7 @@ import {FinancesView} from "../FinancesView";
 import {PlacesView} from "../PlacesView";
 import {Footer} from "../../components/bars/Footer/Footer";
 import {TourInterface, UserInterface, DayInterface} from "types";
+import { ProfileView } from "../ProfileView";
 
 export const LoggedInView = (
     userData: UserInterface,
@@ -31,6 +32,8 @@ export const LoggedInView = (
                    element={<FinancesView page="finances" userData={userData} setUserData={setUserData}/>}/>
             <Route path="places"
                    element={<PlacesView page="places" userData={userData} setUserData={setUserData}/>}/>
+            <Route path="profile"
+                   element={<ProfileView page="profile" userData={userData} setUserData={setUserData}/>}/>
         </Routes>
         <Footer lang={userData.lang}/>
     </div>
