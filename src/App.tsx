@@ -89,7 +89,7 @@ export const App = () => {
             })();
         }
         // eslint-disable-next-line
-    }, [tourData]);
+    }, [userData?.currentTokenId]);
 
     if (loading) {
         return <LinearProgress/>;

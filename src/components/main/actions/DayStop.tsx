@@ -81,6 +81,7 @@ export const DayStop = (props: ActionsPropsTypes) => {
 
     return (
         <fieldset>
+            <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].dayStop}</legend>
             <form onSubmit={sendDayStop}>
                 <div><OdometerInput

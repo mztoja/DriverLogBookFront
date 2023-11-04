@@ -36,6 +36,8 @@ interface Form {
     date: string;
     truck: string;
     trailer: string;
+    vehicle: string;
+    vehicleDetailsNotFound: string;
     fuelQuantity: string;
     fuelCombustion: string;
     fuelConTypeHelper1: string;
@@ -55,6 +57,10 @@ interface Form {
     switchToBorderList: string;
     yourCountry: string;
     selectTargetCountry: string;
+    loadDescription: string;
+    loadReference: string;
+    loadWeight: string;
+    loadQuantity: string;
 }
 
 
@@ -97,6 +103,8 @@ export const form: Form[] =
         date: 'Date',
         truck: 'Truck reg. plate',
         trailer: 'Trailer reg. plate',
+        vehicle: 'Choose loaded vehicle',
+        vehicleDetailsNotFound: 'vehicle details not found',
         fuelCombustion: 'Amount of fuel consumed',
         fuelQuantity: 'Fuel level',
         fuelConTypeHelper1: 'W ustawieniach profilu wybrano wpisywanie spalania po ilości paliwa',
@@ -116,6 +124,10 @@ export const form: Form[] =
         switchToBorderList: 'Switch to border list',
         yourCountry: 'You are now in',
         selectTargetCountry: 'Select the country you want to enter below',
+        loadDescription: 'Product description',
+        loadReference: 'Loading reference',
+        loadWeight: 'Weight of the goods',
+        loadQuantity: 'Quantity of the goods',
     },
         {//pl
             email: 'E-mail',
@@ -155,6 +167,8 @@ export const form: Form[] =
             date: 'Data',
             truck: 'Nr. rej. ciężarówki',
             trailer: 'Nr. rej. naczepy/przyczepy',
+            vehicle: 'Wybierz załadowany pojazd',
+            vehicleDetailsNotFound: 'nie znaleziono danych pojazdu',
             fuelQuantity: 'Poziom paliwa',
             fuelCombustion: 'Ilość spalonego paliwa',
             fuelConTypeHelper1: 'W ustawieniach profilu wybrano wpisywanie spalania po ilości paliwa',
@@ -174,4 +188,8 @@ export const form: Form[] =
             switchToNewBorder: 'Dodaj nowe przejście',
             yourCountry: 'Jesteś teraz w',
             selectTargetCountry: 'Wybierz poniżej kraj do którego chcesz wjechać',
+            loadDescription: 'Opis towrau',
+            loadReference: 'Numer załadunku',
+            loadWeight: 'Waga towaru',
+            loadQuantity: 'Ilość towaru',
         }];

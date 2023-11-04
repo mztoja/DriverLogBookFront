@@ -9,6 +9,10 @@ import {useAlert} from "../../hooks/useAlert";
 import {DayStop} from "./actions/DayStop";
 import { AnotherLog } from "./actions/AnotherLog";
 import { BorderCross } from "./actions/BorderCross";
+import {AttachTrailer} from "./actions/AttachTrailer";
+import {DetachTrailer} from "./actions/DetachTrailer";
+import {LoadingArrival} from "./actions/LoadingArrival";
+import {LoadingCompleted} from "./actions/LoadingCompleted";
 
 interface Props {
     lang: userLangEnum;
@@ -28,6 +32,7 @@ export const ActivitiesFieldsets = (props: Props) => {
         date: '',
         truck: '',
         trailer: '',
+        vehicle: '',
         odometer: '',
         action: '',
         fuelQuantity: '',
@@ -35,6 +40,8 @@ export const ActivitiesFieldsets = (props: Props) => {
         place: '',
         placeId: '',
         country: '',
+        senderId: '',
+        receiverId: '',
         notes: '',
         doubleCrew: 'false',
         cardInserted: 'false',
@@ -42,6 +49,10 @@ export const ActivitiesFieldsets = (props: Props) => {
         driveTime: '',
         driveTime2: '',
         addNewBorder: 'false',
+        description: '',
+        quantity: '',
+        weight: '',
+        reference: '',
     });
 
     const updateGeneralFormData = (key: string, value: string) => {
@@ -134,6 +145,74 @@ export const ActivitiesFieldsets = (props: Props) => {
         />
     }
 
+    if (activityForm === 'attachTrailer') {
+        if (props.tourData?.trailer) {
+            setAlert(home[props.lang].trailerExist, 'info');
+            setActivityForm(null);
+        }
+        return <AttachTrailer
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
+    if (activityForm === 'detachTrailer') {
+        if (!props.tourData?.trailer) {
+            setAlert(home[props.lang].noTrailer, 'info');
+            setActivityForm(null);
+        }
+        return <DetachTrailer
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
+    if (activityForm === 'loadingArrival') {
+        return <LoadingArrival
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
+    if (activityForm === 'loadingCompleted') {
+        return <LoadingCompleted
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
     if (props.tourData) {
         return (
             <>
@@ -146,6 +225,17 @@ export const ActivitiesFieldsets = (props: Props) => {
                 </fieldset>
                 <fieldset className="DivInline">
                     <legend>{home[props.lang].fieldFinances}</legend>
+                </fieldset>
+                <fieldset className="DivInline">
+                    <legend>{home[props.lang].fieldLoads}</legend>
+                    <NavigateButton activityForm='loadingArrival' set={setActivityForm} text={home[props.lang].loadingArrival}/><br/>
+                    <NavigateButton activityForm='loadingCompleted' set={setActivityForm} text={home[props.lang].loading}/><br/>
+                    <NavigateButton activityForm='unloadingArrival' set={setActivityForm} text={home[props.lang].unloadingArrival+'?'}/><br/>
+                </fieldset>
+                <fieldset className="DivInline">
+                    <legend>{home[props.lang].fieldVehicle}</legend>
+                    <NavigateButton activityForm='attachTrailer' set={setActivityForm} text={home[props.lang].attachTrailer}/><br/>
+                    <NavigateButton activityForm='detachTrailer' set={setActivityForm} text={home[props.lang].detachTrailer}/><br/>
                 </fieldset>
                 <DivClear/>
                 <NavigateButton activityForm='tourStop' set={setActivityForm} text={home[props.lang].tourStop}/><br/>

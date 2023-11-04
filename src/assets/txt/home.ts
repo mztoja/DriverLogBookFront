@@ -3,16 +3,38 @@ interface Home {
     subTitle: string;
     fieldDaysLogs: string;
     fieldFinances: string;
+    fieldLoads: string;
+    fieldVehicle: string;
     dayStart: string;
     dayStop: string;
     borderCross: string;
     anotherLog: string;
     tourStart: string;
     tourStop: string;
+    loadingArrival: string;
+    loadingArrivalAction: string;
+    loadingArrivalSuccess: string;
+    loading: string;
+    loadingAction: string;
+    loadingSuccess: string;
+    loadingPlace: string;
+    loadingSender: string;
+    loadingReceiver: string;
+    loadingSenderSwitchLabel: string;
+    unloadingArrival: string;
+    attachTrailer: string;
+    attachTrailerAction: string;
+    attachTrailerSuccess: string;
+    detachTrailer: string;
+    detachTrailerAction: string;
+    detachTrailerSuccess: string;
     back: string;
     startedTour: string;
     startedTourAction: string;
     truckNoExist: string;
+    trailerNoExist: string;
+    trailerExist: string;
+    noTrailer: string;
     placeNoExist: string;
     tourExist: string;
     doubleCrew: string;
@@ -33,6 +55,9 @@ interface Home {
     borderCrossAction: string;
     borderCrossSuccess: string;
     countryConflict: string;
+    loadingCountryNoExist: string;
+    noVehicle: string;
+    noWeight: string;
 }
 
 export const home:Home[] = [{
@@ -41,17 +66,39 @@ export const home:Home[] = [{
     subTitle: `Driver's Log-Book`,
     fieldDaysLogs: 'Days/Logs',
     fieldFinances: 'Finances',
+    fieldLoads: 'Loads',
+    fieldVehicle: 'Vehicle / service',
     dayStart: 'Start your day',
     dayStop: 'Finish your day',
     borderCross: 'Border Crossing',
     anotherLog: 'Add another log',
     tourStart: 'Start your tour',
     tourStop: 'Finish your tour',
+    loadingArrival: 'Arrival for loading',
+    loadingArrivalAction: 'Arrival for loading',
+    loadingArrivalSuccess: 'The arrival for loading was recorded successfully.',
+    loading: 'Loading completed',
+    loadingAction: 'Completion of loading no.',
+    loadingSuccess: 'Loading completed successfully entered.',
+    loadingPlace: 'Loading place',
+    loadingSender: 'Sender',
+    loadingReceiver: 'Receiver',
+    loadingSenderSwitchLabel: 'enter the sender in the place of loading',
+    unloadingArrival: 'arriving at unloading',
+    attachTrailer: 'Attach Trailer',
+    attachTrailerAction: 'Trailer attached',
+    attachTrailerSuccess: 'The trailer has been connected successfully',
+    detachTrailer: 'Detach Trailer',
+    detachTrailerAction: 'Trailer detached',
+    detachTrailerSuccess: 'The trailer has been disconnected successfully',
     back: 'Back',
     startedTour: 'Your tour has started.',
     startedTourAction: 'Route no. has started',
     truckNoExist: 'Please enter truck number.',
+    trailerNoExist: 'Please enter trailer number.',
     placeNoExist: 'Please choose or enter place activity.',
+    trailerExist: 'You have already entered the connected trailer',
+    noTrailer: 'You don\'t have a trailer attached that you could unhook.',
     tourExist: 'You have already started a route, so you cannot start another one.',
     doubleCrew: 'Double crew',
     cardInserted: `I insert my driver card`,
@@ -71,21 +118,46 @@ export const home:Home[] = [{
     borderCrossAction: 'Border crossing',
     borderCrossSuccess: 'Border crossing entered successfully.',
     countryConflict: 'The country entered is the same as the one you are currently in. You must provide the country you are entering.',
+    loadingCountryNoExist: 'Please select loading place country.',
+    noVehicle: 'You must select a loaded vehicle',
+    noWeight: 'You must enter the weight of the load.',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
     fieldDaysLogs: 'Dni/Czynności',
     fieldFinances: 'Finanse',
+    fieldLoads: 'Ładunki',
+    fieldVehicle: 'Pojazd / serwis',
     dayStart: 'Rozpoczęcie dnia',
     dayStop: 'Zakończenie dnia',
     borderCross: 'Przekroczenie granicy',
     anotherLog: 'Dodaj inną czynność',
     tourStart: 'Rozpocznij trasę',
     tourStop: 'Zakończ trasę',
+    loadingArrival: 'Dojazd na załadunek',
+    loadingArrivalAction: 'Dojazd na załadunek',
+    loadingArrivalSuccess: 'Dojazd na załadunek został zapisany pomyślnie.',
+    loading: 'Zakończenie załadunku',
+    loadingAction: 'Zakończenie załadunku nr.',
+    loadingSuccess: 'Pomyślnie wpisano zakończenie załadunku.',
+    loadingPlace: 'Miejsce załadunku',
+    loadingSender: 'Nadawca',
+    loadingReceiver: 'Odbiorca',
+    loadingSenderSwitchLabel: 'wpisz nadawcę w miejsce załadunku',
+    unloadingArrival: 'Dojazd na rozładunek',
+    attachTrailer: 'Podepnij naczepę',
+    attachTrailerAction: 'Podpięto naczepę',
+    attachTrailerSuccess: 'Naczepa została podpięta pomyślnie.',
+    detachTrailer: 'Odepnij naczepę',
+    detachTrailerAction: 'Odpięto naczepę',
+    detachTrailerSuccess: 'Naczepa została odpięta pomyślnie.',
     back: 'Powrót',
     startedTour: 'Twoja trasa została rozpoczęta.',
     startedTourAction: 'Trasa nr. została rozpoczęta',
-    truckNoExist: 'Podaj nr rej. ciągnika.',
+    truckNoExist: 'Podaj nr. rej. ciągnika.',
+    trailerNoExist: 'Podaj nr. rej. naczepy.',
+    trailerExist: 'Masz już wpisaną podpiętą przyczepę.',
+    noTrailer: 'Nie masz żadnej podpiętej naczepy do odpięcia.',
     placeNoExist: 'Wybierz lub wpisz miejsce czynności.',
     tourExist: 'Masz już rozpoczętą trasę, więc nie możesz rozpocząć kolejnej.',
     doubleCrew: 'Podwójna obsada',
@@ -106,4 +178,7 @@ export const home:Home[] = [{
     borderCrossAction: 'Przekroczenie granicy',
     borderCrossSuccess: 'Pomyślnie wpisano przekroczenie granicy.',
     countryConflict: 'Podany kraj jest taki sam jak ten w którym się obecnie znajdujesz. Musisz podać kraj do którego wjeżdzasz.',
+    loadingCountryNoExist: 'Wybierz kraj miejsca załadunku.',
+    noVehicle: 'Musisz wybrać załadowany pojazd.',
+    noWeight: 'Musisz podać masę ładunku.',
 }];

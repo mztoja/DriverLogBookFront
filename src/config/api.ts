@@ -25,6 +25,13 @@ export const apiPaths = {
     createNewLog: '/logs/create',
     createBorderCross: '/logs/createBorderCross',
     getLogs: '/logs',
+    attachTrailer: '/logs/attachTrailer',
+    detachTrailer: '/logs/detachTrailer',
+    loadingArrival: '/logs/loadingArrival',
     // borders
     getBordersByCountry: '/borders/getByCountry',
+    // vehicles
+    getVehicleByRegistration: '/vehicles/findByRegistration',
+    // loadings
+    createLoad: '/loads/create',
 }

@@ -76,6 +76,7 @@ export const TourStart = (props:ActionsPropsTypes) => {
 
     return (
         <fieldset>
+            <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].tourStart}</legend>
             <form onSubmit={sendTourStart}>
                 <div><DateInput

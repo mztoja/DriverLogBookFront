@@ -3,38 +3,37 @@ import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {home} from "../../../assets/txt/home";
 import {DateInput} from "../../common/form/DateInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
+import {PlaceInput} from "../../common/form/PlaceInput";
 import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
-import {BorderInput} from "../../common/form/border/BorderInput";
-import { BorderCrossData } from "types";
-import {apiPaths} from "../../../config/api";
+import {AddLogData} from "types";
+import {login} from "../../../assets/txt/login";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
+import {apiPaths} from "../../../config/api";
 import {commons} from "../../../assets/txt/commons";
-import {login} from "../../../assets/txt/login";
 
-export const BorderCross = (props: ActionsPropsTypes) => {
+export const DetachTrailer = (props: ActionsPropsTypes) => {
 
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
 
-    const sendBorderCross = async (e: FormEvent) => {
+    const send = async (e: FormEvent) => {
         e.preventDefault();
-        props.updateFormData('placeId', '0');
-        const sendData: BorderCrossData = {
-            placeId: '0',
-            place: props.formData.place,
-            country: props.formData.country,
+
+        const sendData: AddLogData = {
             date: props.formData.date,
-            notes: props.formData.notes,
+            country: props.formData.country,
+            place: props.formData.place,
+            placeId: props.formData.placeId,
             odometer: props.formData.odometer,
-            action: home[props.lang].borderCross+' '+props.userData.country+' > '+props.formData.country,
-            addNewBorder: props.formData.addNewBorder,
+            notes: props.formData.notes,
+            action: home[props.lang].detachTrailerAction,
         }
-        const result = await fetchData(apiPaths.createBorderCross, {
+        const result = await fetchData(apiPaths.detachTrailer, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(sendData),
@@ -45,23 +44,24 @@ export const BorderCross = (props: ActionsPropsTypes) => {
         } else {
             if (result && result.data) {
                 if (!result.data.dtc) {
-                    setAlert(home[props.lang].borderCrossSuccess, 'success');
+                    setAlert(home[props.lang].detachTrailerSuccess, 'success');
+                    if (props.tourData) {
+                        props.setTourData({...props.tourData, trailer: null});
+                    }
                     props.setActivityForm(null);
-                    props.setUserData({ ...props.userData, country: sendData.country });
                 } else {
                     setAlert(commons[props.lang].apiUnknownError, 'error');
                     if (result.data.dtc === 'Unauthorized') {
                         setAlert(commons[props.lang].apiUnauthorized, 'error');
                     }
-                    if (result.data.dtc === 'countryConflict') {
-                        setAlert(home[props.lang].countryConflict, 'warning');
-                    }
                     if (result.data.dtc === 'country') {
                         setAlert(login[props.lang].registerCountryNotExist, 'warning');
                     }
-
                     if (result.data.dtc === 'noActiveRoute') {
                         setAlert(home[props.lang].noActiveRoute, 'info');
+                    }
+                    if (result.data.dtc === 'noTrailer') {
+                        setAlert(home[props.lang].noTrailer, 'info');
                     }
                 }
             }
@@ -76,8 +76,8 @@ export const BorderCross = (props: ActionsPropsTypes) => {
     return (
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
-            <legend>{home[props.lang].borderCross}</legend>
-            <form onSubmit={sendBorderCross}>
+            <legend>{home[props.lang].detachTrailer}</legend>
+            <form onSubmit={send}>
                 <div><DateInput
                     lang={props.lang}
                     value={props.formData.date}
@@ -92,22 +92,22 @@ export const BorderCross = (props: ActionsPropsTypes) => {
                 />
                 </div>
                 <br/>
-                <div>
-                    <BorderInput
-                        country={props.userData.country}
-                        lang={props.lang}
-                        countryValue={props.formData.country}
-                        countryOnChange={e => props.updateFormData('country', e)}
-                        placeValue={props.formData.place}
-                        placeOnChange={e => props.updateFormData('place', e)}
-                        addNewBorderChange={e => props.updateFormData('addNewBorder', e)}
-                    />
+                <div><PlaceInput
+                    lang={props.lang}
+                    defaultCountry={props.userData.country}
+                    countryValue={props.formData.country}
+                    countryOnChange={e => props.updateFormData('country', e)}
+                    placeValue={props.formData.place}
+                    placeOnChange={e => props.updateFormData('place', e)}
+                    placeIdValue={props.formData.placeId}
+                    placeIdOnChange={e => props.updateFormData('placeId', e)}
+                />
                 </div>
                 <br/>
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
-                <SubmitButton text={home[props.lang].borderCross}/>
+                <SubmitButton text={home[props.lang].detachTrailer}/>
             </form>
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>

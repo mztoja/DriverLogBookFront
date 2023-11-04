@@ -90,6 +90,7 @@ export const DayStart = (props: ActionsPropsTypes) => {
     }
     return (
         <fieldset>
+            <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].dayStart}</legend>
             <form onSubmit={sendDayStart}>
                 <div><DateInput

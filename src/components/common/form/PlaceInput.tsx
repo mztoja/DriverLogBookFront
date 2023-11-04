@@ -22,12 +22,13 @@ interface Props {
     placeOnChange: (e: any) => void;
     placeIdValue: string;
     placeIdOnChange: (e: any) => void;
+    disablePlaceText?: boolean;
 }
 
 export const PlaceInput = (props: Props) => {
 
     const [country, setCountry] = useState<string>(props.countryValue ? props.countryValue : props.defaultCountry);
-    const [autoCompleteFormSwitch, setAutoCompleteFormSwitch] = useState<boolean>(props.placeValue === '');
+    const [autoCompleteFormSwitch, setAutoCompleteFormSwitch] = useState<boolean>(props.disablePlaceText ? true : (props.placeValue === ''));
     const [firstRender, setFirstRender] = useState<boolean>(true);
     const [placeIdValue, setPlaceIdValue] = useState<string>(props.placeIdValue === '' ? '0' : props.placeIdValue);
     const [placesList, setPlacesList] = useState<PlaceInterface[] | null>(null);
@@ -102,13 +103,13 @@ export const PlaceInput = (props: Props) => {
 
     const updateCountry = (e: string) => {
         if (country !== e) {
-            setCountry(e);
-            props.countryOnChange(e);
             setPlaceIdValue('0');
             props.placeIdOnChange('0');
             setDefaultPlaceValue(null);
             setClear(clear + 1);
         }
+        setCountry(e);
+        props.countryOnChange(e);
     }
 
     if (loading) {
@@ -197,10 +198,10 @@ export const PlaceInput = (props: Props) => {
                             }}
 
                         />
-                        <FormHelperText className='TextInput__Label'>
+                        {!props.disablePlaceText && <FormHelperText className='TextInput__Label'>
                             <Link to="" className="Link"
                                   onClick={() => changeInput()}>{form[props.lang].switchToPlace}</Link>
-                        </FormHelperText>
+                        </FormHelperText>}
                     </>
                 )
                 :

@@ -54,7 +54,7 @@ export const CompanySelect = (props: InputPropsTypes) => {
             >
                 {placesList.map(company => {
                     return (
-                        <MenuItem value={company.id}>
+                        <MenuItem key={company.id} value={company.id}>
                             ({company.country}) {company.name} - {company.street}, {company.code} {company.city}
                         </MenuItem>);
                 })}
