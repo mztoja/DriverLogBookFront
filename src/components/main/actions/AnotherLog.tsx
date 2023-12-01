@@ -14,8 +14,7 @@ import {Link} from "react-router-dom";
 import {ActionInput} from "../../common/form/ActionInput";
 import { AddLogData } from "types";
 import {apiPaths} from "../../../config/api";
-import {commons} from "../../../assets/txt/commons";
-import {login} from "../../../assets/txt/login";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const AnotherLog = (props: ActionsPropsTypes) => {
 
@@ -39,31 +38,10 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    setAlert(home[props.lang].anotherActionSuccess, 'success');
-                    props.setActivityForm(null);
-                } else {
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    }
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    }
-                    if (result.data.dtc === 'noActiveRoute') {
-                        setAlert(home[props.lang].noActiveRoute, 'info');
-                    }
-                    if (result.data.dtc === 'action') {
-                        setAlert(home[props.lang].actionNoExist, 'info');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].anotherActionSuccess, 'success');
+            props.setActivityForm(null);
+        });
     }
 
     if (loading) {

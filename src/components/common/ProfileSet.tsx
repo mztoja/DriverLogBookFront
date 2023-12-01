@@ -15,7 +15,7 @@ import {apiPaths} from "../../config/api";
 import {useApi} from "../../hooks/useApi";
 import {useAlert} from "../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
-import {commons} from "../../assets/txt/commons";
+import {handleApiResult} from "../../utils/handleApiResult";
 
 interface Props {
     userData: UserInterface;
@@ -55,21 +55,10 @@ export const ProfileSet = (props: Props) => {
             body: JSON.stringify(data),
             credentials: "include",
         });
-        if (result && !result.success) {
-            setAlert(commons[props.userData.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    setAlert(login[props.userData.lang].saveApiSuccess, 'success');
-                    props.setUserData(result.data);
-                } else {
-                    setAlert(commons[props.userData.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.userData.lang].apiUnauthorized, 'error');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.userData.lang, setAlert, () => {
+            setAlert(login[props.userData.lang].saveApiSuccess, 'success');
+            props.setUserData(result?.data);
+        });
     }
 
     if (loading) {

@@ -10,7 +10,7 @@ import {SubmitButton} from "../common/form/SubmitButton";
 import {useLocation} from "react-router-dom";
 import {DeleteFromLocalStorage, DownloadFromLocalStorage} from "../../hooks/LocalStorageHook";
 import {useApi} from "../../hooks/useApi";
-import {commons} from "../../assets/txt/commons";
+import {handleApiResult} from "../../utils/handleApiResult";
 
 interface Props {
     lang: userLangEnum;
@@ -56,26 +56,9 @@ export const LoginForm = (props: Props) => {
             credentials: "include",
             body: JSON.stringify(loginForm),
         });
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc && props.setUserData) {
-                    props.setUserData(result.data);
-                } else {
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'invalidLoginData') {
-                        setAlert(txt.responseError, 'warning');
-                    }
-                    if (result.data.dtc === 'email') {
-                        setAlert(txt.responseError, 'warning');
-                    }
-                    if (result.data.dtc === 'password') {
-                        setAlert(txt.responseError, 'warning');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            props.setUserData && props.setUserData(result?.data);
+        });
     }
 
     if (loading) {

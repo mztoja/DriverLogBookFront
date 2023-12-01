@@ -16,8 +16,7 @@ import {dayCardStateEnum, StopDayData} from "types";
 import {DriveTimeInput} from "../../common/form/DriveTimeInput";
 import {FuelInput} from "../../common/form/FuelInput";
 import {apiPaths} from "../../../config/api";
-import {commons} from "../../../assets/txt/commons";
-import {login} from "../../../assets/txt/login";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const DayStop = (props: ActionsPropsTypes) => {
     const {loading, fetchData} = useApi();
@@ -45,34 +44,11 @@ export const DayStop = (props: ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    setAlert(home[props.lang].finishedDay, 'success');
-                    props.setActivityForm(null);
-                    props.setDayData(null);
-                } else {
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    }
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    }
-                    if (result.data.dtc === 'fuelCombustion') {
-                        setAlert(home[props.lang].typeFuelBurned, 'warning');
-                    }
-                    if (result.data.dtc === 'noActiveRoute') {
-                        setAlert(home[props.lang].noActiveRoute, 'info');
-                    }
-                    if (result.data.dtc === 'dayNotExist') {
-                        setAlert(home[props.lang].dayNotExist, 'info');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].finishedDay, 'success');
+            props.setActivityForm(null);
+            props.setDayData(null);
+        });
     }
 
     if (loading) {
