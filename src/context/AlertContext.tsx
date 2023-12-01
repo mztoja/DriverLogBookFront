@@ -2,11 +2,11 @@ import {createContext, ReactNode, useState} from 'react';
 import {ALERT_TIME} from "../config/set";
 
 
-type Type = "error" | "success" | "info" | "warning" | undefined | "";
+export type SetAlertType = "error" | "success" | "info" | "warning" | undefined | "";
 
 interface InitialState {
     text: string;
-    type: Type;
+    type: SetAlertType;
 }
 
 const initialState: InitialState = {
@@ -16,7 +16,7 @@ const initialState: InitialState = {
 
 export const AlertContext = createContext({
     ...initialState,
-    setAlert: (text:string, type:Type):void => {},
+    setAlert: (text:string, type:SetAlertType):void => {},
 });
 
 interface Props {
@@ -25,9 +25,9 @@ interface Props {
 
 export const AlertProvider = ({ children }:Props) => {
     const [text, setText] = useState<string>('');
-    const [type, setType] = useState<Type>('');
+    const [type, setType] = useState<SetAlertType>('');
 
-    const setAlert = (text:string, type:Type) => {
+    const setAlert = (text:string, type:SetAlertType) => {
 
         if (type !== undefined) {
 

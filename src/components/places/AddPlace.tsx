@@ -12,12 +12,11 @@ import {CountrySelect} from "../common/form/CountrySelect";
 import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
 import {TextArea} from "../common/form/TextArea";
 import {PlaceGps} from "../common/form/place/PlaceGps";
-import {login} from "../../assets/txt/login";
 import AddIcon from "@mui/icons-material/Add";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
 import {apiPaths} from "../../config/api";
-import {commons} from "../../assets/txt/commons";
+import {handleApiResult} from "../../utils/handleApiResult";
 
 interface Props {
     lang: userLangEnum;
@@ -61,29 +60,11 @@ export const AddPlace = (props: Props) => {
                 body: JSON.stringify(addPlaceForm),
                 credentials: "include",
             });
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                        setAddPlaceShow(false);
-                        props.setRefresh((prev) => !prev);
-                        setAlert(places[props.lang].addSuccess, 'success');
-                } else {
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    } else if (result.data.dtc === 'name') {
-                        setAlert(login[props.lang].registerCompanyNameNotExist, 'warning');
-                    } else if (result.data.dtc === 'city') {
-                        setAlert(login[props.lang].registerCompanyCityNotExist, 'warning');
-                    } else if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    } else {
-                        setAlert(commons[props.lang].apiUnknownError, 'error');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAddPlaceShow(false);
+            props.setRefresh((prev) => !prev);
+            setAlert(places[props.lang].addSuccess, 'success');
+        });
     };
 
     if (loading) {

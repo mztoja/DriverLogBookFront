@@ -13,8 +13,7 @@ import {apiPaths} from "../../../config/api";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
-import {commons} from "../../../assets/txt/commons";
-import {login} from "../../../assets/txt/login";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const BorderCross = (props: ActionsPropsTypes) => {
 
@@ -40,33 +39,11 @@ export const BorderCross = (props: ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    setAlert(home[props.lang].borderCrossSuccess, 'success');
-                    props.setActivityForm(null);
-                    props.setUserData({ ...props.userData, country: sendData.country });
-                } else {
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    }
-                    if (result.data.dtc === 'countryConflict') {
-                        setAlert(home[props.lang].countryConflict, 'warning');
-                    }
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    }
-
-                    if (result.data.dtc === 'noActiveRoute') {
-                        setAlert(home[props.lang].noActiveRoute, 'info');
-                    }
-                }
-            }
-        }
-
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].borderCrossSuccess, 'success');
+            props.setActivityForm(null);
+            props.setUserData({ ...props.userData, country: sendData.country });
+        });
     }
 
     if (loading) {

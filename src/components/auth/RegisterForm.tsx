@@ -23,7 +23,7 @@ import {useAlert} from "../../hooks/useAlert";
 import {RegisterFormInterface} from "types";
 import {SaveToLocalStorage} from "../../hooks/LocalStorageHook";
 import {useApi} from "../../hooks/useApi";
-import {commons} from "../../assets/txt/commons";
+import {handleApiResult} from "../../utils/handleApiResult";
 
 interface Props {
     lang: userLangEnum;
@@ -68,34 +68,11 @@ export const RegisterForm = (props: Props) => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(registerForm),
         });
-
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    SaveToLocalStorage('alertSuccess', login[props.lang].registerSuccess);
-                    setAlert(login[props.lang].registerSuccess, 'success');
-                    navigate("/login");
-                } else {
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    } else if (result.data.dtc === 'email') {
-                        setAlert(login[props.lang].registerResInvEmail, 'warning');
-                    } else if (result.data.dtc === 'email exist') {
-                        setAlert(login[props.lang].registerResEmailExist, 'warning');
-                    } else if (result.data.dtc === 'password') {
-                        setAlert(login[props.lang].registerResInvPassword, 'warning');
-                    } else if (result.data.dtc === 'companyName') {
-                        setAlert(login[props.lang].registerCompanyNameNotExist, 'warning');
-                    } else if (result.data.dtc === 'companyCity') {
-                        setAlert(login[props.lang].registerCompanyCityNotExist, 'warning');
-                    } else {
-                        setAlert(commons[props.lang].apiUnknownError, 'error');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            SaveToLocalStorage('alertSuccess', login[props.lang].registerSuccess);
+            setAlert(login[props.lang].registerSuccess, 'success');
+            navigate("/login");
+        });
     };
 
     if (loading) {

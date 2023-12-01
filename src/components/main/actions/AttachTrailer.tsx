@@ -10,12 +10,11 @@ import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
 import { AddLogData } from "types";
 import {VehicleInput} from "../../common/form/VehicleInput";
-import {login} from "../../../assets/txt/login";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
 import {apiPaths} from "../../../config/api";
-import {commons} from "../../../assets/txt/commons";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const AttachTrailer = (props: ActionsPropsTypes) => {
 
@@ -43,31 +42,11 @@ export const AttachTrailer = (props: ActionsPropsTypes) => {
                 body: JSON.stringify(sendData),
                 credentials: "include",
             });
-            if (result && !result.success) {
-                setAlert(commons[props.lang].apiConnectionError, 'error');
-            } else {
-                if (result && result.data) {
-                    if (!result.data.dtc) {
-                        setAlert(home[props.lang].attachTrailerSuccess, 'success');
-                        if (props.tourData) {props.setTourData({...props.tourData, trailer});}
-                        props.setActivityForm(null);
-                    } else {
-                        setAlert(commons[props.lang].apiUnknownError, 'error');
-                        if (result.data.dtc === 'Unauthorized') {
-                            setAlert(commons[props.lang].apiUnauthorized, 'error');
-                        }
-                        if (result.data.dtc === 'country') {
-                            setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                        }
-                        if (result.data.dtc === 'noActiveRoute') {
-                            setAlert(home[props.lang].noActiveRoute, 'info');
-                        }
-                        if (result.data.dtc === 'trailerExist') {
-                            setAlert(home[props.lang].trailerExist, 'info');
-                        }
-                    }
-                }
-            }
+            handleApiResult(result, props.lang, setAlert, () => {
+                setAlert(home[props.lang].attachTrailerSuccess, 'success');
+                if (props.tourData) {props.setTourData({...props.tourData, trailer});}
+                props.setActivityForm(null);
+            });
         }
     }
 

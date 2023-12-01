@@ -14,9 +14,8 @@ import {StartTourData} from 'types';
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
-import {commons} from "../../../assets/txt/commons";
-import {login} from "../../../assets/txt/login";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const TourStart = (props:ActionsPropsTypes) => {
 
@@ -42,32 +41,11 @@ export const TourStart = (props:ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                        setAlert(home[props.lang].startedTour, 'success');
-                        props.setActivityForm(null);
-                        props.setTourData(result.data);
-                } else {
-
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    }
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    }
-                    if (result.data.dtc === 'truck') {
-                        setAlert(home[props.lang].truckNoExist, 'warning');
-                    }
-                    if (result.data.dtc === 'activeRoute') {
-                        setAlert(home[props.lang].tourExist, 'info');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].startedTour, 'success');
+            props.setActivityForm(null);
+            props.setTourData(result?.data);
+        });
     }
 
     if (loading) {

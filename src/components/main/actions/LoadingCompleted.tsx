@@ -18,8 +18,8 @@ import {AddLoadingData} from "types";
 import {apiPaths} from "../../../config/api";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
-import {commons} from "../../../assets/txt/commons";
 import {CircularProgress} from "@mui/material";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const LoadingCompleted = (props: ActionsPropsTypes) => {
 
@@ -73,37 +73,10 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    setAlert(home[props.lang].loadingArrivalSuccess, 'success');
-                    props.setActivityForm(null);
-                } else {
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    }
-                    if (result.data.dtc === 'country') {
-                        setAlert(home[props.lang].loadingCountryNoExist, 'warning');
-                    }
-                    if (result.data.dtc === 'noActiveRoute') {
-                        setAlert(home[props.lang].noActiveRoute, 'info');
-                    }
-                    if (result.data.dtc === 'vehicle') {
-                        setAlert(home[props.lang].noVehicle, 'warning');
-                    }
-                    if (result.data.dtc === 'weight') {
-                        setAlert(home[props.lang].noWeight, 'warning');
-                    }
-                    if (result.data.dtc === 'description') {
-                        setAlert(home[props.lang].noDescription, 'warning');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].loadingArrivalSuccess, 'success');
+            props.setActivityForm(null);
+        });
     }
 
     if (loading) {

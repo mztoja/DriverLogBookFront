@@ -13,8 +13,7 @@ import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import { AddLogData } from "types";
 import {apiPaths} from "../../../config/api";
-import {commons} from "../../../assets/txt/commons";
-import {login} from "../../../assets/txt/login";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const LoadingArrival = (props: ActionsPropsTypes) => {
 
@@ -53,28 +52,11 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    setAlert(home[props.lang].loadingArrivalSuccess, 'success');
-                    props.setActivityForm(null);
-                    props.setUserData({...props.userData, markedDepart: 0, markedArrive: Number(sendData.placeId)});
-                } else {
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    }
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    }
-                    if (result.data.dtc === 'noActiveRoute') {
-                        setAlert(home[props.lang].noActiveRoute, 'info');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].loadingArrivalSuccess, 'success');
+            props.setActivityForm(null);
+            props.setUserData({...props.userData, markedDepart: 0, markedArrive: Number(sendData.placeId)});
+        });
     }
 
     if (loading) {

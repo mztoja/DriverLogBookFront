@@ -12,10 +12,9 @@ import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
 import {apiPaths} from "../../../config/api";
-import {commons} from "../../../assets/txt/commons";
-import {login} from "../../../assets/txt/login";
 import {OnOffSwitch} from "../../common/form/OnOffSwitch";
 import {dayCardStateEnum, DayInterface, StartDayData} from "types";
+import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const DayStart = (props: ActionsPropsTypes) => {
 
@@ -58,31 +57,11 @@ export const DayStart = (props: ActionsPropsTypes) => {
             body: JSON.stringify(sendData),
             credentials: "include",
         });
-        if (result && !result.success) {
-            setAlert(commons[props.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
-                    setAlert(home[props.lang].startedDay, 'success');
-                    props.setActivityForm(null);
-                    props.setDayData(result.data);
-                } else {
-                    setAlert(commons[props.lang].apiUnknownError, 'error');
-                    if (result.data.dtc === 'Unauthorized') {
-                        setAlert(commons[props.lang].apiUnauthorized, 'error');
-                    }
-                    if (result.data.dtc === 'country') {
-                        setAlert(login[props.lang].registerCountryNotExist, 'warning');
-                    }
-                    if (result.data.dtc === 'noActiveRoute') {
-                        setAlert(home[props.lang].noActiveRoute, 'info');
-                    }
-                    if (result.data.dtc === 'activeDay') {
-                        setAlert(home[props.lang].dayExist, 'info');
-                    }
-                }
-            }
-        }
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].startedDay, 'success');
+            props.setActivityForm(null);
+            props.setDayData(result?.data);
+        });
     }
 
     if (loading) {
