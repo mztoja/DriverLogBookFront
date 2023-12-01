@@ -13,6 +13,7 @@ import {AttachTrailer} from "./actions/AttachTrailer";
 import {DetachTrailer} from "./actions/DetachTrailer";
 import {LoadingArrival} from "./actions/LoadingArrival";
 import {LoadingCompleted} from "./actions/LoadingCompleted";
+import {UnloadingArrival} from "./actions/UnloadingArrival";
 
 interface Props {
     lang: userLangEnum;
@@ -53,6 +54,7 @@ export const ActivitiesFieldsets = (props: Props) => {
         quantity: '',
         weight: '',
         reference: '',
+        loadId: '',
     });
 
     const updateGeneralFormData = (key: string, value: string) => {
@@ -213,6 +215,21 @@ export const ActivitiesFieldsets = (props: Props) => {
         />
     }
 
+    if (activityForm === 'unloadingArrival') {
+        return <UnloadingArrival
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
     if (props.tourData) {
         return (
             <>
@@ -230,7 +247,7 @@ export const ActivitiesFieldsets = (props: Props) => {
                     <legend>{home[props.lang].fieldLoads}</legend>
                     <NavigateButton activityForm='loadingArrival' set={setActivityForm} text={home[props.lang].loadingArrival}/><br/>
                     <NavigateButton activityForm='loadingCompleted' set={setActivityForm} text={home[props.lang].loading}/><br/>
-                    <NavigateButton activityForm='unloadingArrival' set={setActivityForm} text={home[props.lang].unloadingArrival+'?'}/><br/>
+                    <NavigateButton activityForm='unloadingArrival' set={setActivityForm} text={home[props.lang].unloadingArrival}/><br/>
                 </fieldset>
                 <fieldset className="DivInline">
                     <legend>{home[props.lang].fieldVehicle}</legend>

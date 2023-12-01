@@ -28,10 +28,14 @@ export const apiPaths = {
     attachTrailer: '/logs/attachTrailer',
     detachTrailer: '/logs/detachTrailer',
     loadingArrival: '/logs/loadingArrival',
+    unloadingArrival: '/logs/unloadingArrival',
     // borders
     getBordersByCountry: '/borders/getByCountry',
     // vehicles
     getVehicleByRegistration: '/vehicles/findByRegistration',
     // loadings
     createLoad: '/loads/create',
+    getNotUnloadedLoads: '/loads/getNotUnloadedLoads',
+    getUnloadingPlace: '/loads/getUnloadingPlace',
+    getLoadDetails: '/loads/getLoadDetails',
 }

@@ -27,6 +27,7 @@ export const LoadReferenceInput = (props: InputPropsTypes) => {
             error={validation}
             fullWidth
             size='small'
+            autoComplete='off'
         />
     );
 }

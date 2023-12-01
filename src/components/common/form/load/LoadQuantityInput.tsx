@@ -27,6 +27,7 @@ export const LoadQuantityInput = (props: InputPropsTypes) => {
             error={validation}
             fullWidth
             size='small'
+            autoComplete='off'
         />
     );
 }

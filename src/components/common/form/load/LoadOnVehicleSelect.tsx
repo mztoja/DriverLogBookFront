@@ -12,6 +12,7 @@ interface Props {
     onChange: (e:any) => void;
     truck: string;
     trailer: string | null;
+    value: string;
 }
 
 export const LoadOnVehicleSelect = (props: Props) => {
@@ -22,7 +23,7 @@ export const LoadOnVehicleSelect = (props: Props) => {
         unloadable = 2,
     }
 
-    const [value, setValue] = useState<string>('');
+    const [value, setValue] = useState<string>(props.value);
     const {loading, fetchData} = useApi();
     const [truckState, setTruckState] = useState<number>(state.notFound);
     const [trailerState, setTrailerState] = useState<number>(state.notFound);
@@ -41,7 +42,7 @@ export const LoadOnVehicleSelect = (props: Props) => {
             if ((result && result.data) && (!result.data.dtc)) {
                 if (result.data.isLoadable) {
                     setTruckState(state.loadable);
-                    setValue(props.truck);
+                    value === '' && setValue(props.truck);
                 } else {
                     setTruckState(state.unloadable);
                 }
@@ -54,7 +55,7 @@ export const LoadOnVehicleSelect = (props: Props) => {
                 if ((result2 && result2.data) && (!result2.data.dtc)) {
                     if (result2.data.isLoadable) {
                         setTrailerState(state.loadable);
-                        setValue(props.trailer);
+                        value === '' && setValue(props.trailer);
                     } else {
                         setTrailerState(state.unloadable);
                     }

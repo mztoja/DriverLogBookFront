@@ -61,6 +61,7 @@ interface Form {
     loadReference: string;
     loadWeight: string;
     loadQuantity: string;
+    chooseLoad: string;
 }
 
 
@@ -128,6 +129,7 @@ export const form: Form[] =
         loadReference: 'Loading reference',
         loadWeight: 'Weight of the goods',
         loadQuantity: 'Quantity of the goods',
+        chooseLoad: 'Choose your load',
     },
         {//pl
             email: 'E-mail',
@@ -192,4 +194,5 @@ export const form: Form[] =
             loadReference: 'Numer załadunku',
             loadWeight: 'Waga towaru',
             loadQuantity: 'Ilość towaru',
+            chooseLoad: 'Wybierz ładunek',
         }];

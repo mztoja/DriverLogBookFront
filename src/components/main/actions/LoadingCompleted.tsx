@@ -38,7 +38,6 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
             props.updateFormData('placeId', senderId);
         }
             firstRender.current = false;
-            firstRender.current = false;
     }
 
     useEffect(() => {
@@ -98,6 +97,9 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                     }
                     if (result.data.dtc === 'weight') {
                         setAlert(home[props.lang].noWeight, 'warning');
+                    }
+                    if (result.data.dtc === 'description') {
+                        setAlert(home[props.lang].noDescription, 'warning');
                     }
                 }
             }
@@ -189,6 +191,7 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                         onChange={e => props.updateFormData('vehicle', e)}
                         truck={props.tourData.truck}
                         trailer={props.tourData.trailer}
+                        value={props.formData.vehicle}
                         />
                     }
 

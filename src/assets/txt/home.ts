@@ -22,6 +22,9 @@ interface Home {
     loadingReceiver: string;
     loadingSenderSwitchLabel: string;
     unloadingArrival: string;
+    unloadingArrivalSuccess: string;
+    unloadingArrivalAction: (x: string) => string;
+    unloadingLoadSelectLabel: string;
     attachTrailer: string;
     attachTrailerAction: string;
     attachTrailerSuccess: string;
@@ -58,6 +61,8 @@ interface Home {
     loadingCountryNoExist: string;
     noVehicle: string;
     noWeight: string;
+    noDescription: string;
+    noLoadChosen: string;
 }
 
 export const home:Home[] = [{
@@ -85,6 +90,9 @@ export const home:Home[] = [{
     loadingReceiver: 'Receiver',
     loadingSenderSwitchLabel: 'enter the sender in the place of loading',
     unloadingArrival: 'arriving at unloading',
+    unloadingArrivalSuccess: 'The arrival for loading was recorded successfully.',
+    unloadingArrivalAction: (x) => `Arrival for unloading load nr ${x}`,
+    unloadingLoadSelectLabel: 'enter the receiver in the place of unloading',
     attachTrailer: 'Attach Trailer',
     attachTrailerAction: 'Trailer attached',
     attachTrailerSuccess: 'The trailer has been connected successfully',
@@ -121,6 +129,8 @@ export const home:Home[] = [{
     loadingCountryNoExist: 'Please select loading place country.',
     noVehicle: 'You must select a loaded vehicle',
     noWeight: 'You must enter the weight of the load.',
+    noDescription: 'You must enter the description of the load.',
+    noLoadChosen: 'Please choose the load.',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -145,6 +155,9 @@ export const home:Home[] = [{
     loadingReceiver: 'Odbiorca',
     loadingSenderSwitchLabel: 'wpisz nadawcę w miejsce załadunku',
     unloadingArrival: 'Dojazd na rozładunek',
+    unloadingArrivalSuccess: 'Dojazd na rozładunek został zapisany pomyślnie.',
+    unloadingArrivalAction: (x) => `Dojazd na rozładunek ładunktu nr. ${x}`,
+    unloadingLoadSelectLabel: 'wpisz odbiorcę w miejsce rozładunku',
     attachTrailer: 'Podepnij naczepę',
     attachTrailerAction: 'Podpięto naczepę',
     attachTrailerSuccess: 'Naczepa została podpięta pomyślnie.',
@@ -181,4 +194,6 @@ export const home:Home[] = [{
     loadingCountryNoExist: 'Wybierz kraj miejsca załadunku.',
     noVehicle: 'Musisz wybrać załadowany pojazd.',
     noWeight: 'Musisz podać masę ładunku.',
+    noDescription: 'Musisz podać opis towaru.',
+    noLoadChosen: 'Nie wybrano ładunku',
 }];
