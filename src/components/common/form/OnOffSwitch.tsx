@@ -6,6 +6,7 @@ interface Props {
     label: string;
     value: 'false' | 'true';
     onChange: (e: any) => void;
+    disabled?: boolean;
 }
 
 export const OnOffSwitch = (props: Props) => {
@@ -31,7 +32,7 @@ export const OnOffSwitch = (props: Props) => {
 
 
     return (
-        <FormControlLabel control={<Switch checked={value} onChange={(e) => {
+        <FormControlLabel control={<Switch checked={value} disabled={props.disabled} onChange={(e) => {
             setValue(e.target.checked);
         }}/>} label={props.label}/>
     );

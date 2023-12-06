@@ -76,6 +76,7 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].loadingArrivalSuccess, 'success');
             props.setActivityForm(null);
+            props.setUserData({...props.userData, markedArrive: 0});
         });
     }
 

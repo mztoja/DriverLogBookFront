@@ -24,6 +24,9 @@ interface Home {
     unloadingArrival: string;
     unloadingArrivalSuccess: string;
     unloadingArrivalAction: (x: string) => string;
+    unloading: string;
+    unloadingAction: string;
+    unloadingSuccess: string;
     unloadingLoadSelectLabel: string;
     attachTrailer: string;
     attachTrailerAction: string;
@@ -31,6 +34,7 @@ interface Home {
     detachTrailer: string;
     detachTrailerAction: string;
     detachTrailerSuccess: string;
+    detachTrailerConfirm: (x: number) => string;
     back: string;
     startedTour: string;
     startedTourAction: string;
@@ -63,6 +67,8 @@ interface Home {
     noWeight: string;
     noDescription: string;
     noLoadChosen: string;
+    chosenLoadIsUnloaded: string;
+    noLoadReceiver: string;
 }
 
 export const home:Home[] = [{
@@ -89,9 +95,12 @@ export const home:Home[] = [{
     loadingSender: 'Sender',
     loadingReceiver: 'Receiver',
     loadingSenderSwitchLabel: 'enter the sender in the place of loading',
-    unloadingArrival: 'arriving at unloading',
+    unloadingArrival: 'Ariving at unloading',
     unloadingArrivalSuccess: 'The arrival for loading was recorded successfully.',
-    unloadingArrivalAction: (x) => `Arrival for unloading load nr ${x}`,
+    unloadingArrivalAction: (x) => `Arrival for unloading load nr. ${x}`,
+    unloading: 'Unloading completed',
+    unloadingAction: `Completion of unloading the load no. .value.`,
+    unloadingSuccess: 'Unloading completed successfully entered.',
     unloadingLoadSelectLabel: 'enter the receiver in the place of unloading',
     attachTrailer: 'Attach Trailer',
     attachTrailerAction: 'Trailer attached',
@@ -99,6 +108,7 @@ export const home:Home[] = [{
     detachTrailer: 'Detach Trailer',
     detachTrailerAction: 'Trailer detached',
     detachTrailerSuccess: 'The trailer has been disconnected successfully',
+    detachTrailerConfirm: (x) => `You are trying to unhook the trailer even though you still have ${x === 1 ? 'unloaded load.' : 'unloaded loads.'} If you detach the trailer now, they will be entered as unloaded in the current place with a note that the trailer was detached.`,
     back: 'Back',
     startedTour: 'Your tour has started.',
     startedTourAction: 'Route no. has started',
@@ -131,6 +141,8 @@ export const home:Home[] = [{
     noWeight: 'You must enter the weight of the load.',
     noDescription: 'You must enter the description of the load.',
     noLoadChosen: 'Please choose the load.',
+    chosenLoadIsUnloaded: 'The selected load is already unloaded.',
+    noLoadReceiver: 'You cannot enter a receiver as unloading place because the selected load does not have any receiver.',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -157,6 +169,9 @@ export const home:Home[] = [{
     unloadingArrival: 'Dojazd na rozładunek',
     unloadingArrivalSuccess: 'Dojazd na rozładunek został zapisany pomyślnie.',
     unloadingArrivalAction: (x) => `Dojazd na rozładunek ładunktu nr. ${x}`,
+    unloading: 'Zakończenie rozładunku',
+    unloadingAction: `Zakończenie rozładunku (ładunek nr. .value.)`,
+    unloadingSuccess: 'Pomyślnie wpisano zakończenie rozładunku.',
     unloadingLoadSelectLabel: 'wpisz odbiorcę w miejsce rozładunku',
     attachTrailer: 'Podepnij naczepę',
     attachTrailerAction: 'Podpięto naczepę',
@@ -164,6 +179,7 @@ export const home:Home[] = [{
     detachTrailer: 'Odepnij naczepę',
     detachTrailerAction: 'Odpięto naczepę',
     detachTrailerSuccess: 'Naczepa została odpięta pomyślnie.',
+    detachTrailerConfirm: (x) => `Próbujesz odczepić naczepę mimo, że masz ciągle ${x} ${x === 1 ? 'nierozładowany ładunek.' : 'nierozładowane ładunki.'} Jeżeli odczepisz teraz naczepę to zostaną one wpisane jako rozładowane w obecnym miejscu z adnotacją, że była odczepiona naczepa.`,
     back: 'Powrót',
     startedTour: 'Twoja trasa została rozpoczęta.',
     startedTourAction: 'Trasa nr. została rozpoczęta',
@@ -196,4 +212,6 @@ export const home:Home[] = [{
     noWeight: 'Musisz podać masę ładunku.',
     noDescription: 'Musisz podać opis towaru.',
     noLoadChosen: 'Nie wybrano ładunku',
+    chosenLoadIsUnloaded: 'Wybrany ładunek jest już rozładowany.',
+    noLoadReceiver: 'Nie można wpisać odbiorcy gdyż wybrany ładunek go nie posiada.',
 }];

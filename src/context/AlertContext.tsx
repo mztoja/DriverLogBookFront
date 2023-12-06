@@ -30,17 +30,13 @@ export const AlertProvider = ({ children }:Props) => {
     const setAlert = (text:string, type:SetAlertType) => {
 
         if (type !== undefined) {
-
             setText(text);
             setType(type);
-
-
 
             setTimeout(() => {
                 setText('');
                 setType('');
             }, ALERT_TIME);
-
         }
     };
 

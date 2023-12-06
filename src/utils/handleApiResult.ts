@@ -79,6 +79,18 @@ export const handleApiResult = (result: any, lang: userLangEnum, setAlert: (text
                 if (result.data.dtc === 'dayNotExist') {
                     setAlert(home[lang].dayNotExist, 'info');
                 }
+                if (result.data.dtc === 'loadId') {
+                    setAlert(home[lang].noLoadChosen, 'warning');
+                }
+                if (result.data.dtc === 'noChosenLoad') {
+                    setAlert(home[lang].noLoadChosen, 'warning');
+                }
+                if (result.data.dtc === 'chosenLoadIsUnloaded') {
+                    setAlert(home[lang].chosenLoadIsUnloaded, 'warning');
+                }
+                if (result.data.dtc === 'noLoadReceiver') {
+                    setAlert(home[lang].noLoadReceiver, 'warning');
+                }
                 if (result.data.dtc === 'Unauthorized') {
                     setAlert(commons[lang].apiUnauthorized, 'error');
                 }

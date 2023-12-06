@@ -1,4 +1,4 @@
-import React, {FormEvent} from "react";
+import React, {FormEvent, useState} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {home} from "../../../assets/txt/home";
 import {DateInput} from "../../common/form/DateInput";
@@ -8,22 +8,40 @@ import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
-import {AddLogData} from "types";
+import {DetachTrailerData, LoadInterface} from "types";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
 import {apiPaths} from "../../../config/api";
 import {handleApiResult} from "../../../utils/handleApiResult";
+import {WindowConfirm} from "../../common/WindowConfirm";
 
 export const DetachTrailer = (props: ActionsPropsTypes) => {
 
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
+    const [confirm, setConfirm] = useState<boolean>(false);
+    const [text, setText] = useState<string>('');
 
-    const send = async (e: FormEvent) => {
+    const check = async (e: FormEvent) => {
         e.preventDefault();
+        const result = await fetchData(apiPaths.getNotUnloadedLoads, {
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        });
+        if ((result && result.data) && (!result.data.dtc)) {
+            const loads = result.data.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
+            if (loads.length>0) {
+                setText(home[props.lang].detachTrailerConfirm(loads.length));
+                setConfirm(true);
+            } else {
+                await send();
+            }
+        }
+    }
 
-        const sendData: AddLogData = {
+    const send = async () => {
+        const sendData: DetachTrailerData = {
             date: props.formData.date,
             country: props.formData.country,
             place: props.formData.place,
@@ -31,6 +49,7 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
             odometer: props.formData.odometer,
             notes: props.formData.notes,
             action: home[props.lang].detachTrailerAction,
+            unloadAction: home[props.lang].unloadingAction,
         }
         const result = await fetchData(apiPaths.detachTrailer, {
             method: 'POST',
@@ -51,11 +70,11 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
         return <CircularProgress/>
     }
 
-    return (
+    return (<>
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].detachTrailer}</legend>
-            <form onSubmit={send}>
+            <form onSubmit={check}>
                 <div><DateInput
                     lang={props.lang}
                     value={props.formData.date}
@@ -90,5 +109,7 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>
         </fieldset>
+            <WindowConfirm lang={props.lang} text={text} show={confirm} setShow={setConfirm} execute={send}/>
+        </>
     );
 }

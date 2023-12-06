@@ -3,7 +3,7 @@ import { Alert } from '@mui/material';
 import {useAlert} from "../../../hooks/useAlert";
 
 export const AlertPopup = () => {
-    const { text, type } = useAlert();
+    const { text, type, setAlert } = useAlert();
 
     const alertPopupRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -14,7 +14,7 @@ export const AlertPopup = () => {
 
     if (text && type) {
         return (
-            <Alert ref={alertPopupRef} severity={type}>{text}</Alert>
+            <Alert onClick={() => setAlert('', '')} ref={alertPopupRef} severity={type}>{text}</Alert>
         );
     } else {
         return <></>;

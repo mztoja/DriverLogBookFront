@@ -35,6 +35,7 @@ export const apiPaths = {
     getVehicleByRegistration: '/vehicles/findByRegistration',
     // loadings
     createLoad: '/loads/create',
+    unloadingLoad: '/loads/unload',
     getNotUnloadedLoads: '/loads/getNotUnloadedLoads',
     getUnloadingPlace: '/loads/getUnloadingPlace',
     getLoadDetails: '/loads/getLoadDetails',

@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {Link} from "react-router-dom";
 import {home} from "../../../assets/txt/home";
@@ -10,7 +10,7 @@ import {SubmitButton} from "../../common/form/SubmitButton";
 import {LoadSelect} from "../../common/form/load/LoadSelect";
 import {OnOffSwitch} from "../../common/form/OnOffSwitch";
 import {PlaceInput} from "../../common/form/PlaceInput";
-import { UnloadingData } from "types";
+import {LoadInterface, UnloadingData } from "types";
 import {apiPaths} from "../../../config/api";
 import {useApi} from "../../../hooks/useApi";
 import {CircularProgress} from "@mui/material";
@@ -22,30 +22,54 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
     const [switchValue, setSwitchValue] = useState<'false' | 'true'>('true');
+    const [receiverKnown, setReceiverKnown] = useState<boolean>(false);
+
+    const getLoadDetails = async (e: number): Promise<void> => {
+        const result = await fetchData(apiPaths.getLoadDetails + '/' + e, {
+            headers: {'Content-Type': 'application/json'},
+            credentials: "include",
+        });
+        if ((result && result.data) && (!result.data.dtc)) {
+            const loadDetails: LoadInterface = result.data;
+            if (loadDetails.receiverId === 0) {
+                setSwitchValue('false');
+                setReceiverKnown(false);
+            } else {
+                setSwitchValue('true');
+                setReceiverKnown(true);
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (Number(props.formData.loadId) > 0) {
+            getLoadDetails(Number(props.formData.loadId));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const send = async (e: FormEvent) => {
         e.preventDefault();
         const sendData: UnloadingData = {
             date: props.formData.date,
-            country: props.formData.country,
+            country: switchValue === 'true' ? props.userData.country : props.formData.country,
             place: props.formData.place,
             placeId: props.formData.placeId,
             odometer: props.formData.odometer,
             notes: props.formData.notes,
-            action: home[props.lang].loadingAction,
+            action: home[props.lang].unloadingAction,
             loadId: props.formData.loadId,
             isPlaceAsReceiver: switchValue,
         }
-        const result = await fetchData(apiPaths.unloadingArrival, {
+        const result = await fetchData(apiPaths.unloadingLoad, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(sendData),
             credentials: "include",
         });
         handleApiResult(result, props.lang, setAlert, () => {
-            //setAlert(home[props.lang].unloadingArrivalSuccess, 'success');
-            //props.setActivityForm(null);
-            //props.setUserData({...props.userData, markedArrive: 0});
+            props.setActivityForm(null);
+            setAlert(home[props.lang].unloadingSuccess, 'success');
         });
     }
 
@@ -56,7 +80,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
     return (
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
-            <legend>{home[props.lang].unloadingArrival}</legend>
+            <legend>{home[props.lang].unloading}</legend>
             <form onSubmit={send}>
                 <div><DateInput
                     lang={props.lang}
@@ -75,7 +99,10 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
                 <div><LoadSelect
                     value={props.formData.loadId}
                     lang={props.lang}
-                    onChange={e => props.updateFormData('loadId', e)}
+                    onChange={e => {
+                        props.updateFormData('loadId', e);
+                        getLoadDetails(Number(e));
+                    }}
                 />
                 </div>
                 <br/>
@@ -84,6 +111,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
                         label={home[props.lang].unloadingLoadSelectLabel}
                         value={switchValue}
                         onChange={e => setSwitchValue(e)}
+                        disabled={!receiverKnown}
                     />
                 </div>
                 <br/>
@@ -104,7 +132,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
-                <SubmitButton text={home[props.lang].unloadingArrival}/>
+                <SubmitButton text={home[props.lang].unloading}/>
             </form>
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>
