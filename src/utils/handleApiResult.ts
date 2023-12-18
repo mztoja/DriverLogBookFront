@@ -1,10 +1,15 @@
 import {commons} from "../assets/txt/commons";
 import {login} from "../assets/txt/login";
 import {home} from "../assets/txt/home";
-import { userLangEnum } from "types";
+import {userLangEnum } from "types";
 import {SetAlertType} from "../context/AlertContext";
 
-export const handleApiResult = (result: any, lang: userLangEnum, setAlert: (text:string, type:SetAlertType) => void, action: () => void): void => {
+export const handleApiResult = (
+    result: any,
+    lang: userLangEnum,
+    setAlert: (text:string, type:SetAlertType) => void,
+    action: () => void
+): void => {
     if (result && !result.success) {
         setAlert(commons[lang].apiConnectionError, 'error');
     } else {

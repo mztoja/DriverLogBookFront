@@ -5,6 +5,7 @@ import {useApi} from "../../hooks/useApi";
 import {CircularProgress, Tooltip} from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 import {login} from "../../assets/txt/login";
+import Cookies from "js-cookie";
 
 interface Props {
     lang: userLangEnum;
@@ -13,21 +14,25 @@ interface Props {
 
 export const LogoutLink = (props: Props) => {
     const {loading,fetchData} = useApi();
-    const logout = async () => {
+    const click = async () => {
 
-        const result = await fetchData(apiPaths.logout, {
+        await fetchData(apiPaths.logout, {
             headers: {'Content-Type': 'application/json'},
             credentials: "include",
         });
-        if ((result && result.data) && (!result.data.dtc)) {
-            if (props.setUserData) props.setUserData(null);
-        }
+        Cookies.remove('jwt');
+        if (props.setUserData) props.setUserData(null);
+
+        // if ((result && result.data) && (!result.data.dtc)) {
+        //     if (props.setUserData) props.setUserData(null);
+        // }
+
     }
 
     if (loading) {
         return <CircularProgress/>
     }
-    // return <Link to="" className="Link" onClick={logout}>{login[props.lang].logout}</Link>
-    return <Tooltip title={login[props.lang].logout} arrow><LogoutIcon className="Link" onClick={logout}/></Tooltip>
+
+    return <Tooltip title={login[props.lang].logout} arrow><LogoutIcon className="Link" onClick={click}/></Tooltip>
 
 }
