@@ -3,7 +3,7 @@ export interface Currency {
     symbol: string;
 }
 
-export const currencies: readonly Currency[] = [
+export const currencies: Currency[] = [
     {
         code: 'EUR',
         symbol: '€',
@@ -59,5 +59,57 @@ export const currencies: readonly Currency[] = [
     {
         code: 'RSD',
         symbol: 'RSD',
+    },
+    {
+        code: 'BAM',
+        symbol: 'KM',
+    },
+    {
+        code: 'BYN',
+        symbol: 'Br',
+    },
+    {
+        code: 'CAD',
+        symbol: 'C$',
+    },
+    {
+        code: 'CNY',
+        symbol: '¥',
+    },
+    {
+        code: 'DZD',
+        symbol: 'DA',
+    },
+    {
+        code: 'KZT',
+        symbol: '₸',
+    },
+    {
+        code: 'MAD',
+        symbol: 'DH',
+    },
+    {
+        code: 'MDL',
+        symbol: 'L',
+    },
+    {
+        code: 'MNT',
+        symbol: '₮',
+    },
+    {
+        code: 'RUB',
+        symbol: '₽',
+    },
+    {
+        code: 'TRY',
+        symbol: '₺',
+    },
+    {
+        code: 'UAH',
+        symbol: '₴',
+    },
+    {
+        code: 'USD',
+        symbol: '$',
     },
 ];

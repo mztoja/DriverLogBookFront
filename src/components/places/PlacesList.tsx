@@ -118,103 +118,107 @@ export const PlacesList = (props: Props) => {
         return <CircularProgress/>
     }
 
-    return (
-        <>
-            <main className="Table">
-                <section className="Table__Header">
-                    {places[props.userData.lang].tableHeader}
-                </section>
-                <section className="Table__Filter">
-                    <div className="DivInline">
-                        <PlaceTypeSelect lang={props.userData.lang} value={filterType}
-                                         onChange={e => setFilterType(e)} displayAll={true}/>
-                    </div>
-                    <div className="DivInline">
-                        <CountrySelect lang={props.userData.lang} value={filterCountry}
-                                       onChange={e => setFilterCountry(e)}/>
-                    </div>
-                    <div className="DivInline">
-                        <SearchInput lang={props.userData.lang} value={filterSearch}
-                                     onChange={e => setFilterSearch(e.target.value)}/>
-                    </div>
-                    <div className="DivClear"/>
-                </section>
-                <section className="Table__Body">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>{places[props.userData.lang].thLp}</th>
-                            <th>{places[props.userData.lang].thType}</th>
-                            <th>{places[props.userData.lang].thCountry}</th>
-                            <th>{places[props.userData.lang].thCity}</th>
-                            <th>{places[props.userData.lang].thNameStreet}</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {showData?.map((place, index) => {
-                                index++;
-                                return (
-                                    <React.Fragment key={place.id}>
-                                        {expandedRow !== index && (
-                                            <tr onClick={() => setExpandedRow(index)}>
-                                                <td>{index}</td>
-                                                <td>{form[props.userData.lang][`placeType${place.type}`]}</td>
-                                                <td>{formatCountry(place.country, props.userData.lang)}</td>
-                                                <td>{place.code} {place.city}</td>
-                                                <td>{place.name} - {place.street}</td>
-                                                <td>
-                                                    {place.description !== null && <DetailsIcon/>}
-                                                    {Number(place.lat) > 0.00001 && <RoomIcon/>}
-                                                </td>
-                                            </tr>
-                                        )}
-                                        {expandedRow === index && (
-                                            <tr onClick={() => setExpandedRow(null)}>
-                                                <td colSpan={6} className="extended">
-                                                    <div>
-                                                        {countries[props.userData.lang][place.country]}
-                                                    </div>
-                                                    <div>
-                                                        {form[props.userData.lang][`placeType${place.type}`]}
-                                                    </div>
-
-                                                    <div>
-                                                        {place.name}
-                                                    </div>
-                                                    <div>
-                                                        {place.street}, {place.code} {place.city}
-                                                    </div>
-                                                    <br/>
-                                                    <div>
-                                                        <RoomIcon/><br/>
-                                                        {place.lat}, {place.lon}
-                                                    </div>
-                                                    {place.description !== null && (
+    if (data) {
+        return (
+            <>
+                <main className="Table">
+                    <section className="Table__Header">
+                        {places[props.userData.lang].tableHeader}
+                    </section>
+                    <section className="Table__Filter">
+                        <div className="DivInline">
+                            <PlaceTypeSelect lang={props.userData.lang} value={filterType}
+                                             onChange={e => setFilterType(e)} displayAll={true}/>
+                        </div>
+                        <div className="DivInline">
+                            <CountrySelect lang={props.userData.lang} value={filterCountry}
+                                           onChange={e => setFilterCountry(e)}/>
+                        </div>
+                        <div className="DivInline">
+                            <SearchInput lang={props.userData.lang} value={filterSearch}
+                                         onChange={e => setFilterSearch(e.target.value)}/>
+                        </div>
+                        <div className="DivClear"/>
+                    </section>
+                    <section className="Table__Body">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>{places[props.userData.lang].thLp}</th>
+                                <th>{places[props.userData.lang].thType}</th>
+                                <th>{places[props.userData.lang].thCountry}</th>
+                                <th>{places[props.userData.lang].thCity}</th>
+                                <th>{places[props.userData.lang].thNameStreet}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {showData?.map((place, index) => {
+                                    index++;
+                                    return (
+                                        <React.Fragment key={place.id}>
+                                            {expandedRow !== index && (
+                                                <tr onClick={() => setExpandedRow(index)}>
+                                                    <td>{index}</td>
+                                                    <td>{form[props.userData.lang][`placeType${place.type}`]}</td>
+                                                    <td>{formatCountry(place.country, props.userData.lang)}</td>
+                                                    <td>{place.code} {place.city}</td>
+                                                    <td>{place.name} - {place.street}</td>
+                                                    <td>
+                                                        {place.description !== null && <DetailsIcon/>}
+                                                        {Number(place.lat) > 0.00001 && <RoomIcon/>}
+                                                    </td>
+                                                </tr>
+                                            )}
+                                            {expandedRow === index && (
+                                                <tr onClick={() => setExpandedRow(null)}>
+                                                    <td colSpan={6} className="extended">
                                                         <div>
-                                                            <DetailsIcon/><br/>
-                                                            {place.description}
+                                                            {countries[props.userData.lang][place.country]}
                                                         </div>
-                                                    )}
-                                                    <br/>
-                                                    <div>
-                                                        <Fab variant="extended" size="small" color="primary"
-                                                             onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
-                                                            <NavigationIcon sx={{mr: 1}}/>
-                                                            {places[props.userData.lang].navigateSwitchLabel}
-                                                        </Fab>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </React.Fragment>
-                                );
-                            }
-                        )}
-                        </tbody>
-                    </table>
-                </section>
-            </main>
-        </>
-    )
+                                                        <div>
+                                                            {form[props.userData.lang][`placeType${place.type}`]}
+                                                        </div>
+
+                                                        <div>
+                                                            {place.name}
+                                                        </div>
+                                                        <div>
+                                                            {place.street}, {place.code} {place.city}
+                                                        </div>
+                                                        <br/>
+                                                        <div>
+                                                            <RoomIcon/><br/>
+                                                            {place.lat}, {place.lon}
+                                                        </div>
+                                                        {place.description !== null && (
+                                                            <div>
+                                                                <DetailsIcon/><br/>
+                                                                {place.description}
+                                                            </div>
+                                                        )}
+                                                        <br/>
+                                                        <div>
+                                                            <Fab variant="extended" size="small" color="primary"
+                                                                 onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
+                                                                <NavigationIcon sx={{mr: 1}}/>
+                                                                {places[props.userData.lang].navigateSwitchLabel}
+                                                            </Fab>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </React.Fragment>
+                                    );
+                                }
+                            )}
+                            </tbody>
+                        </table>
+                    </section>
+                </main>
+            </>
+        )
+    }
+
+    return <>{places[props.userData.lang].apiError}</>
 };

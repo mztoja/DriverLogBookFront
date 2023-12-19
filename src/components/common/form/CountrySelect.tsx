@@ -3,39 +3,40 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import {InputPropsTypes} from "../../../types/InputPropsTypes";
-import {Country, countries as countriesList} from "../../../data/countries";
+import {Country, countries} from "../../../data/countries";
 import {form,} from "../../../assets/txt/form";
 import {countries as txtCountries} from "../../../assets/txt/countries";
 
 export const CountrySelect = (props: InputPropsTypes) => {
 
     const [value, setValue] = React.useState<Country | null>(null);
-    const [countries, setCountries] = React.useState(countriesList);
+    //const [countries, setCountries] = React.useState(countriesList);
     const [defaultValue, setDefaultValue] = React.useState<Country | null>(null);
     const [firstRender, setFirstRender] = React.useState<boolean>(false);
+    const txt = txtCountries[props.lang];
 
-    useEffect(() => {
-        if (props.lang !== 0) {
-            const newCountries: Country[] = countries.map(country => {
-                if (country.code in txtCountries[props.lang]) {
-                    return {
-                        code: country.code,
-                        label: txtCountries[props.lang][country.code],
-                        phone: country.phone,
-                    }
-                }
-                return {
-                    code: country.code,
-                    label: country.label,
-                    phone: country.phone,
-                }
-            });
-            setCountries(newCountries);
-        } else {
-            setCountries(countriesList);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.lang]);
+    // useEffect(() => {
+    //     if (props.lang !== 0) {
+    //         const newCountries: Country[] = countries.map(country => {
+    //             if (country.code in txtCountries[props.lang]) {
+    //                 return {
+    //                     code: country.code,
+    //                     label: txtCountries[props.lang][country.code],
+    //                     phone: country.phone,
+    //                 }
+    //             }
+    //             return {
+    //                 code: country.code,
+    //                 label: country.label,
+    //                 phone: country.phone,
+    //             }
+    //         });
+    //         setCountries(newCountries);
+    //     } else {
+    //         setCountries(countriesList);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [props.lang]);
 
     useEffect(() => {
         props.onChange(value?.code);
@@ -48,13 +49,13 @@ export const CountrySelect = (props: InputPropsTypes) => {
             if (set !== undefined) {
                 setDefaultValue({
                     code: set.code,
-                    label: set.label,
+                    currency: set.currency,
                     phone: set.phone,
                 });
 
                 setValue({
                     code: set.code,
-                    label: set.label,
+                    currency: set.currency,
                     phone: set.phone,
                 });
 
@@ -71,7 +72,7 @@ export const CountrySelect = (props: InputPropsTypes) => {
             autoHighlight
             size='small'
             defaultValue={defaultValue}
-            getOptionLabel={(option) => option.label+' ('+option.code+')'}
+            getOptionLabel={(option) => txt[option.code]+' ('+option.code+')'}
             isOptionEqualToValue={(option, value) =>
                 (option.code === value.code)}
             renderOption={(props, option) => (
@@ -83,7 +84,7 @@ export const CountrySelect = (props: InputPropsTypes) => {
                         src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
                         alt=""
                     />
-                    {option.label} ({option.code}) +{option.phone}
+                    {txt[option.code]} ({option.code}) +{option.phone}
                 </Box>
             )}
             renderInput={(params) => (
