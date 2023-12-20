@@ -10,7 +10,7 @@ import { LoadInterface } from "types";
 
 export const LoadSelect = (props: InputPropsTypes) => {
 
-    const {loading, fetchData} = useApi();
+    const {fetchData} = useApi();
     const [loadList, setLoadList] = useState<LoadInterface[]>([]);
 
     useEffect(() => {
@@ -26,13 +26,9 @@ export const LoadSelect = (props: InputPropsTypes) => {
         // eslint-disable-next-line
     }, []);
 
-    if (loading) {
-        return <CircularProgress/>
-    }
-
-    return (
+    if (loadList.length > 0) return (
         <FormControl fullWidth>
-            <InputLabel id="vehicle" className="TextInput__Label">{form[props.lang].chooseLoad}</InputLabel>
+            <InputLabel id="chooseLoad" className="TextInput__Label">{form[props.lang].chooseLoad}</InputLabel>
             <Select
                 label={form[props.lang].chooseLoad}
                 id="chooseLoad"
@@ -48,4 +44,6 @@ export const LoadSelect = (props: InputPropsTypes) => {
             </Select>
         </FormControl>
     );
+
+    return <CircularProgress/>;
 }

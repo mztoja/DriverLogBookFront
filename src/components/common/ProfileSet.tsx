@@ -1,13 +1,13 @@
 import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
 import { UserInterface, UpdateFormInterface } from "types";
 import {login} from "../../assets/txt/login";
-import {LanguageSelect} from "./form/LanguageSelect";
-import {FirstNameInput} from "./form/FirstNameInput";
-import {LastNameInput} from "./form/LastNameInput";
-import {DefaultCustomerInput} from "./form/DefaultCustomerInput";
-import {BidTypeSelect} from "./form/BidTypeSelect";
-import {AmountInput} from "./form/AmountInput";
-import {FuelConsuptionTypeSelect} from "./form/FuelConsuptionTypeSelect";
+import {LanguageSelect} from "./form/profile/LanguageSelect";
+import {FirstNameInput} from "./form/profile/FirstNameInput";
+import {LastNameInput} from "./form/profile/LastNameInput";
+import {DefaultCustomerInput} from "./form/profile/DefaultCustomerInput";
+import {BidTypeSelect} from "./form/profile/BidTypeSelect";
+import {AmountInput} from "./form/finance/AmountInput";
+import {FuelConsuptionTypeSelect} from "./form/profile/FuelConsuptionTypeSelect";
 import {SubmitButton} from "./form/SubmitButton";
 import {form} from "../../assets/txt/form";
 import {CompanySelect} from "./form/place/CompanySelect";
@@ -56,13 +56,9 @@ export const ProfileSet = (props: Props) => {
             credentials: "include",
         });
         handleApiResult(result, props.userData.lang, setAlert, () => {
-            setAlert(login[props.userData.lang].saveApiSuccess, 'success');
             props.setUserData(result?.data);
+            setAlert(login[result?.data.lang].saveApiSuccess, 'success');
         });
-    }
-
-    if (loading) {
-        return <CircularProgress/>
     }
 
     return (
@@ -119,7 +115,10 @@ export const ProfileSet = (props: Props) => {
                                                   onChange={e => updateData('fuelConsumptionType', e)}/>
                     </div>
                     <br/>
-                    <SubmitButton text={login[props.userData.lang].save}/>
+                    {loading ?
+                        <CircularProgress/> :
+                        <SubmitButton text={login[props.userData.lang].save}/>
+                    }
                 </form>
             </fieldset>
     );

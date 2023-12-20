@@ -1,79 +1,60 @@
+import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
+import {AddExpenseData} from "types";
+import {useApi} from "../../../hooks/useApi";
+import {useAlert} from "../../../hooks/useAlert";
 import React, {FormEvent} from "react";
-import {home} from "../../../assets/txt/home";
 import {apiPaths} from "../../../config/api";
+import {handleApiResult} from "../../../utils/handleApiResult";
+import {home} from "../../../assets/txt/home";
+import {CircularProgress} from "@mui/material";
+import {Link} from "react-router-dom";
 import {DateInput} from "../../common/form/DateInput";
-import {VehicleInput} from "../../common/form/VehicleInput";
-import {FuelInput} from "../../common/form/FuelInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {PlaceInput} from "../../common/form/PlaceInput";
+import {ActionInput} from "../../common/form/ActionInput";
 import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
-import {Link} from "react-router-dom";
-import {StartTourData} from 'types';
-import {useApi} from "../../../hooks/useApi";
-import {useAlert} from "../../../hooks/useAlert";
-import {CircularProgress} from "@mui/material";
-import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
-import {handleApiResult} from "../../../utils/handleApiResult";
+import {PaymentSelect} from "../../common/form/finance/PaymentSelect";
 
-export const TourStart = (props:ActionsPropsTypes) => {
+export const AddExpense = (props:ActionsPropsTypes) => {
 
-    const { loading, fetchData } = useApi();
+    const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
 
-    const sendTourStart = async (e: FormEvent) => {
+    const sendAnotherLog = async (e: FormEvent) => {
         e.preventDefault();
-        const sendData: StartTourData = {
-            action: home[props.lang].startedTourAction,
+        const sendData: AddExpenseData = {
+            date: props.formData.date,
             country: props.formData.country,
             place: props.formData.place,
-            truck: props.formData.truck,
             placeId: props.formData.placeId,
             odometer: props.formData.odometer,
             notes: props.formData.notes,
-            date: props.formData.date,
-            fuelStateBefore: props.formData.fuelQuantity,
+            action: props.formData.action,
+            payment: props.formData.payment,
         }
-        const result = await fetchData(apiPaths.createNewRoute, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].startedTour, 'success');
-            props.setActivityForm(null);
-            props.setTourData(result?.data);
-        });
+        // const result = await fetchData(apiPaths., {
+        //     method: 'POST',
+        //     headers: {'Content-Type': 'application/json'},
+        //     body: JSON.stringify(sendData),
+        //     credentials: "include",
+        // });
+        // handleApiResult(result, props.lang, setAlert, () => {
+        //     setAlert(home[props.lang]., 'success');
+        //     props.setActivityForm(null);
+        // });
     }
 
     return (
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
-            <legend>{home[props.lang].tourStart}</legend>
-            <form onSubmit={sendTourStart}>
+            <legend>{home[props.lang].addExpense}</legend>
+            <form onSubmit={sendAnotherLog}>
                 <div><DateInput
                     lang={props.lang}
                     value={props.formData.date}
                     onChange={e => props.updateFormData('date', e)}
-                />
-                </div>
-                <br/>
-                <div><VehicleInput
-                    lang={props.lang}
-                    value={props.formData.truck}
-                    onChange={e => props.updateFormData('truck', e.target.value)}
-                    vehicle='truck'
-                />
-                </div>
-                <br/>
-                <div><FuelInput
-                    lang={props.lang}
-                    value={props.formData.fuelQuantity}
-                    onChange={e => props.updateFormData('fuelQuantity', e.target.value)}
-                    type='quantity'
-                    userFuelConType={props.userData.fuelConType}
                 />
                 </div>
                 <br/>
@@ -96,12 +77,16 @@ export const TourStart = (props:ActionsPropsTypes) => {
                 />
                 </div>
                 <br/>
+                <div>
+                    <PaymentSelect lang={props.lang} value={props.formData.payment} onChange={e => props.updateFormData('payment', e)}/>
+                </div>
+                <br/>
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
                 {loading ?
                     <CircularProgress/> :
-                    <SubmitButton text={home[props.lang].tourStart}/>
+                    <SubmitButton text={home[props.lang].addExpense}/>
                 }
             </form>
             <br/>

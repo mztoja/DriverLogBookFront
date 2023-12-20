@@ -39,4 +39,9 @@ export const apiPaths = {
     getNotUnloadedLoads: '/loads/getNotUnloadedLoads',
     getUnloadingPlace: '/loads/getUnloadingPlace',
     getLoadDetails: '/loads/getLoadDetails',
+    // finances
+    getPaymentMethods: '/payments',
+    addPaymentMethod: '/payments/add',
+    deletePaymentMethod: '/payments/delete',
+    selectPaymentMethod: '/payments/select',
 }

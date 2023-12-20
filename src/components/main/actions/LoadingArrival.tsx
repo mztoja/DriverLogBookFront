@@ -59,10 +59,6 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
         });
     }
 
-    if (loading) {
-        return <CircularProgress/>
-    }
-
     return (
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
@@ -97,7 +93,10 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
-                <SubmitButton text={home[props.lang].loadingArrival}/>
+                {loading ?
+                    <CircularProgress/> :
+                    <SubmitButton text={home[props.lang].loadingArrival}/>
+                }
             </form>
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>

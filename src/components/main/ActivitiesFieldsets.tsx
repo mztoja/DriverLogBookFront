@@ -15,6 +15,7 @@ import {LoadingArrival} from "./actions/LoadingArrival";
 import {LoadingCompleted} from "./actions/LoadingCompleted";
 import {UnloadingArrival} from "./actions/UnloadingArrival";
 import { UnloadingCompleted } from "./actions/UnloadingCompleted";
+import {AddExpense} from "./actions/AddExpense";
 
 interface Props {
     lang: userLangEnum;
@@ -56,6 +57,7 @@ export const ActivitiesFieldsets = (props: Props) => {
         weight: '',
         reference: '',
         loadId: '',
+        payment: '',
     });
 
     const updateGeneralFormData = (key: string, value: string) => {
@@ -246,6 +248,21 @@ export const ActivitiesFieldsets = (props: Props) => {
         />
     }
 
+    if (activityForm === 'addExpense') {
+        return <AddExpense
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+        />
+    }
+
     if (props.tourData) {
         return (
             <>
@@ -258,6 +275,7 @@ export const ActivitiesFieldsets = (props: Props) => {
                 </fieldset>
                 <fieldset className="DivInline">
                     <legend>{home[props.lang].fieldFinances}</legend>
+                    <NavigateButton activityForm='addExpense' set={setActivityForm} text={home[props.lang].addExpense}/><br/>
                 </fieldset>
                 <fieldset className="DivInline">
                     <legend>{home[props.lang].fieldLoads}</legend>

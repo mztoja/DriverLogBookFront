@@ -69,6 +69,7 @@ interface Home {
     noLoadChosen: string;
     chosenLoadIsUnloaded: string;
     noLoadReceiver: string;
+    addExpense: string;
 }
 
 export const home:Home[] = [{
@@ -143,6 +144,7 @@ export const home:Home[] = [{
     noLoadChosen: 'Please choose the load.',
     chosenLoadIsUnloaded: 'The selected load is already unloaded.',
     noLoadReceiver: 'You cannot enter a receiver as unloading place because the selected load does not have any receiver.',
+    addExpense: 'Add expense',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -214,4 +216,5 @@ export const home:Home[] = [{
     noLoadChosen: 'Nie wybrano ładunku',
     chosenLoadIsUnloaded: 'Wybrany ładunek jest już rozładowany.',
     noLoadReceiver: 'Nie można wpisać odbiorcy gdyż wybrany ładunek go nie posiada.',
+    addExpense: 'Dodaj wydatek',
 }];

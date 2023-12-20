@@ -14,6 +14,10 @@ a {
     text-decoration: inherit;
 }
 
+.center {
+    text-align: center;
+}
+
 .Link {
     font: inherit;
     color: rgb(64 120 165);

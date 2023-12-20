@@ -1,16 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {TextField} from "@mui/material";
-import { form } from "../../../assets/txt/form";
-import './Form.css';
-import {InputPropsTypes} from "../../../types/InputPropsTypes";
+import { form } from "../../../../assets/txt/form";
+import '../Form.css';
+import {emailRegExp} from "../../../../config/regexp";
+import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
-export const LastNameInput = (props:InputPropsTypes) => {
+export const EmailInput = (props:InputPropsTypes) => {
 
     const [validation, setValidation] = useState<boolean>(false);
 
     useEffect(() => {
-
-        if ((props.value.length <= 22) || (props.value === '')) {
+        const regexp = emailRegExp();
+        if ((regexp.test(props.value)) || (props.value === '')) {
             setValidation(false);
         } else {
             setValidation(true);
@@ -19,16 +20,17 @@ export const LastNameInput = (props:InputPropsTypes) => {
 
     return (
         <TextField
-            label={form[props.lang].lastName}
-            id="lastName"
+            required
+            id="email"
+            label={form[props.lang].email}
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput'}}
-            type="text"
+            type="email"
             value={props.value}
             onChange={props.onChange}
             error={validation}
             fullWidth
-            autoComplete="nope"
+            autoComplete=''
             size='small'
         />
     );

@@ -51,10 +51,6 @@ export const DayStop = (props: ActionsPropsTypes) => {
         });
     }
 
-    if (loading) {
-        return <CircularProgress/>
-    }
-
     return (
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
@@ -121,7 +117,10 @@ export const DayStop = (props: ActionsPropsTypes) => {
                 />
                 </div>
                 <br/>
-                <SubmitButton text={home[props.lang].dayStop}/>
+                {loading ?
+                    <CircularProgress/> :
+                    <SubmitButton text={home[props.lang].dayStop}/>
+                }
             </form>
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>

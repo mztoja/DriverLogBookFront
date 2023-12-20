@@ -2,9 +2,9 @@ import React, {useEffect, useState} from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import {MenuItem, Select} from "@mui/material";
-import {commons} from '../../../assets/txt/commons';
-import { form } from "../../../assets/txt/form";
-import {InputPropsTypes} from "../../../types/InputPropsTypes";
+import {commons} from '../../../../assets/txt/commons';
+import { form } from "../../../../assets/txt/form";
+import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
 export const LanguageSelect = (props: InputPropsTypes) => {
 

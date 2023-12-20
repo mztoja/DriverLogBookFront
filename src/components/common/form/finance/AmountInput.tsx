@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {userLangEnum} from "types";
 import InputLabel from "@mui/material/InputLabel";
-import {form} from "../../../assets/txt/form";
+import {form} from "../../../../assets/txt/form";
 import {MenuItem, OutlinedInput, Select} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
-import {currencies} from "../../../data/currencies";
+import {currencies} from "../../../../data/currencies";
 import InputAdornment from "@mui/material/InputAdornment";
-import {extractNumberWithDecimal} from "../../../utils/extractNumberWithDecimal";
+import {extractNumberWithDecimal} from "../../../../utils/extractNumberWithDecimal";
 
 interface Props {
     lang: userLangEnum;
@@ -64,7 +64,9 @@ export const AmountInput = (props: Props) => {
                     inputProps={{className: 'TextInput'}}
                     size='small'
                 >
-                    {currencies.map(option => (
+                    {currencies
+                        .sort((a, b) => a.code.localeCompare(b.code))
+                        .map(option => (
                         <MenuItem key={option.code} value={option.code}>{option.code} ({option.symbol})</MenuItem>)
                     )}
                 </Select>

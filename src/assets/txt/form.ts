@@ -62,6 +62,13 @@ interface Form {
     loadWeight: string;
     loadQuantity: string;
     chooseLoad: string;
+    paymentSelect: string;
+    cash: string;
+    paymentSetTitle: string;
+    newPaymentMethod: string;
+    paymentSetDelete: string;
+    paymentSetAdd: string;
+    paymentSetDefault: string;
 }
 
 
@@ -130,6 +137,13 @@ export const form: Form[] =
         loadWeight: 'Weight of the goods',
         loadQuantity: 'Quantity of the goods',
         chooseLoad: 'Choose your load',
+        paymentSelect: 'Payment',
+        cash: 'Cash',
+        paymentSetTitle: 'Payment methods',
+        newPaymentMethod: 'New payment method',
+        paymentSetAdd: 'Add new payment method',
+        paymentSetDefault: 'Set this method as default payment method',
+        paymentSetDelete: 'Delete this payment method',
     },
         {//pl
             email: 'E-mail',
@@ -195,4 +209,11 @@ export const form: Form[] =
             loadWeight: 'Waga towaru',
             loadQuantity: 'Ilość towaru',
             chooseLoad: 'Wybierz ładunek',
+            paymentSelect: 'Płatność',
+            cash: 'Gotówka',
+            paymentSetTitle: 'Metody płatności',
+            newPaymentMethod: 'Nowa metoda płatności',
+            paymentSetDelete: 'Usuń wybraną metodę płatności',
+            paymentSetDefault: 'Ustaw wybraną metodę płatności jako domyślną',
+            paymentSetAdd: 'Dodaj nową metodę płatności',
         }];

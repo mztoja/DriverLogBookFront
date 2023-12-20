@@ -6,10 +6,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {form} from "../../../assets/txt/form";
-import './Form.css';
-import {passwordRegExp} from "../../../config/regexp";
-import {InputPropsTypes} from "../../../types/InputPropsTypes";
+import {form} from "../../../../assets/txt/form";
+import '../Form.css';
+import {passwordRegExp} from "../../../../config/regexp";
+import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
 export const PasswordInput = (props:InputPropsTypes) => {
     const [showPassword, setShowPassword] = React.useState(false);

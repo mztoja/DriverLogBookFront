@@ -74,14 +74,10 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
             credentials: "include",
         });
         handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].loadingArrivalSuccess, 'success');
+            setAlert(home[props.lang].loadingSuccess, 'success');
             props.setActivityForm(null);
             props.setUserData({...props.userData, markedArrive: 0});
         });
-    }
-
-    if (loading) {
-        return <CircularProgress/>
     }
 
     return (
@@ -196,7 +192,10 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
-                <SubmitButton text={home[props.lang].loading}/>
+                {loading ?
+                    <CircularProgress/> :
+                    <SubmitButton text={home[props.lang].loading}/>
+                }
             </form>
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>
