@@ -71,7 +71,7 @@ export const TourStart = (props:ActionsPropsTypes) => {
                 <div><FuelInput
                     lang={props.lang}
                     value={props.formData.fuelQuantity}
-                    onChange={e => props.updateFormData('fuelQuantity', e.target.value)}
+                    onChange={e => props.updateFormData('fuelQuantity', e)}
                     type='quantity'
                     userFuelConType={props.userData.fuelConType}
                 />
@@ -80,7 +80,7 @@ export const TourStart = (props:ActionsPropsTypes) => {
                 <div><OdometerInput
                     lang={props.lang}
                     value={props.formData.odometer}
-                    onChange={e => props.updateFormData('odometer', e.target.value)}
+                    onChange={e => props.updateFormData('odometer', e)}
                 />
                 </div>
                 <br/>

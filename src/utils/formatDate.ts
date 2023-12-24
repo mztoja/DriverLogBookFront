@@ -1,9 +1,11 @@
+import { userLangEnum } from "types";
+
 export const formatDate = (dateString: string, lang: number): string => {
     let daysOfWeek = ['(Sun)', '(Mon)', '(Tue)', '(Wed)', '(Thu)', '(Fri)', '(Sat)'];
-    if (lang === 1) {
+    if (lang === userLangEnum.pl) {
         daysOfWeek = ['(Niedz)', '(Pon)', '(Wt)', '(Śr)', '(Czw)', '(Pt)', '(Sob)'];
     }
-    const date = new Date(dateString); // Załóżmy, że dateString to np. "2023-10-31T22:33:00.000Z"
+    const date = new Date(dateString);
     const dayOfWeek = daysOfWeek[date.getUTCDay()];
     const day = date.getUTCDate().toString().padStart(2, '0');
     const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');

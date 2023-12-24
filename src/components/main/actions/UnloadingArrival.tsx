@@ -92,7 +92,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                 <div><OdometerInput
                     lang={props.lang}
                     value={props.formData.odometer}
-                    onChange={e => props.updateFormData('odometer', e.target.value)}
+                    onChange={e => props.updateFormData('odometer', e)}
                 />
                 </div>
                 <br/>

@@ -69,6 +69,10 @@ interface Form {
     paymentSetDelete: string;
     paymentSetAdd: string;
     paymentSetDefault: string;
+    expenseQuantity: string;
+    expenseUnitPrice: string;
+    expenseItemDescription: string;
+    expenseForeignCurrency: string;
 }
 
 
@@ -144,6 +148,10 @@ export const form: Form[] =
         paymentSetAdd: 'Add new payment method',
         paymentSetDefault: 'Set this method as default payment method',
         paymentSetDelete: 'Delete this payment method',
+        expenseItemDescription: 'Item (expense description)',
+        expenseQuantity: 'Quantity',
+        expenseUnitPrice: 'Unit Price',
+        expenseForeignCurrency: 'Foreign currency payment',
     },
         {//pl
             email: 'E-mail',
@@ -216,4 +224,8 @@ export const form: Form[] =
             paymentSetDelete: 'Usuń wybraną metodę płatności',
             paymentSetDefault: 'Ustaw wybraną metodę płatności jako domyślną',
             paymentSetAdd: 'Dodaj nową metodę płatności',
+            expenseUnitPrice: 'Cena jednostkowa',
+            expenseQuantity: 'Ilość',
+            expenseItemDescription: 'Pozycja (opis wydatku)',
+            expenseForeignCurrency: 'Płatność w obcej walucie',
         }];

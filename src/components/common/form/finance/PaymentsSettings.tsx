@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import {styled, css} from '@mui/system';
 import {Modal as BaseModal} from '@mui/base/Modal';
-import {Dispatch, FormEvent, SetStateAction, useEffect, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {DeletePaymentData, PaymentInterface, userLangEnum} from 'types';
 import {form} from "../../../../assets/txt/form";
 import {CircularProgress, IconButton, TextField, Tooltip} from "@mui/material";
@@ -43,8 +43,8 @@ export const PaymentsSettings = (props: Props) => {
 
     const handleClose = () => props.setOpen(false);
 
-    const add = async (e: FormEvent) => {
-        e.preventDefault();
+    const add = async () => {
+        //e.preventDefault();
         const sendData: AddPaymentData = {
             paymentMethod: newMethod,
         }
@@ -147,7 +147,6 @@ export const PaymentsSettings = (props: Props) => {
                                 </p>
                             ))}
                             <p className='center'>
-                                <form onSubmit={add}>
                                     <TextField
                                         label={form[props.lang].newPaymentMethod}
                                         id='newPayment'
@@ -159,13 +158,18 @@ export const PaymentsSettings = (props: Props) => {
                                         error={validation}
                                         size='small'
                                         autoComplete='off'
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                add().finally();
+                                            }
+                                            }
+                                        }
                                     />
                                     <Tooltip title={form[props.lang].paymentSetAdd} arrow>
-                                        <IconButton color="info" aria-label="add">
-                                            <AddCircleIcon onClick={add}/>
+                                        <IconButton color="info" aria-label="add" onClick={add}>
+                                            <AddCircleIcon />
                                         </IconButton>
                                     </Tooltip>
-                                </form>
                             </p>
                         </>
                     }

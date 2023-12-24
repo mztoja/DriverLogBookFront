@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {TextField} from "@mui/material";
 import { form } from "../../../../assets/txt/form";
 import '../Form.css';
@@ -8,11 +8,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 
 export const LoadWeightInput = (props:InputPropsTypes) => {
 
-    const [value, setValue] = useState<string>(props.value);
-
-    useEffect(() => {
-        setValue(extractDigits(props.value));
-    }, [props.value]);
+    const onChange = (v: string) => {
+        const newValue = extractDigits(v);
+        props.onChange(newValue);
+    }
 
     return (
         <TextField
@@ -26,8 +25,8 @@ export const LoadWeightInput = (props:InputPropsTypes) => {
                     </InputAdornment>
                 ),}}
             type="text"
-            value={value}
-            onChange={props.onChange}
+            value={props.value}
+            onChange={(e) => onChange(e.target.value)}
             fullWidth
             autoComplete="off"
             size='small'

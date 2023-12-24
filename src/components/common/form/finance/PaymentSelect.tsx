@@ -32,12 +32,17 @@ export const PaymentSelect = (props: InputPropsTypes) => {
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() => {
+        props.onChange(value);
+        // eslint-disable-next-line
+    }, [value]);
+
     const handleClick = () => {
         setShowPaymentsSettings(true);
     }
 
     if ((paymentsList.length > 0) || (paymentsList.length === 0 && !loading)) return (
-        <FormControl>
+        <FormControl sx={{ minWidth: '100px' }}>
             {showPaymentsSettings &&
                 <PaymentsSettings
                     open={showPaymentsSettings}
@@ -60,7 +65,7 @@ export const PaymentSelect = (props: InputPropsTypes) => {
                 id="paymentSelect"
                 value={paymentsList.length > 0 ? value : form[props.lang].cash}
                 onChange={(e) => {
-                    props.onChange(e.target.value);
+                    //props.onChange(e.target.value);
                     setValue(e.target.value);
                 }}
                 inputProps={{className: 'TextInput'}}

@@ -95,7 +95,7 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                 <div><OdometerInput
                     lang={props.lang}
                     value={props.formData.odometer}
-                    onChange={e => props.updateFormData('odometer', e.target.value)}
+                    onChange={e => props.updateFormData('odometer', e)}
                 />
                 </div>
                 <br/>
@@ -178,7 +178,7 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                 <div><LoadWeightInput
                     lang={props.lang}
                     value={props.formData.weight}
-                    onChange={e => props.updateFormData('weight', e.target.value)}
+                    onChange={e => props.updateFormData('weight', e)}
                 />
                 </div>
                 <br/>

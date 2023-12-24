@@ -70,6 +70,11 @@ interface Home {
     chosenLoadIsUnloaded: string;
     noLoadReceiver: string;
     addExpense: string;
+    addedExpenseActionSuccess: string;
+    noExpenseDescription: string;
+    expenseAddAction: string;
+    addFuelRefuel: string;
+    addDefRefuel: string;
 }
 
 export const home:Home[] = [{
@@ -130,7 +135,7 @@ export const home:Home[] = [{
     startedDayActionCardInsert: '(card insert)',
     startedDayActionCardTakeOut: '(card take out)',
     finishedDayAction: 'End of the day',
-    noActiveRoute: 'You don\'t have a route to start your working day.',
+    noActiveRoute: 'You don\'t have a route to write this activity.',
     typeFuelBurned: 'You forgot to top up the amount of fuel burned.',
     actionNoExist: 'Please top up the activity field.',
     anotherActionSuccess: 'The activity has been added successfully.',
@@ -145,6 +150,11 @@ export const home:Home[] = [{
     chosenLoadIsUnloaded: 'The selected load is already unloaded.',
     noLoadReceiver: 'You cannot enter a receiver as unloading place because the selected load does not have any receiver.',
     addExpense: 'Add expense',
+    addedExpenseActionSuccess: 'The expense has been added successfully.',
+    noExpenseDescription: 'You must enter a description of the expense (item).',
+    expenseAddAction: 'Expense added:',
+    addFuelRefuel: 'Diesel refueling',
+    addDefRefuel: 'Def refueling',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -202,7 +212,7 @@ export const home:Home[] = [{
     startedDayActionCardInsert: '(włożenie karty)',
     startedDayActionCardTakeOut: '(wyjęcie karty)',
     finishedDayAction: 'Zakończenie dnia',
-    noActiveRoute: 'Nie masz rozpoczętej trasy w której można by rozpocząć dzień pracy.',
+    noActiveRoute: 'Nie masz rozpoczętej trasy w której mógłbyś wykonać tą czynność.',
     typeFuelBurned: 'Zapomniałeś uzupełnić ilośći spalonego paliwa.',
     actionNoExist: 'Uzupełnij czynność którą chcesz wpisać.',
     anotherActionSuccess: 'Wpisana czynność została dodana pomyślnie.',
@@ -217,4 +227,9 @@ export const home:Home[] = [{
     chosenLoadIsUnloaded: 'Wybrany ładunek jest już rozładowany.',
     noLoadReceiver: 'Nie można wpisać odbiorcy gdyż wybrany ładunek go nie posiada.',
     addExpense: 'Dodaj wydatek',
+    addedExpenseActionSuccess: 'Pomyślnie wpisano wydatek.',
+    noExpenseDescription: 'Musisz wpisać opis wydatku (pozycję).',
+    expenseAddAction: 'Dodano wydatek',
+    addDefRefuel: 'Tankowanie Adblue',
+    addFuelRefuel: 'Tankowanie Diesel',
 }];

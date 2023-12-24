@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
-import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface, DayInterface} from "types";
+import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface, DayInterface, ExpenseEnum} from "types";
 import {home} from "../../assets/txt/home";
 import {DivClear} from "../common/DivClear";
 import {NavigateButton} from "./NavigateButton";
@@ -27,7 +27,7 @@ interface Props {
     setDayData: Dispatch<SetStateAction<DayInterface | null>>,
 }
 
-export const ActivitiesFieldsets = (props: Props) => {
+export const ActivitiesFields = (props: Props) => {
 
     const {setAlert} = useAlert();
     const [activityForm, setActivityForm] = useState<ActivitiesTypes | null>(null);
@@ -58,9 +58,16 @@ export const ActivitiesFieldsets = (props: Props) => {
         reference: '',
         loadId: '',
         payment: '',
+        expenseItemDescription: '',
+        expenseQuantity: '1',
+        expenseUnitPrice: '',
+        expenseAmount: '',
+        expenseCurrency: '',
+        expenseForeignAmount: '',
+        expenseForeignCurrency: '',
     });
 
-    const updateGeneralFormData = (key: string, value: string) => {
+    const updateGeneralFormData = (key: keyof GeneralFormData, value: string): void => {
         setGeneralFormData((values: GeneralFormData) => ({
             ...values,
             [key]: value,
@@ -260,6 +267,39 @@ export const ActivitiesFieldsets = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            expenseType={ExpenseEnum.standard}
+        />
+    }
+
+    if (activityForm === 'addFuelRefuel') {
+        return <AddExpense
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+            expenseType={ExpenseEnum.fuel}
+        />
+    }
+
+    if (activityForm === 'addDefRefuel') {
+        return <AddExpense
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+            expenseType={ExpenseEnum.def}
         />
     }
 
@@ -276,6 +316,8 @@ export const ActivitiesFieldsets = (props: Props) => {
                 <fieldset className="DivInline">
                     <legend>{home[props.lang].fieldFinances}</legend>
                     <NavigateButton activityForm='addExpense' set={setActivityForm} text={home[props.lang].addExpense}/><br/>
+                    <NavigateButton activityForm='addFuelRefuel' set={setActivityForm} text={home[props.lang].addFuelRefuel}/><br/>
+                    <NavigateButton activityForm='addDefRefuel' set={setActivityForm} text={home[props.lang].addDefRefuel}/><br/>
                 </fieldset>
                 <fieldset className="DivInline">
                     <legend>{home[props.lang].fieldLoads}</legend>

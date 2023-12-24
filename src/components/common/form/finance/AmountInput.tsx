@@ -15,12 +15,12 @@ interface Props {
     onChangeAmount: (e: any) => void;
     onChangeCurrency: (e: any) => void;
     nameId: string;
+    currencyDisable?: boolean;
 }
 
 export const AmountInput = (props: Props) => {
 
     const [symbol,setSymbol] = useState<string>('€');
-    const [amount,setAmount] = useState<string>(props.valueAmount);
     const [valueCurrency, setValueCurrency] = useState<string>(props.valueCurrency || 'EUR');
 
     useEffect(() => {
@@ -31,12 +31,13 @@ export const AmountInput = (props: Props) => {
                 setSymbol(e.symbol);
             }
         })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line
     }, [valueCurrency]);
 
-    useEffect(() => {
-        setAmount(extractNumberWithDecimal(props.valueAmount));
-    }, [props.valueAmount]);
+    const onChangeAmount = (v: string) => {
+        const newValue = extractNumberWithDecimal(v);
+        props.onChangeAmount(newValue);
+    }
 
     return (
         <>
@@ -44,11 +45,11 @@ export const AmountInput = (props: Props) => {
                 <InputLabel className="TextInput__Label">{form[props.lang].amount}</InputLabel>
                 <OutlinedInput
                     id={props.nameId}
-                    value={amount}
+                    value={props.valueAmount}
                     inputProps={{className: 'TextInput'}}
                     startAdornment={<InputAdornment position="start"><div className="TextInput">{symbol}</div></InputAdornment>}
                     label={form[props.lang].amount}
-                    onChange={props.onChangeAmount}
+                    onChange={(e) => onChangeAmount(e.target.value)}
                     autoComplete='off'
                     size='small'
                 />
@@ -59,8 +60,9 @@ export const AmountInput = (props: Props) => {
                     id={props.nameId+'currency'}
                     value={valueCurrency}
                     label={form[props.lang].currency}
-                    onChange={(e) => {setValueCurrency(e.target.value);}}
+                    onChange={(e) => setValueCurrency(e.target.value)}
                     required
+                    disabled={props.currencyDisable}
                     inputProps={{className: 'TextInput'}}
                     size='small'
                 >
@@ -74,5 +76,4 @@ export const AmountInput = (props: Props) => {
         </>
 
     );
-
 }

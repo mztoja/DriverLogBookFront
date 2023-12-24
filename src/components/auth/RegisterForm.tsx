@@ -161,7 +161,7 @@ export const RegisterForm = (props: Props) => {
                     <AmountInput lang={props.lang}
                                  valueAmount={registerForm.bid}
                                  valueCurrency={registerForm.currency}
-                                 onChangeAmount={e => updateForm('bid', e.target.value)}
+                                 onChangeAmount={e => updateForm('bid', e)}
                                  onChangeCurrency={e => updateForm('currency', e)}
                                  nameId='bid'
                     />

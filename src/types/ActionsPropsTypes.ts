@@ -4,7 +4,7 @@ import {ActivitiesTypes, GeneralFormData, TourInterface, UserInterface, userLang
 export interface ActionsPropsTypes {
     formData: GeneralFormData;
     lang: userLangEnum;
-    updateFormData: (key: string, value: string) => void;
+    updateFormData: (key: keyof GeneralFormData, value: string) => void;
     setActivityForm: Dispatch<SetStateAction<ActivitiesTypes | null>>;
     userData: UserInterface;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>,

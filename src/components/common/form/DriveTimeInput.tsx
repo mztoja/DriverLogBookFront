@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {FormHelperText, TextField} from "@mui/material";
 import {form} from "../../../assets/txt/form";
 import {InputPropsTypes} from "../../../types/InputPropsTypes";
@@ -9,12 +9,11 @@ export interface Props extends InputPropsTypes {
 }
 
 export const DriveTimeInput = (props: Props) => {
-    const [time, setTime] = useState('');
 
-    useEffect(() => {
-        setTime(extractTime(props.value));
-    }, [props.value]);
-
+    const onChange = (v: string) => {
+        const newValue = extractTime(v);
+        props.onChange(extractTime(newValue));
+    }
 
     return (
         <>
@@ -24,8 +23,8 @@ export const DriveTimeInput = (props: Props) => {
                 InputLabelProps={{className: 'TextInput__Label'}}
                 InputProps={{className: 'TextInput'}}
                 type="text"
-                value={time}
-                onChange={props.onChange}
+                value={props.value}
+                onChange={(e) => onChange(e.target.value)}
                 autoComplete='off'
                 size='small'
             />

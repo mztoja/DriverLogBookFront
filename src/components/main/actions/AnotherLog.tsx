@@ -59,7 +59,7 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
                 <div><OdometerInput
                     lang={props.lang}
                     value={props.formData.odometer}
-                    onChange={e => props.updateFormData('odometer', e.target.value)}
+                    onChange={e => props.updateFormData('odometer', e)}
                 />
                 </div>
                 <br/>
@@ -76,7 +76,7 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
                 </div>
                 <br/>
                 <div>
-                    <ActionInput lang={props.lang} value={props.formData.action} onChange={e => props.updateFormData('action', e.target.value)}/>
+                    <ActionInput lang={props.lang} value={props.formData.action} onChange={e => props.updateFormData('action', e)}/>
                 </div>
                 <br/>
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}

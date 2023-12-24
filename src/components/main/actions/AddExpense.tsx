@@ -1,8 +1,8 @@
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
-import {AddExpenseData} from "types";
+import {AddExpenseData, ExpenseEnum} from "types";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
-import React, {FormEvent} from "react";
+import React, {FormEvent, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../../config/api";
 import {handleApiResult} from "../../../utils/handleApiResult";
 import {home} from "../../../assets/txt/home";
@@ -11,19 +11,60 @@ import {Link} from "react-router-dom";
 import {DateInput} from "../../common/form/DateInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {PlaceInput} from "../../common/form/PlaceInput";
-import {ActionInput} from "../../common/form/ActionInput";
 import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {PaymentSelect} from "../../common/form/finance/PaymentSelect";
+import {ExpenseQuantityInput} from "../../common/form/finance/ExpenseQuantityInput";
+import {UnitPriceInput} from "../../common/form/finance/UnitPriceInput";
+import {AmountInput} from "../../common/form/finance/AmountInput";
+import {OnOffSwitch} from "../../common/form/OnOffSwitch";
+import {form} from "../../../assets/txt/form";
+import {ExpanseChangeType} from "../../../hooks/useExpenseMath";
+import {useExpenseMath} from "../../../hooks/useExpenseMath";
+import {ItemDescriptionInput} from "../../common/form/finance/ItemDescriptionInput";
+import {countries} from "../../../data/countries";
 
-export const AddExpense = (props:ActionsPropsTypes) => {
+interface Props extends ActionsPropsTypes {
+    expenseType: ExpenseEnum;
+}
 
+export const AddExpense = (props: Props) => {
+    const [switchValue, setSwitchValue] = useState<'false' | 'true'>('false');
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
+    const [foreignCurrency, setForeignCurrency] = useState<string>('');
 
-    const sendAnotherLog = async (e: FormEvent) => {
+    useEffect(() => {
+        const find = countries.find((country) => country.code === props.userData.country);
+        if (find) {
+            setForeignCurrency(find.currency);
+            if (find.currency !== props.userData.currency) setSwitchValue('true');
+        }
+        // eslint-disable-next-line
+    },[]);
+
+    useExpenseMath(
+        switchValue,
+        props.formData,
+        props.updateFormData,
+        useRef<Partial<Record<ExpanseChangeType, string>>>({
+            amount: props.formData.expenseAmount,
+            foreignAmount: props.formData.expenseForeignAmount,
+            quantity: props.formData.expenseQuantity,
+            unitPrice: props.formData.expenseUnitPrice,
+            switch: switchValue,
+        }),
+    );
+
+    const sendAddExpense = async (e: FormEvent) => {
         e.preventDefault();
+        const itemDescription =
+            props.expenseType === ExpenseEnum.fuel
+                ? home[props.lang].addFuelRefuel
+                : props.expenseType === ExpenseEnum.def
+                    ? home[props.lang].addDefRefuel
+                    : props.formData.expenseItemDescription;
         const sendData: AddExpenseData = {
             date: props.formData.date,
             country: props.formData.country,
@@ -31,26 +72,51 @@ export const AddExpense = (props:ActionsPropsTypes) => {
             placeId: props.formData.placeId,
             odometer: props.formData.odometer,
             notes: props.formData.notes,
-            action: props.formData.action,
+            action: home[props.lang].expenseAddAction+': '+itemDescription,
             payment: props.formData.payment,
+            expenseItemDescription: itemDescription,
+            expenseQuantity: props.formData.expenseQuantity !== ''
+            ? props.formData.expenseQuantity
+            : '0',
+            expenseUnitPrice: props.formData.expenseUnitPrice !== ''
+            ? props.formData.expenseUnitPrice
+            : '0',
+            expenseCurrency: props.formData.expenseCurrency,
+            expenseAmount: props.formData.expenseAmount !== ''
+            ? props.formData.expenseAmount
+            : '0',
+            expenseForeignCurrency: props.formData.expenseForeignCurrency,
+            expenseForeignAmount: props.formData.expenseForeignAmount !== ''
+            ? props.formData.expenseForeignAmount
+            : '0',
+            expenseType: props.expenseType,
         }
-        // const result = await fetchData(apiPaths., {
-        //     method: 'POST',
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: JSON.stringify(sendData),
-        //     credentials: "include",
-        // });
-        // handleApiResult(result, props.lang, setAlert, () => {
-        //     setAlert(home[props.lang]., 'success');
-        //     props.setActivityForm(null);
-        // });
+        const result = await fetchData(apiPaths.createExpense, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(sendData),
+            credentials: "include",
+        });
+        handleApiResult(result, props.lang, setAlert, () => {
+            setAlert(home[props.lang].addedExpenseActionSuccess, 'success');
+            props.setActivityForm(null);
+            props.updateFormData('expenseItemDescription', '');
+            props.updateFormData('expenseQuantity', '1');
+            props.updateFormData('expenseAmount', '');
+            props.updateFormData('expenseUnitPrice', '');
+            props.updateFormData('expenseForeignAmount', '');
+        });
     }
 
     return (
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
-            <legend>{home[props.lang].addExpense}</legend>
-            <form onSubmit={sendAnotherLog}>
+            <legend>
+                {props.expenseType === ExpenseEnum.standard && home[props.lang].addExpense}
+                {props.expenseType === ExpenseEnum.fuel && home[props.lang].addFuelRefuel}
+                {props.expenseType === ExpenseEnum.def && home[props.lang].addDefRefuel}
+            </legend>
+            <form onSubmit={sendAddExpense}>
                 <div><DateInput
                     lang={props.lang}
                     value={props.formData.date}
@@ -61,7 +127,7 @@ export const AddExpense = (props:ActionsPropsTypes) => {
                 <div><OdometerInput
                     lang={props.lang}
                     value={props.formData.odometer}
-                    onChange={e => props.updateFormData('odometer', e.target.value)}
+                    onChange={e => props.updateFormData('odometer', e)}
                 />
                 </div>
                 <br/>
@@ -78,7 +144,75 @@ export const AddExpense = (props:ActionsPropsTypes) => {
                 </div>
                 <br/>
                 <div>
-                    <PaymentSelect lang={props.lang} value={props.formData.payment} onChange={e => props.updateFormData('payment', e)}/>
+                    <ItemDescriptionInput
+                        lang={props.lang}
+                        value={
+                        props.expenseType === ExpenseEnum.fuel
+                            ? home[props.lang].addFuelRefuel
+                            : props.expenseType === ExpenseEnum.def
+                                ? home[props.lang].addDefRefuel
+                                : props.formData.expenseItemDescription
+                        }
+                        onChange={e => props.updateFormData('expenseItemDescription', e)}
+                        disabled={props.expenseType !== ExpenseEnum.standard}
+                    />
+                </div>
+                <br/>
+                <div>
+                    <ExpenseQuantityInput
+                        lang={props.lang}
+                        value={props.formData.expenseQuantity}
+                        onChange={e => props.updateFormData('expenseQuantity', e)}
+                    />&nbsp;
+                    <UnitPriceInput
+                        lang={props.lang}
+                        value={props.formData.expenseUnitPrice}
+                        onChange={e => props.updateFormData('expenseUnitPrice', e)}
+                    />&nbsp;
+                    <PaymentSelect
+                        lang={props.lang}
+                        value={props.formData.payment}
+                        onChange={e => props.updateFormData('payment', e)}
+                    />
+                </div>
+                <br/>
+                <div>
+                    <OnOffSwitch
+                        label={form[props.lang].expenseForeignCurrency}
+                        value={switchValue}
+                        onChange={e => setSwitchValue(e)}
+                    />
+                </div>
+                <br/>
+                {switchValue === 'true' &&
+                    <>
+                        <div>
+                            <AmountInput
+                                lang={props.lang}
+                                valueAmount={props.formData.expenseForeignAmount}
+                                valueCurrency={
+                                props.formData.expenseForeignCurrency !== ''
+                                    ? props.formData.expenseForeignCurrency
+                                    : foreignCurrency}
+                                onChangeAmount={e => props.updateFormData('expenseForeignAmount', e)}
+                                onChangeCurrency={e => props.updateFormData('expenseForeignCurrency', e)}
+                                nameId='foreignAmount'
+                            />
+                        </div>
+                        <br/>
+                    </>
+                }
+
+                <div>
+                    <AmountInput
+                        lang={props.lang}
+                        valueAmount={props.formData.expenseAmount}
+                        valueCurrency={props.userData.currency}
+                        onChangeAmount={e => props.updateFormData('expenseAmount', e)}
+                        onChangeCurrency={e => props.updateFormData('expenseCurrency', e)}
+                        nameId='homeAmount'
+                        currencyDisable
+                    />
                 </div>
                 <br/>
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
@@ -86,7 +220,7 @@ export const AddExpense = (props:ActionsPropsTypes) => {
                 <br/>
                 {loading ?
                     <CircularProgress/> :
-                    <SubmitButton text={home[props.lang].addExpense}/>
+                    <SubmitButton text={props.expenseType === ExpenseEnum.fuel ? home[props.lang].addFuelRefuel : props.expenseType === ExpenseEnum.def ? home[props.lang].addDefRefuel : home[props.lang].addExpense}/>
                 }
             </form>
             <br/>

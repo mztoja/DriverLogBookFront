@@ -104,7 +104,7 @@ export const ProfileSet = (props: Props) => {
                         <AmountInput lang={props.userData.lang}
                                      valueAmount={data.bid}
                                      valueCurrency={data.currency}
-                                     onChangeAmount={e => updateData('bid', e.target.value)}
+                                     onChangeAmount={e => updateData('bid', e)}
                                      onChangeCurrency={e => updateData('currency', e)}
                                      nameId='bid'
                         />

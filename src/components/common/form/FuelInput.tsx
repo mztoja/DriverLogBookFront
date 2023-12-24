@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {FormHelperText, TextField} from "@mui/material";
 import { form } from "../../../assets/txt/form";
 import './Form.css';
@@ -15,16 +15,15 @@ interface Props extends InputPropsTypes {
 
 export const FuelInput = (props: Props) => {
 
-    const [value, setValue] = useState<string>(props.value);
-
-    useEffect(() => {
+    const onChange = (v: string) => {
         if (props.type === 'quantity') {
-            setValue(extractDigits(props.value));
+            const newValue = extractDigits(v);
+            props.onChange(newValue);
         } else {
-            setValue(extractNumberWithDecimal(props.value));
+            const newValue = extractNumberWithDecimal(v);
+            props.onChange(newValue);
         }
-
-    }, [props.value, props.type]);
+    }
 
     return (
         <>
@@ -43,8 +42,8 @@ export const FuelInput = (props: Props) => {
                         </InputAdornment>
                     ),}}
                 type="text"
-                value={value}
-                onChange={props.onChange}
+                value={props.value}
+                onChange={(e) => onChange(e.target.value)}
                 autoComplete='off'
                 size='small'
             />

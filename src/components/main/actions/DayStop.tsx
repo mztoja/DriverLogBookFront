@@ -59,7 +59,7 @@ export const DayStop = (props: ActionsPropsTypes) => {
                 <div><OdometerInput
                     lang={props.lang}
                     value={props.formData.odometer}
-                    onChange={e => props.updateFormData('odometer', e.target.value)}
+                    onChange={e => props.updateFormData('odometer', e)}
                 />
                 </div>
                 <br/>
@@ -77,13 +77,13 @@ export const DayStop = (props: ActionsPropsTypes) => {
                 <br/>
                 <div>
                     <DriveTimeInput lang={props.lang} value={props.formData.driveTime}
-                                    onChange={e => props.updateFormData('driveTime', e.target.value)}/>
+                                    onChange={e => props.updateFormData('driveTime', e)}/>
                 </div>
                 <br/>
                 {props.dayData?.doubleCrew ?
                     <>
                         <div><DriveTimeInput lang={props.lang} value={props.formData.driveTime2}
-                                             onChange={e => props.updateFormData('driveTime2', e.target.value)}
+                                             onChange={e => props.updateFormData('driveTime2', e)}
                                              secDriver={true}/></div>
                         <br/>
                     </>
@@ -92,7 +92,7 @@ export const DayStop = (props: ActionsPropsTypes) => {
                 <div><FuelInput
                     lang={props.lang}
                     value={props.formData.fuelCombustion}
-                    onChange={e => props.updateFormData('fuelCombustion', e.target.value)}
+                    onChange={e => props.updateFormData('fuelCombustion', e)}
                     type='combustion'
                     userFuelConType={props.userData.fuelConType}
                 />

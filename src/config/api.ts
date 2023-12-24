@@ -44,4 +44,5 @@ export const apiPaths = {
     addPaymentMethod: '/payments/add',
     deletePaymentMethod: '/payments/delete',
     selectPaymentMethod: '/payments/select',
+    createExpense: '/finances/create',
 }
