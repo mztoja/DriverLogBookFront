@@ -8,4 +8,5 @@ export interface MenuLabelTypes {
     blockedUser: string;
     places: string;
     profile: string;
+    vehicles: string;
 }

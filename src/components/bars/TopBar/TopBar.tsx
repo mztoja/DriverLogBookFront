@@ -34,7 +34,7 @@ export const TopBar = (props: Props) => {
                     {txtSubTitle} - {txtLabel[props.page]}
                 </div>
                 <div className="TopBar_Right">
-                    <TopBarRight setLang={props.setLang} userData={props.userData} setUserData={props.setUserData}/>
+                    <TopBarRight setLang={props.setLang} userData={props.userData} setUserData={props.setUserData} page={props.page}/>
                 </div>
                 <DivClear/>
             </div>

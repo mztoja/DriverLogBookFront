@@ -10,6 +10,7 @@ export const labels:MenuLabelTypes[] = [{
     blockedUser: 'Inactive account',
     places: 'Address List',
     profile: 'Profile settings',
+    vehicles: 'Vehicle Management',
 },{
     register: "Rejestracja",
     login: "Logowanie",
@@ -20,6 +21,7 @@ export const labels:MenuLabelTypes[] = [{
     blockedUser: 'Konto nieaktywne',
     places: 'Lista adresowa',
     profile: 'Ustawienia profilu',
+    vehicles: 'Zarządzanie pojazdami',
 }];
 
 

@@ -23,6 +23,7 @@ interface Login {
     profile: string;
     save: string;
     saveApiSuccess: string;
+    vehicles: string;
 }
 
 
@@ -52,6 +53,7 @@ export const login: Login[] =
         profile: 'Profile settings',
         save: 'Save changes',
         saveApiSuccess: 'Profile data has been changed.',
+        vehicles: 'Vehicle management',
     },
         {//pl
             welcome: `Witaj w aplikacji "Dziennik Kierowcy".`,
@@ -78,4 +80,5 @@ export const login: Login[] =
             profile: 'Ustawienia profilu',
             save: 'Zapisz zmiany',
             saveApiSuccess: 'Dane profilu zostały zmienione.',
+            vehicles: 'Zarządzanie pojazdami',
         }];

@@ -30,6 +30,11 @@ a {
     cursor: pointer;
 }
 
+.Link__Active {
+    color: rgb(144, 202, 249);
+    text-decoration: underline rgba(144, 202, 249, 0.7);
+}
+
 .ContentLink {
     font: inherit;
     color: rgb(0 33 209);
