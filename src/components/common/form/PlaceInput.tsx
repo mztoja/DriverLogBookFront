@@ -9,8 +9,6 @@ import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
 import {apiPaths} from "../../../config/api";
 import {useApi} from '../../../hooks/useApi';
-//import {places as placesTxt} from "../../../assets/txt/places";
-//import {useAlert} from "../../../hooks/useAlert";
 import {PlaceField} from "./PlaceField";
 
 interface Props {
@@ -36,7 +34,6 @@ export const PlaceInput = (props: Props) => {
     const [defaultPlaceValue, setDefaultPlaceValue] = useState<PlaceInterface | null>(null);
     const [clear, setClear] = useState<number>(0);
     const {loading, fetchData} = useApi();
-    //const {setAlert} = useAlert();
 
     useEffect(() => {
         (async () => {
@@ -46,8 +43,6 @@ export const PlaceInput = (props: Props) => {
             });
             if ((result && result.data) && (!result.data.dtc)) {
                 setPlacesList(result.data);
-            } else {
-                //setAlert(placesTxt[props.lang].apiError, 'error');
             }
         })();
         // eslint-disable-next-line

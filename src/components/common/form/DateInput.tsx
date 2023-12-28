@@ -1,32 +1,25 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {TextField} from "@mui/material";
-import {form} from "../../../assets/txt/form";
 import './Form.css';
 import {InputPropsTypes} from "../../../types/InputPropsTypes";
 
-export const DateInput = (props: InputPropsTypes) => {
+interface Props extends InputPropsTypes{
+    label: string;
+}
 
-    const [selectedDate, setSelectedDate] = useState(new Date(new Date().getTime() + 60*60*1000).toISOString().slice(0, 16));
-
-    const handleDateChange = (e: any) => {
-        setSelectedDate(e.target.value);
-    };
-
-    useEffect(() => {
-        props.onChange(selectedDate);
-    },[selectedDate, props]);
+export const DateInput = (props: Props) => {
 
     return (
         <TextField
-            label={form[props.lang].date}
+            label={props.label}
             id="date"
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput'}}
-            type="datetime-local"
-            value={selectedDate}
-            onChange={handleDateChange}
+            type="date"
+            value={props.value}
+            onChange={(e) => props.onChange(e.target.value)}
             fullWidth
-            autoComplete="nope"
+            autoComplete="off"
             size='small'
         />
     );

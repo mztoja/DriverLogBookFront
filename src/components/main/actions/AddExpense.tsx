@@ -8,7 +8,7 @@ import {handleApiResult} from "../../../utils/handleApiResult";
 import {home} from "../../../assets/txt/home";
 import {CircularProgress} from "@mui/material";
 import {Link} from "react-router-dom";
-import {DateInput} from "../../common/form/DateInput";
+import {DateTimeInput} from "../../common/form/DateTimeInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {PlaceInput} from "../../common/form/PlaceInput";
 import {TextArea} from "../../common/form/TextArea";
@@ -117,7 +117,7 @@ export const AddExpense = (props: Props) => {
                 {props.expenseType === ExpenseEnum.def && home[props.lang].addDefRefuel}
             </legend>
             <form onSubmit={sendAddExpense}>
-                <div><DateInput
+                <div><DateTimeInput
                     lang={props.lang}
                     value={props.formData.date}
                     onChange={e => props.updateFormData('date', e)}

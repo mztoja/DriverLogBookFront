@@ -33,6 +33,7 @@ export const apiPaths = {
     getBordersByCountry: '/borders/getByCountry',
     // vehicles
     getVehicleByRegistration: '/vehicles/findByRegistration',
+    createVehicle: '/vehicles/create',
     // loadings
     createLoad: '/loads/create',
     unloadingLoad: '/loads/unload',

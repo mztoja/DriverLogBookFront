@@ -3,7 +3,7 @@ import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {TopBar} from "../components/bars/TopBar/TopBar";
 import {Content} from "../components/bars/Content/Content";
-import {VehicleManagement} from "../components/vehicles/VehicleManagement";
+import {AddVehicle} from "../components/vehicles/AddVehicle";
 
 interface Props extends AppMainElementsTypes {
     page: keyof MenuLabelTypes;
@@ -15,7 +15,7 @@ export const VehiclesView = (props: Props) => {
             <>
                 <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
                 <Content>
-                    <VehicleManagement userData={props.userData}/>
+                    <AddVehicle userData={props.userData}/>
                 </Content>
             </>
         );

@@ -4,7 +4,7 @@ import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
 import {home} from "../../../assets/txt/home";
-import {DateInput} from "../../common/form/DateInput";
+import {DateTimeInput} from "../../common/form/DateTimeInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {PlaceInput} from "../../common/form/PlaceInput";
 import {OnOffSwitch} from "../../common/form/OnOffSwitch";
@@ -110,7 +110,7 @@ export const DayStop = (props: ActionsPropsTypes) => {
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
-                <div><DateInput
+                <div><DateTimeInput
                     lang={props.lang}
                     value={props.formData.date}
                     onChange={e => props.updateFormData('date', e)}

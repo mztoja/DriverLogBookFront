@@ -2,13 +2,13 @@ import React, {useEffect, useState} from "react";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import {CircularProgress, MenuItem, Select} from "@mui/material";
-import { form } from "../../../../assets/txt/form";
+import {form} from "../../../../assets/txt/form";
 import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 import {apiPaths} from "../../../../config/api";
 import {places as placesTxt} from "../../../../assets/txt/places";
 import {useApi} from "../../../../hooks/useApi";
 import {useAlert} from "../../../../hooks/useAlert";
-import { PlaceInterface } from "types";
+import {PlaceInterface} from "types";
 
 export const CompanySelect = (props: InputPropsTypes) => {
 
@@ -30,12 +30,12 @@ export const CompanySelect = (props: InputPropsTypes) => {
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+    }, []);
 
     useEffect(() => {
         props.onChange(value.toString());
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[value]);
+    }, [value]);
 
     if (loading) {
         return <CircularProgress/>
@@ -44,20 +44,22 @@ export const CompanySelect = (props: InputPropsTypes) => {
     return (
         <FormControl fullWidth>
             <InputLabel id="companyData" className="TextInput__Label">{form[props.lang].placeType1}</InputLabel>
-            <Select
+            {placesList.length > 0 && !loading &&
+                <Select
                 label={form[props.lang].placeType1}
                 id="companyData"
                 value={value}
-                onChange={(e) => {setValue(Number(e.target.value));}}
+                onChange={(e) => {
+                    setValue(Number(e.target.value));
+                }}
                 inputProps={{className: 'TextInput'}}
                 size='small'
             >
-                {placesList.map(company => {
-                    return (
-                        <MenuItem key={company.id} value={company.id}>
-                            ({company.country}) {company.name} - {company.street}, {company.code} {company.city}
-                        </MenuItem>);
-                })}
-            </Select>
+                {placesList.map(company => (
+                    <MenuItem key={company.id} value={company.id}>
+                        ({company.country}) {company.name} - {company.street}, {company.code} {company.city}
+                    </MenuItem>))}
+                </Select>
+            }
         </FormControl>);
 }

@@ -1,11 +1,10 @@
 import React, {Dispatch, SetStateAction} from "react";
 import {UserInterface, userLangEnum} from "types";
-import {apiPaths} from "../../config/api";
 import {useApi} from "../../hooks/useApi";
 import {CircularProgress, Tooltip} from "@mui/material";
 import LogoutIcon from '@mui/icons-material/Logout';
 import {login} from "../../assets/txt/login";
-import Cookies from "js-cookie";
+import {handleLogout} from "../../utils/handleLogout";
 
 interface Props {
     lang: userLangEnum;
@@ -15,19 +14,11 @@ interface Props {
 export const LogoutLink = (props: Props) => {
     const {loading,fetchData} = useApi();
     const click = async () => {
-
-        await fetchData(apiPaths.logout, {
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-        });
-        Cookies.remove('jwt');
-        if (props.setUserData) props.setUserData(null);
-
-        // if ((result && result.data) && (!result.data.dtc)) {
-        //     if (props.setUserData) props.setUserData(null);
-        // }
-
+        if (props.setUserData) {
+            await handleLogout(props.setUserData, fetchData);
+        }
     }
+
 
     if (loading) {
         return <CircularProgress/>

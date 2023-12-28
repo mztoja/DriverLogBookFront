@@ -1,8 +1,8 @@
 import React, {FormEvent} from "react";
 import {home} from "../../../assets/txt/home";
 import {apiPaths} from "../../../config/api";
-import {DateInput} from "../../common/form/DateInput";
-import {VehicleInput} from "../../common/form/VehicleInput";
+import {DateTimeInput} from "../../common/form/DateTimeInput";
+import {RegistrationNrInput} from "../../common/form/vehicles/RegistrationNrInput";
 import {FuelInput} from "../../common/form/FuelInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {PlaceInput} from "../../common/form/PlaceInput";
@@ -53,17 +53,17 @@ export const TourStart = (props:ActionsPropsTypes) => {
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].tourStart}</legend>
             <form onSubmit={sendTourStart}>
-                <div><DateInput
+                <div><DateTimeInput
                     lang={props.lang}
                     value={props.formData.date}
                     onChange={e => props.updateFormData('date', e)}
                 />
                 </div>
                 <br/>
-                <div><VehicleInput
+                <div><RegistrationNrInput
                     lang={props.lang}
                     value={props.formData.truck}
-                    onChange={e => props.updateFormData('truck', e.target.value)}
+                    onChange={e => props.updateFormData('truck', e)}
                     vehicle='truck'
                 />
                 </div>

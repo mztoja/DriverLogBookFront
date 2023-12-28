@@ -2,7 +2,7 @@ import React, {FormEvent, useEffect, useState} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {Link} from "react-router-dom";
 import {home} from "../../../assets/txt/home";
-import {DateInput} from "../../common/form/DateInput";
+import {DateTimeInput} from "../../common/form/DateTimeInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
@@ -78,7 +78,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].unloading}</legend>
             <form onSubmit={send}>
-                <div><DateInput
+                <div><DateTimeInput
                     lang={props.lang}
                     value={props.formData.date}
                     onChange={e => props.updateFormData('date', e)}

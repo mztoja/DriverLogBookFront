@@ -1,13 +1,14 @@
 import {commons} from "../assets/txt/commons";
 import {login} from "../assets/txt/login";
 import {home} from "../assets/txt/home";
-import {userLangEnum } from "types";
+import {userLangEnum} from "types";
 import {SetAlertType} from "../context/AlertContext";
+import {vehicles} from "../assets/txt/vehicles";
 
 export const handleApiResult = (
     result: any,
     lang: userLangEnum,
-    setAlert: (text:string, type:SetAlertType) => void,
+    setAlert: (text: string, type: SetAlertType) => void,
     action: () => void
 ): void => {
     if (result && !result.success) {
@@ -34,8 +35,8 @@ export const handleApiResult = (
                         setAlert(login[lang].registerResInvEmail, 'warning');
                         break;
                     case 'email exist':
-                            setAlert(login[lang].registerResEmailExist, 'warning');
-                            break;
+                        setAlert(login[lang].registerResEmailExist, 'warning');
+                        break;
                     case 'action':
                         setAlert(home[lang].actionNoExist, 'info');
                         break;
@@ -98,6 +99,15 @@ export const handleApiResult = (
                         break;
                     case 'expenseDescriptionEmpty':
                         setAlert(home[lang].noExpenseDescription, 'warning');
+                        break;
+                    case 'addVehicleRegEmpty':
+                        setAlert(vehicles[lang].addVehicleRegEmpty, 'error');
+                        break;
+                    case 'addVehicleWeightEmpty':
+                        setAlert(vehicles[lang].addVehicleWeightEmpty, 'error');
+                        break;
+                    case 'vehicleRegExist':
+                        setAlert(vehicles[lang].vehicleRegExist, 'error');
                         break;
                     case 'Unauthorized':
                         setAlert(commons[lang].apiUnauthorized, 'error');

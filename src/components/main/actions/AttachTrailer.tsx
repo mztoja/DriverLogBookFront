@@ -1,7 +1,7 @@
 import React, {FormEvent, useState} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {home} from "../../../assets/txt/home";
-import {DateInput} from "../../common/form/DateInput";
+import {DateTimeInput} from "../../common/form/DateTimeInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {PlaceInput} from "../../common/form/PlaceInput";
 import {TextArea} from "../../common/form/TextArea";
@@ -9,7 +9,7 @@ import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
 import { AddLogData } from "types";
-import {VehicleInput} from "../../common/form/VehicleInput";
+import {RegistrationNrInput} from "../../common/form/vehicles/RegistrationNrInput";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
@@ -55,7 +55,7 @@ export const AttachTrailer = (props: ActionsPropsTypes) => {
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].attachTrailer}</legend>
             <form onSubmit={send}>
-                <div><DateInput
+                <div><DateTimeInput
                     lang={props.lang}
                     value={props.formData.date}
                     onChange={e => props.updateFormData('date', e)}
@@ -82,7 +82,7 @@ export const AttachTrailer = (props: ActionsPropsTypes) => {
                 </div>
                 <br/>
                 <div>
-                    <VehicleInput lang={props.lang} value={trailer} onChange={e => setTrailer(e.target.value)} vehicle='trailer'/>
+                    <RegistrationNrInput lang={props.lang} value={trailer} onChange={e => setTrailer(e)} vehicle='trailer'/>
                 </div>
                 <br/>
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}

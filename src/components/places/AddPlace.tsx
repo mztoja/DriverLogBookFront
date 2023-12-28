@@ -24,27 +24,29 @@ interface Props {
     setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
+const defaultValues: AddPlaceFormInterface = {
+    isFavorite: 'false',
+    type: '',
+    name: '',
+    street: '',
+    code: '',
+    city: '',
+    country: '',
+    lat: '',
+    lon: '',
+    description: '',
+    isMarked: 'false',
+};
+
 export const AddPlace = (props: Props) => {
 
     const {setAlert} = useAlert();
     const { loading, fetchData } = useApi();
     const [addPlaceShow, setAddPlaceShow] = useState<boolean>(false);
 
-    const [addPlaceForm, setAddPlaceForm] = useState<AddPlaceFormInterface>({
-        isFavorite: 'false',
-        type: '',
-        name: '',
-        street: '',
-        code: '',
-        city: '',
-        country: '',
-        lat: '',
-        lon: '',
-        description: '',
-        isMarked: 'false',
-    });
+    const [addPlaceForm, setAddPlaceForm] = useState<AddPlaceFormInterface>(defaultValues);
 
-    const updateForm = (key: string, value: string) => {
+    const updateForm = (key: keyof AddPlaceFormInterface, value: string) => {
         setAddPlaceForm((addPlaceForm: AddPlaceFormInterface) => ({
             ...addPlaceForm,
             [key]: value,
@@ -62,14 +64,11 @@ export const AddPlace = (props: Props) => {
             });
         handleApiResult(result, props.lang, setAlert, () => {
             setAddPlaceShow(false);
+            setAddPlaceForm(defaultValues);
             props.setRefresh((prev) => !prev);
             setAlert(places[props.lang].addSuccess, 'success');
         });
     };
-
-    if (loading) {
-        return <CircularProgress/>
-    }
 
     return (
         <><div><Fab  onClick={() => setAddPlaceShow(!addPlaceShow)} color="primary" aria-label="add"><AddIcon /></Fab></div><br/>
@@ -114,7 +113,10 @@ export const AddPlace = (props: Props) => {
                                onChange={e => updateForm('lon', e.target.value)}/></div>
                 <div className="DivClear"/>
                 <br/>
-                <SubmitButton text={places[props.lang].submit}/>
+                {loading
+                    ? <CircularProgress/>
+                    : <SubmitButton text={places[props.lang].submit}/>
+                }
             </form>
         </fieldset>}</>
     )

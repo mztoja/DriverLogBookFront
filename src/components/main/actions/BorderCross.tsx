@@ -1,7 +1,7 @@
 import React, {FormEvent} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {home} from "../../../assets/txt/home";
-import {DateInput} from "../../common/form/DateInput";
+import {DateTimeInput} from "../../common/form/DateTimeInput";
 import {OdometerInput} from "../../common/form/OdometerInput";
 import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
@@ -51,7 +51,7 @@ export const BorderCross = (props: ActionsPropsTypes) => {
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].borderCross}</legend>
             <form onSubmit={sendBorderCross}>
-                <div><DateInput
+                <div><DateTimeInput
                     lang={props.lang}
                     value={props.formData.date}
                     onChange={e => props.updateFormData('date', e)}
