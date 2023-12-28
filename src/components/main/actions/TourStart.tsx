@@ -35,16 +35,11 @@ export const TourStart = (props:ActionsPropsTypes) => {
             date: props.formData.date,
             fuelStateBefore: props.formData.fuelQuantity,
         }
-        const result = await fetchData(apiPaths.createNewRoute, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.createNewRoute, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].startedTour, 'success');
             props.setActivityForm(null);
-            props.setTourData(result?.data);
+            props.setTourData(result?.responseData);
         });
     }
 

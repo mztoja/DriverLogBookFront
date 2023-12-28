@@ -33,12 +33,7 @@ export const BorderCross = (props: ActionsPropsTypes) => {
             action: home[props.lang].borderCross+' '+props.userData.country+' > '+props.formData.country,
             addNewBorder: props.formData.addNewBorder,
         }
-        const result = await fetchData(apiPaths.createBorderCross, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.createBorderCross, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].borderCrossSuccess, 'success');
             props.setActivityForm(null);

@@ -24,13 +24,10 @@ export const DayStart = (props: ActionsPropsTypes) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getLastDay, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setLastDay(result.data);
-                if (result.data.cardState === dayCardStateEnum.inserted) {
+            const result = await fetchData(apiPaths.getLastDay, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setLastDay(result.responseData);
+                if (result.responseData.cardState === dayCardStateEnum.inserted) {
                     props.updateFormData('cardInserted', 'true');
                 }
             }
@@ -51,16 +48,11 @@ export const DayStart = (props: ActionsPropsTypes) => {
             doubleCrew: props.formData.doubleCrew,
             action: home[props.lang].startedDayAction + ' ' + (props.formData.cardInserted === 'true' ? home[props.lang].startedDayActionCardInsert : ''),
         }
-        const result = await fetchData(apiPaths.createNewDay, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.createNewDay, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].startedDay, 'success');
             props.setActivityForm(null);
-            props.setDayData(result?.data);
+            props.setDayData(result?.responseData);
         });
     }
 

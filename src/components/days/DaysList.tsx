@@ -30,13 +30,10 @@ export const DaysList = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getDays + '/' + page + '/' + DAYS_PER_PAGE, {
-                headers: {Accept: 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setData(result.data.items);
-                setTotalItems(Number(result.data.totalItems));
+            const result = await fetchData(apiPaths.getDays + '/' + page + '/' + DAYS_PER_PAGE, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setData(result.responseData.items);
+                setTotalItems(Number(result.responseData.totalItems));
             } else {
                 setAlert(days[props.lang].apiError, 'error');
             }

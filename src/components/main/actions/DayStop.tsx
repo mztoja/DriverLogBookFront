@@ -38,12 +38,7 @@ export const DayStop = (props: ActionsPropsTypes) => {
             action: home[props.lang].finishedDayAction + ' ' + (props.formData.cardTakeOut === 'true' ? home[props.lang].startedDayActionCardTakeOut : ''),
         }
 
-        const result = await fetchData(apiPaths.finishDay, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.finishDay, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].finishedDay, 'success');
             props.setActivityForm(null);

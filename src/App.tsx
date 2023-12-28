@@ -27,12 +27,9 @@ export const App = () => {
     // setUserData
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.get, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setUserData(result.data);
+            const result = await fetchData(apiPaths.get, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setUserData(result.responseData);
             } else {
                 const lang = DownloadFromLocalStorage('lang');
                 if (lang !== null) {
@@ -64,12 +61,9 @@ export const App = () => {
     //setTourData
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getActiveRoute, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setTourData(result.data);
+            const result = await fetchData(apiPaths.getActiveRoute, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setTourData(result.responseData);
             }
         })();
         // eslint-disable-next-line
@@ -79,12 +73,9 @@ export const App = () => {
     useEffect(() => {
         if (tourData !== null) {
             (async () => {
-                const result = await fetchData(apiPaths.getActiveDay, {
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: "include",
-                });
-                if ((result && result.data) && (!result.data.dtc)) {
-                    setDayData(result.data);
+                const result = await fetchData(apiPaths.getActiveDay, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setDayData(result.responseData);
                 }
             })();
         }

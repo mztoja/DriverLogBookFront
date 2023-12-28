@@ -37,12 +37,9 @@ export const PlaceInput = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getPlaces, {
-                headers: {Accept: 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setPlacesList(result.data);
+            const result = await fetchData(apiPaths.getPlaces, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setPlacesList(result.responseData);
             }
         })();
         // eslint-disable-next-line

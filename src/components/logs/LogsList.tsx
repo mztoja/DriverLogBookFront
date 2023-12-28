@@ -46,13 +46,10 @@ export const LogsList = (props: Props) => {
     useEffect(() => {
         (async () => {
             const search = filterSearch === '' ? '' : '/' + filterSearch;
-            const result = await fetchData(apiPaths.getLogs + '/' + page + '/' + LOGS_PER_PAGE + search, {
-                headers: {Accept: 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setData(result.data.items);
-                setTotalItems(Number(result.data.totalItems));
+            const result = await fetchData(apiPaths.getLogs + '/' + page + '/' + LOGS_PER_PAGE + search, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setData(result.responseData.items);
+                setTotalItems(Number(result.responseData.totalItems));
             } else {
                 setAlert(logs[props.lang].apiError, 'error');
             }

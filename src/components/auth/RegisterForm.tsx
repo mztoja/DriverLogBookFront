@@ -63,11 +63,7 @@ export const RegisterForm = (props: Props) => {
     const sendForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.register, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(registerForm),
-        });
+        const result = await fetchData(apiPaths.register, 'POST', registerForm);
         handleApiResult(result, props.lang, setAlert, () => {
             SaveToLocalStorage('alertSuccess', login[props.lang].registerSuccess);
             setAlert(login[props.lang].registerSuccess, 'success');

@@ -44,20 +44,14 @@ export const PaymentsSettings = (props: Props) => {
     const handleClose = () => props.setOpen(false);
 
     const add = async () => {
-        //e.preventDefault();
         const sendData: AddPaymentData = {
             paymentMethod: newMethod,
         }
         const find = props.paymentsList.find((payment) => (payment.method === newMethod));
         if (!find) {
-            const result = await fetchData(apiPaths.addPaymentMethod, {
-                headers: {'Content-Type': 'application/json'},
-                method: 'POST',
-                credentials: "include",
-                body: JSON.stringify(sendData),
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                props.setPaymentsList(result.data);
+            const result = await fetchData(apiPaths.addPaymentMethod, 'POST', sendData);
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                props.setPaymentsList(result.responseData);
                 setNewMethod('');
             }
         } else {
@@ -69,14 +63,9 @@ export const PaymentsSettings = (props: Props) => {
         const sendData: DeletePaymentData = {
             paymentId: id.toString(),
         }
-        const result = await fetchData(apiPaths.deletePaymentMethod, {
-            headers: {'Content-Type': 'application/json'},
-            method: 'DELETE',
-            credentials: "include",
-            body: JSON.stringify(sendData),
-        });
-        if ((result && result.data) && (!result.data.dtc)) {
-            props.setPaymentsList(result.data);
+        const result = await fetchData(apiPaths.deletePaymentMethod, 'DELETE', sendData);
+        if ((result && result.responseData) && (!result.responseData.dtc)) {
+            props.setPaymentsList(result.responseData);
         }
     }
 
@@ -84,14 +73,9 @@ export const PaymentsSettings = (props: Props) => {
         const sendData: DeletePaymentData = {
             paymentId: id.toString(),
         }
-        const result = await fetchData(apiPaths.selectPaymentMethod, {
-            headers: {'Content-Type': 'application/json'},
-            method: 'PATCH',
-            credentials: "include",
-            body: JSON.stringify(sendData),
-        });
-        if ((result && result.data) && (!result.data.dtc)) {
-            props.setPaymentsList(result.data);
+        const result = await fetchData(apiPaths.selectPaymentMethod, 'PATCH', sendData);
+        if ((result && result.responseData) && (!result.responseData.dtc)) {
+            props.setPaymentsList(result.responseData);
         }
     }
 

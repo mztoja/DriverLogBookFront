@@ -15,12 +15,9 @@ export const LoadSelect = (props: InputPropsTypes) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getNotUnloadedLoads, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setLoadList(result.data);
+            const result = await fetchData(apiPaths.getNotUnloadedLoads, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setLoadList(result.responseData);
             }
         })();
         // eslint-disable-next-line

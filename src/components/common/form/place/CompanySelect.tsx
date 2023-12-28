@@ -19,12 +19,9 @@ export const CompanySelect = (props: InputPropsTypes) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getCompanyList, {
-                headers: {Accept: 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setPlacesList(result.data);
+            const result = await fetchData(apiPaths.getCompanyList, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setPlacesList(result.responseData);
             } else {
                 setAlert(placesTxt[props.lang].apiError, 'error');
             }

@@ -19,13 +19,10 @@ export const PaymentSelect = (props: InputPropsTypes) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getPaymentMethods, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setPaymentsList(result.data);
-                const defaultPayment = result.data.find((payment: PaymentInterface) => payment.default === true);
+            const result = await fetchData(apiPaths.getPaymentMethods, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setPaymentsList(result.responseData);
+                const defaultPayment = result.responseData.find((payment: PaymentInterface) => payment.default === true);
                 setValue(defaultPayment ? defaultPayment.method : form[props.lang].cash);
             }
         })();

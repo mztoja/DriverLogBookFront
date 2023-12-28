@@ -4,10 +4,7 @@ import {Dispatch, SetStateAction} from "react";
 import { UserInterface } from "types";
 
 export const handleLogout = async (setUserData: Dispatch<SetStateAction<UserInterface | null>>, fetchData: any): Promise<void> => {
-    await fetchData(apiPaths.logout, {
-        headers: {'Content-Type': 'application/json'},
-        credentials: "include",
-    });
+    await fetchData(apiPaths.logout, 'GET');
     Cookies.remove('jwt');
     setUserData(null);
 }

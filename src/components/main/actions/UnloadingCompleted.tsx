@@ -25,12 +25,9 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
     const [receiverKnown, setReceiverKnown] = useState<boolean>(false);
 
     const getLoadDetails = async (e: number): Promise<void> => {
-        const result = await fetchData(apiPaths.getLoadDetails + '/' + e, {
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-        });
-        if ((result && result.data) && (!result.data.dtc)) {
-            const loadDetails: LoadInterface = result.data;
+        const result = await fetchData(apiPaths.getLoadDetails + '/' + e, 'GET');
+        if ((result && result.responseData) && (!result.responseData.dtc)) {
+            const loadDetails: LoadInterface = result.responseData;
             if (loadDetails.receiverId === 0) {
                 setSwitchValue('false');
                 setReceiverKnown(false);
@@ -61,12 +58,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
             loadId: props.formData.loadId,
             isPlaceAsReceiver: switchValue,
         }
-        const result = await fetchData(apiPaths.unloadingLoad, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.unloadingLoad, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             props.setActivityForm(null);
             setAlert(home[props.lang].unloadingSuccess, 'success');

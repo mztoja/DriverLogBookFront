@@ -32,12 +32,7 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
             notes: props.formData.notes,
             action: props.formData.action,
         }
-        const result = await fetchData(apiPaths.createNewLog, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.createNewLog, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].anotherActionSuccess, 'success');
             props.setActivityForm(null);

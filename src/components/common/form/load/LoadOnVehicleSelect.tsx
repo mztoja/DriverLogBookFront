@@ -35,12 +35,9 @@ export const LoadOnVehicleSelect = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getVehicleByRegistration + '/' + props.truck, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                if (result.data.isLoadable) {
+            const result = await fetchData(apiPaths.getVehicleByRegistration + '/' + props.truck, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                if (result.responseData.isLoadable) {
                     setTruckState(state.loadable);
                     value === '' && setValue(props.truck);
                 } else {
@@ -48,12 +45,9 @@ export const LoadOnVehicleSelect = (props: Props) => {
                 }
             }
             if (props.trailer){
-                const result2 = await fetchData(apiPaths.getVehicleByRegistration + '/' + props.trailer, {
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: "include",
-                });
-                if ((result2 && result2.data) && (!result2.data.dtc)) {
-                    if (result2.data.isLoadable) {
+                const result2 = await fetchData(apiPaths.getVehicleByRegistration + '/' + props.trailer, 'GET');
+                if ((result2 && result2.responseData) && (!result2.responseData.dtc)) {
+                    if (result2.responseData.isLoadable) {
                         setTrailerState(state.loadable);
                         value === '' && setValue(props.trailer);
                     } else {

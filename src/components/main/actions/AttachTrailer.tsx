@@ -36,12 +36,7 @@ export const AttachTrailer = (props: ActionsPropsTypes) => {
                 notes: props.formData.notes,
                 action: home[props.lang].attachTrailerAction + ': ' + trailer.replace(/\s/g, ''),
             }
-            const result = await fetchData(apiPaths.attachTrailer, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(sendData),
-                credentials: "include",
-            });
+            const result = await fetchData(apiPaths.attachTrailer, 'POST', sendData);
             handleApiResult(result, props.lang, setAlert, () => {
                 setAlert(home[props.lang].attachTrailerSuccess, 'success');
                 if (props.tourData) {props.setTourData({...props.tourData, trailer});}

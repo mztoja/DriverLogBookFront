@@ -14,11 +14,11 @@ export const handleApiResult = (
     if (result && !result.success) {
         setAlert(commons[lang].apiConnectionError, 'error');
     } else {
-        if (result && result.data) {
-            if (!result.data.dtc) {
+        if (result && result.responseData) {
+            if (!result.responseData.dtc) {
                 action();
             } else {
-                switch (result.data.dtc) {
+                switch (result.responseData.dtc) {
                     case 'invalidLoginData':
                         setAlert(login[lang].responseError, 'warning');
                         break;

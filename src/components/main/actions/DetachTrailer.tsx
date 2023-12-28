@@ -25,12 +25,9 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
 
     const check = async (e: FormEvent) => {
         e.preventDefault();
-        const result = await fetchData(apiPaths.getNotUnloadedLoads, {
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-        });
-        if ((result && result.data) && (!result.data.dtc)) {
-            const loads = result.data.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
+        const result = await fetchData(apiPaths.getNotUnloadedLoads, 'GET');
+        if ((result && result.responseData) && (!result.responseData.dtc)) {
+            const loads = result.responseData.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
             if (loads.length>0) {
                 setText(home[props.lang].detachTrailerConfirm(loads.length));
                 setConfirm(true);
@@ -51,12 +48,7 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
             action: home[props.lang].detachTrailerAction,
             unloadAction: home[props.lang].unloadingAction,
         }
-        const result = await fetchData(apiPaths.detachTrailer, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.detachTrailer, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].detachTrailerSuccess, 'success');
             if (props.tourData) {

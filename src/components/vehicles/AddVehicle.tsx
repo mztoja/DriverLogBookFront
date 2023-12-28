@@ -53,12 +53,7 @@ export const AddVehicle = (props: Props) => {
 
     const sendAddVehicleForm = async (e: FormEvent) => {
         e.preventDefault();
-        const result = await fetchData(apiPaths.createVehicle, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(addVehicleForm),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.createVehicle, 'POST', addVehicleForm);
         handleApiResult(result, props.userData.lang, setAlert, () => {
             setAlert(vehicles[props.userData.lang].addSuccess, 'success');
             setAddVehicleShow(false);

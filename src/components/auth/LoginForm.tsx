@@ -50,14 +50,9 @@ export const LoginForm = (props: Props) => {
     const sendLoginForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.login, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-            body: JSON.stringify(loginForm),
-        });
+        const result = await fetchData(apiPaths.login, 'POST', loginForm);
         handleApiResult(result, props.lang, setAlert, () => {
-            props.setUserData && props.setUserData(result?.data);
+            props.setUserData && props.setUserData(result?.responseData);
         });
     }
 

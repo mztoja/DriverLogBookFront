@@ -56,12 +56,7 @@ export const AddPlace = (props: Props) => {
     const sendAddPlaceForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.createPlace, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(addPlaceForm),
-                credentials: "include",
-            });
+        const result = await fetchData(apiPaths.createPlace, 'POST', addPlaceForm);
         handleApiResult(result, props.lang, setAlert, () => {
             setAddPlaceShow(false);
             setAddPlaceForm(defaultValues);

@@ -49,15 +49,10 @@ export const ProfileSet = (props: Props) => {
     const sendForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.userUpdate, {
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.userUpdate, 'PATCH', data);
         handleApiResult(result, props.userData.lang, setAlert, () => {
-            props.setUserData(result?.data);
-            setAlert(login[result?.data.lang].saveApiSuccess, 'success');
+            props.setUserData(result?.responseData);
+            setAlert(login[result?.responseData.lang].saveApiSuccess, 'success');
         });
     }
 

@@ -46,12 +46,7 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
             notes: props.formData.notes,
             action: home[props.lang].loadingArrivalAction,
         }
-        const result = await fetchData(apiPaths.loadingArrival, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.loadingArrival, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].loadingArrivalSuccess, 'success');
             props.setActivityForm(null);

@@ -22,12 +22,9 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
     const {setAlert} = useAlert();
 
     const getLoadDetails = async (e: number) => {
-        const result = await fetchData(apiPaths.getUnloadingPlace + '/' + e, {
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-        });
-        if ((result && result.data) && (!result.data.dtc)) {
-            const place = result.data;
+        const result = await fetchData(apiPaths.getUnloadingPlace + '/' + e, 'GET');
+        if ((result && result.responseData) && (!result.responseData.dtc)) {
+            const place = result.responseData;
             props.updateFormData('country', place.country);
             props.updateFormData('placeId', place.id);
             props.updateFormData('place', '');
@@ -45,13 +42,9 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
         e.preventDefault();
         if (Number(props.formData.loadId) > 0) {
             let loadNr = '?';
-            const result2 = await fetchData(apiPaths.getLoadDetails + '/' + props.formData.loadId, {
-                headers: {'Content-Type': 'application/json'},
-                credentials: "include",
-            });
-            console.log(result2);
-            if ((result2 && result2.data) && (!result2.data.dtc)) {
-                loadNr = result2.data.loadNr.toString();
+            const result2 = await fetchData(apiPaths.getLoadDetails + '/' + props.formData.loadId, 'GET');
+            if ((result2 && result2.responseData) && (!result2.responseData.dtc)) {
+                loadNr = result2.responseData.loadNr.toString();
             }
             const sendData: AddLogData = {
                 date: props.formData.date,
@@ -62,12 +55,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                 notes: props.formData.notes,
                 action: home[props.lang].unloadingArrivalAction(loadNr),
             }
-            const result = await fetchData(apiPaths.unloadingArrival, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(sendData),
-                credentials: "include",
-            });
+            const result = await fetchData(apiPaths.unloadingArrival, 'POST', sendData);
             handleApiResult(result, props.lang, setAlert, () => {
                 setAlert(home[props.lang].unloadingArrivalSuccess, 'success');
                 props.setActivityForm(null);

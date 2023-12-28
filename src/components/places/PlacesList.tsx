@@ -36,12 +36,9 @@ export const PlacesList = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getPlaces, {
-                headers: {Accept: 'application/json'},
-                credentials: "include",
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setData(result.data);
+            const result = await fetchData(apiPaths.getPlaces, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setData(result.responseData);
             } else {
                 setAlert(places[props.userData.lang].apiError, 'error');
             }
@@ -50,20 +47,15 @@ export const PlacesList = (props: Props) => {
     }, [props.refresh]);
 
     const markPlace = async (id: number, info: string) => {
-        const result = await fetchData(apiPaths.markDepart, {
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            credentials: "include",
-            body: JSON.stringify({placeId: id}),
-        });
+        const result = await fetchData(apiPaths.markDepart, 'PATCH', {placeId: id});
         if (result && !result.success) {
             setAlert(commons[props.userData.lang].apiConnectionError, 'error');
         } else {
-            if (result && result.data) {
-                if (!result.data.dtc) {
+            if (result && result.responseData) {
+                if (!result.responseData.dtc) {
                     setAlert(places[props.userData.lang].markedPlace + ' ' + info, 'success');
                     const changedUser = props.userData;
-                    changedUser.markedDepart = result.data;
+                    changedUser.markedDepart = result.responseData;
                     props.setUserData(changedUser);
                 } else {
                     setAlert(places[props.userData.lang].markedPlaceError, 'warning');

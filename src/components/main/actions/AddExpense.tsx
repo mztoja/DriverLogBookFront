@@ -91,12 +91,7 @@ export const AddExpense = (props: Props) => {
             : '0',
             expenseType: props.expenseType,
         }
-        const result = await fetchData(apiPaths.createExpense, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(sendData),
-            credentials: "include",
-        });
+        const result = await fetchData(apiPaths.createExpense, 'POST', sendData);
         handleApiResult(result, props.lang, setAlert, () => {
             setAlert(home[props.lang].addedExpenseActionSuccess, 'success');
             props.setActivityForm(null);

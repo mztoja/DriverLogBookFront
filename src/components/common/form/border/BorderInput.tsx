@@ -32,11 +32,9 @@ export const BorderInput = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getBordersByCountry+'/'+props.country, {
-                headers: {'Content-Type': 'application/json'},
-            });
-            if ((result && result.data) && (!result.data.dtc)) {
-                setBordersData(result.data);
+            const result = await fetchData(apiPaths.getBordersByCountry+'/'+props.country, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setBordersData(result.responseData);
             } else {
                 setAlert(form[props.lang].bordersApiProblem, 'error');
             }
