@@ -89,7 +89,7 @@ export const RegisterForm = (props: Props) => {
                 <br/>
                 <div>
                     <PasswordInput lang={props.lang} value={registerForm.password}
-                                   onChange={e => updateForm('password', e.target.value)}/>
+                                   onChange={e => updateForm('password', e.target.value)} helper/>
                 </div>
                 <br/>
                 <div>

@@ -34,6 +34,10 @@ export const apiPaths = {
     // vehicles
     getVehicleByRegistration: '/vehicles/findByRegistration',
     createVehicle: '/vehicles/create',
+    getTrailersList: '/vehicles/trailers',
+    getTrucksList: '/vehicles/trucks',
+    editTrailer: '/vehicles/trailer/edit',
+    editTruck: '/vehicles/truck/edit',
     // loadings
     createLoad: '/loads/create',
     unloadingLoad: '/loads/unload',

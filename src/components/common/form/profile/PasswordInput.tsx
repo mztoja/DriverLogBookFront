@@ -11,7 +11,11 @@ import '../Form.css';
 import {passwordRegExp} from "../../../../config/regexp";
 import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
-export const PasswordInput = (props:InputPropsTypes) => {
+interface Props extends InputPropsTypes {
+    helper?: boolean
+}
+
+export const PasswordInput = (props:Props) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,13 +52,14 @@ export const PasswordInput = (props:InputPropsTypes) => {
                                     onClick={handleClickShowPassword}
                                     onMouseDown={handleMouseDownPassword}
                                     edge="end"
+                                    className='TextInput'
                                 >
                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                 </IconButton>
                             </InputAdornment>
                         }
                     />
-                    {form[props.lang].passwordHelper}
+                    {props.helper && form[props.lang].passwordHelper}
                 </FormControl>
     );
 }

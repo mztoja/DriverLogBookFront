@@ -41,7 +41,7 @@ export const places: Places[] =
         thCity: 'City',
         thCountry:'Country',
         thNameStreet:'Name - street',
-        apiError: 'The place list could not be loaded due to a network problem. Please check your connection or try again later.',
+        apiError: 'The place list could not be loaded due to a network problem or login session timeout.',
         markedPlace: 'Marked as destination point:',
         markedPlaceError: 'Something went wrong with the place marking :( Check your connection or try again later.',
 
@@ -64,7 +64,7 @@ export const places: Places[] =
             thCity: 'Miejscowość',
             thCountry:'Państwo',
             thNameStreet:'Nazwa - ulica',
-            apiError: 'Lista miejsc nie może zostać wczytana przez problem z siecią. Sprawdź swoje połączenie lub spróbuj ponownie później.',
+            apiError: 'Lista miejsc nie może zostać wczytana przez problem z siecią lub sesja logowania wygasła.',
             markedPlace: 'Oznaczono jako miejsce docelowe:',
             markedPlaceError: 'Coś poszło nie tak z oznaczeniem miejsca :( Problem z połączeniem.',
         }];

@@ -15,7 +15,7 @@ export const PaymentSelect = (props: InputPropsTypes) => {
     const {loading, fetchData} = useApi();
     const [paymentsList, setPaymentsList] = useState<PaymentInterface[]>([]);
     const [value, setValue] = useState<string>(props.value !== '' ? props.value : form[props.lang].cash);
-    const [showPaymentsSettings, setShowPaymentsSettings] = useState(false);
+    const [showPaymentsSettings, setShowPaymentsSettings] = useState<boolean>(false);
 
     useEffect(() => {
         (async () => {

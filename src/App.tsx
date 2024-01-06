@@ -24,7 +24,6 @@ export const App = () => {
     const [dayData, setDayData] = useState<DayInterface | null>(null);
     const {loading, fetchData} = useApi();
 
-    // setUserData
     useEffect(() => {
         (async () => {
             const result = await fetchData(apiPaths.get, 'GET');
@@ -46,6 +45,16 @@ export const App = () => {
                 setAppView(AppView.blocked);
             } else {
                 setAppView(AppView.loggedIn);
+                (async () => {
+                    const result = await fetchData(apiPaths.getActiveRoute, 'GET');
+                    if ((result && result.responseData) && (!result.responseData.dtc)) {
+                        setTourData(result.responseData);
+                        const result2 = await fetchData(apiPaths.getActiveDay, 'GET');
+                        if ((result2 && result2.responseData) && (!result2.responseData.dtc)) {
+                            setDayData(result2.responseData);
+                        }
+                    }
+                })();
             }
         } else {
             const lang = DownloadFromLocalStorage('lang');
@@ -55,31 +64,6 @@ export const App = () => {
             setAppView(AppView.loggedOut);
         }
 // eslint-disable-next-line
-    }, [userData?.currentTokenId]);
-
-
-    //setTourData
-    useEffect(() => {
-        (async () => {
-            const result = await fetchData(apiPaths.getActiveRoute, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setTourData(result.responseData);
-            }
-        })();
-        // eslint-disable-next-line
-    }, [userData?.currentTokenId]);
-
-    //setDayData
-    useEffect(() => {
-        if (tourData !== null) {
-            (async () => {
-                const result = await fetchData(apiPaths.getActiveDay, 'GET');
-                if ((result && result.responseData) && (!result.responseData.dtc)) {
-                    setDayData(result.responseData);
-                }
-            })();
-        }
-        // eslint-disable-next-line
     }, [userData?.currentTokenId]);
 
     if (loading) {

@@ -20,7 +20,6 @@ export const VehicleModelInput = (props: InputPropsTypes) => {
         <TextField
             label={vehicles[props.lang].model}
             id='vehicleBrandModel'
-            required
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput'}}
             type="text"

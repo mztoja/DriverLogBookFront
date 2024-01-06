@@ -18,6 +18,10 @@ a {
     text-align: center;
 }
 
+.expired {
+    color: #650000;
+}
+
 .Link {
     font: inherit;
     color: rgb(64 120 165);

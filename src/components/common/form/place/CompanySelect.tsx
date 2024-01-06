@@ -10,7 +10,12 @@ import {useApi} from "../../../../hooks/useApi";
 import {useAlert} from "../../../../hooks/useAlert";
 import {PlaceInterface} from "types";
 
-export const CompanySelect = (props: InputPropsTypes) => {
+interface Props extends InputPropsTypes {
+    fullWidth?: boolean;
+}
+
+
+export const CompanySelect = (props: Props) => {
 
     const [value, setValue] = useState<number>(Number(props.value));
     const [placesList, setPlacesList] = useState<PlaceInterface[]>([]);
@@ -39,7 +44,7 @@ export const CompanySelect = (props: InputPropsTypes) => {
     }
 
     return (
-        <FormControl fullWidth>
+        <FormControl fullWidth={props.fullWidth}>
             <InputLabel id="companyData" className="TextInput__Label">{form[props.lang].placeType1}</InputLabel>
             {placesList.length > 0 && !loading &&
                 <Select

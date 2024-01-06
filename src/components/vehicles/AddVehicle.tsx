@@ -1,4 +1,4 @@
-import React, {FormEvent, useState} from "react";
+import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
 import {AddVehicleFormInterface, UserInterface, vehicleTypeEnum } from "types";
 import {CircularProgress, Fab} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,6 +20,7 @@ import {useAlert} from "../../hooks/useAlert";
 
 interface Props {
     userData: UserInterface;
+    setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultValues: AddVehicleFormInterface = {
@@ -57,6 +58,7 @@ export const AddVehicle = (props: Props) => {
         handleApiResult(result, props.userData.lang, setAlert, () => {
             setAlert(vehicles[props.userData.lang].addSuccess, 'success');
             setAddVehicleShow(false);
+            props.setRefresh((prev) => !prev);
         });
     }
 

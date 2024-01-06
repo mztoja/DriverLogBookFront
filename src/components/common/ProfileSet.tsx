@@ -82,7 +82,7 @@ export const ProfileSet = (props: Props) => {
                     <br/>
                     <div>
                         <CompanySelect lang={props.userData.lang} value={data.companyId}
-                                       onChange={e => updateData('companyId', e)}/>
+                                       onChange={e => updateData('companyId', e)} fullWidth/>
                     </div>
                     <br/>
                     <div>
