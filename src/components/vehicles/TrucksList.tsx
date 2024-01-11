@@ -36,7 +36,7 @@ export const TrucksList = (props: Props) => {
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setData(result.responseData);
             } else {
-                setAlert(vehicles[props.userData.lang].apiTrailersError, 'error');
+                setAlert(vehicles[props.userData.lang].apiTrucksError, 'error');
             }
         })();
         // eslint-disable-next-line

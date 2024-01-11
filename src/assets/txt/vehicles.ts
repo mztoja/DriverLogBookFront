@@ -29,6 +29,13 @@ interface Vehicles {
     editSuccessInfo: string;
     yes: string;
     no: string;
+    serviceType: string;
+    serviceMaintenance: string;
+    serviceService: string;
+    serviceMaintenanceHelper: string;
+    serviceServiceHelper: string;
+    chooseServicedVehicle: string;
+    noServiceEntry: string;
 }
 
 export const vehicles: Vehicles[] = [
@@ -63,6 +70,13 @@ export const vehicles: Vehicles[] = [
         editSuccessInfo: 'The vehicle has been successfully edited.',
         yes: 'Yes',
         no: 'No',
+        serviceType: 'Type of Service',
+        serviceMaintenance: 'Maintenance',
+        serviceService: 'Service',
+        serviceMaintenanceHelper: 'e.g. replacing a light bulb, adding fluid or oil',
+        serviceServiceHelper: 'e.g. replacing tires, oil, major repairs',
+        chooseServicedVehicle: 'The vehicle for service/service has not been selected.',
+        noServiceEntry: 'No operation/service activity has been entered.',
     },
     {//pl
         type: 'Pojazd',
@@ -95,5 +109,12 @@ export const vehicles: Vehicles[] = [
         editSuccessInfo: 'Pojazd został pomyślnie edytowany.',
         yes: 'Tak',
         no: 'Nie',
+        serviceType: 'Rodzaj serwisu',
+        serviceMaintenance: 'Obsługa',
+        serviceService: 'Serwis',
+        serviceMaintenanceHelper: 'np. wymiana żarówki, dolanie płynu lub oleju, etc.',
+        serviceServiceHelper: 'np. wymiana opon, oleju, poważniejsze naprawy',
+        chooseServicedVehicle: 'Nie wybrano pojazdu którego ma dotyczyć obsługa/serwis.',
+        noServiceEntry: 'Nie wpisano żadnej czynności obsługi/serwisu.',
     }
 ];

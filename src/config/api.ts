@@ -38,6 +38,8 @@ export const apiPaths = {
     getTrucksList: '/vehicles/trucks',
     editTrailer: '/vehicles/trailer/edit',
     editTruck: '/vehicles/truck/edit',
+    // services
+    createService: '/services/create',
     // loadings
     createLoad: '/loads/create',
     unloadingLoad: '/loads/unload',

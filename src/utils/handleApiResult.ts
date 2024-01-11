@@ -109,6 +109,12 @@ export const handleApiResult = (
                     case 'vehicleRegExist':
                         setAlert(vehicles[lang].vehicleRegExist, 'error');
                         break;
+                    case 'chooseServicedVehicle':
+                        setAlert(vehicles[lang].chooseServicedVehicle, 'error');
+                        break;
+                    case 'noServiceEntry':
+                        setAlert(vehicles[lang].noServiceEntry, 'error');
+                        break;
                     case 'Unauthorized':
                         setAlert(commons[lang].apiUnauthorized, 'error');
                         break;

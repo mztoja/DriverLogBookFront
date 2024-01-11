@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
-import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface, DayInterface, ExpenseEnum} from "types";
+import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface, DayInterface, ExpenseEnum, ServiceEnum} from "types";
 import {home} from "../../assets/txt/home";
 import {DivClear} from "../common/DivClear";
 import {NavigateButton} from "./NavigateButton";
@@ -16,6 +16,7 @@ import {LoadingCompleted} from "./actions/LoadingCompleted";
 import {UnloadingArrival} from "./actions/UnloadingArrival";
 import { UnloadingCompleted } from "./actions/UnloadingCompleted";
 import {AddExpense} from "./actions/AddExpense";
+import {AddService} from "./actions/AddService";
 
 interface Props {
     lang: userLangEnum;
@@ -65,6 +66,10 @@ export const ActivitiesFields = (props: Props) => {
         expenseCurrency: '',
         expenseForeignAmount: '',
         expenseForeignCurrency: '',
+        serviceEntry: '',
+        serviceType: '',
+        serviceVehicleId: '',
+        serviceVehicleType: '',
     });
 
     const updateGeneralFormData = (key: keyof GeneralFormData, value: string): void => {
@@ -303,6 +308,38 @@ export const ActivitiesFields = (props: Props) => {
         />
     }
 
+    if (activityForm === 'addService') {
+        return <AddService
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+            serviceType={ServiceEnum.standard}
+        />
+    }
+
+    if (activityForm === 'addLubrication') {
+        return <AddService
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
+            serviceType={ServiceEnum.fifthWheelLube}
+        />
+    }
+
     if (props.tourData) {
         return (
             <>
@@ -330,6 +367,8 @@ export const ActivitiesFields = (props: Props) => {
                     <legend>{home[props.lang].fieldVehicle}</legend>
                     <NavigateButton activityForm='attachTrailer' set={setActivityForm} text={home[props.lang].attachTrailer}/><br/>
                     <NavigateButton activityForm='detachTrailer' set={setActivityForm} text={home[props.lang].detachTrailer}/><br/>
+                    <NavigateButton activityForm='addService' set={setActivityForm} text={home[props.lang].addService}/><br/>
+                    <NavigateButton activityForm='addLubrication' set={setActivityForm} text={home[props.lang].addLubrication}/><br/>
                 </fieldset>
                 <DivClear/>
                 <NavigateButton activityForm='tourStop' set={setActivityForm} text={home[props.lang].tourStop}/><br/>

@@ -73,6 +73,7 @@ interface Form {
     expenseUnitPrice: string;
     expenseItemDescription: string;
     expenseForeignCurrency: string;
+    serviceEntry: string;
 }
 
 
@@ -152,6 +153,7 @@ export const form: Form[] =
         expenseQuantity: 'Quantity',
         expenseUnitPrice: 'Unit Price',
         expenseForeignCurrency: 'Foreign currency payment',
+        serviceEntry: 'Description of repair/action',
     },
         {//pl
             email: 'E-mail',
@@ -228,4 +230,5 @@ export const form: Form[] =
             expenseQuantity: 'Ilość',
             expenseItemDescription: 'Pozycja (opis wydatku)',
             expenseForeignCurrency: 'Płatność w obcej walucie',
+            serviceEntry: 'Opis naprawy / czynności',
         }];

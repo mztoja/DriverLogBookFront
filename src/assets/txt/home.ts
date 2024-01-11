@@ -75,6 +75,10 @@ interface Home {
     expenseAddAction: string;
     addFuelRefuel: string;
     addDefRefuel: string;
+    addService: string;
+    addLubrication: string;
+    addServiceSuccess: string;
+    addServiceAction: string;
 }
 
 export const home:Home[] = [{
@@ -155,6 +159,10 @@ export const home:Home[] = [{
     expenseAddAction: 'Expense added:',
     addFuelRefuel: 'Diesel refueling',
     addDefRefuel: 'Def refueling',
+    addService: 'AddService / Maintenance',
+    addLubrication: '5th Wheel Lubrication',
+    addServiceSuccess: 'Vehicle service activity successfully added.',
+    addServiceAction: 'Vehicle maintenance/service entry added',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -232,4 +240,8 @@ export const home:Home[] = [{
     expenseAddAction: 'Dodano wydatek',
     addDefRefuel: 'Tankowanie Adblue',
     addFuelRefuel: 'Tankowanie Diesel',
+    addLubrication: 'Smarowanie siodła',
+    addService: 'Serwis / Obsługa',
+    addServiceSuccess: 'Pomyślnie dodano czynność serwisową pojazdu.',
+    addServiceAction: 'Dodano wpis obsługi/serwisu pojazdu',
 }];
