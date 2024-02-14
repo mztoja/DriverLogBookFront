@@ -1,5 +1,5 @@
 import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
-import { UserInterface, UpdateFormInterface } from "types";
+import { UserInterface, UpdateFormInterface, TourInterface } from "types";
 import {login} from "../../assets/txt/login";
 import {LanguageSelect} from "./form/profile/LanguageSelect";
 import {FirstNameInput} from "./form/profile/FirstNameInput";
@@ -20,6 +20,7 @@ import {handleApiResult} from "../../utils/handleApiResult";
 interface Props {
     userData: UserInterface;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
+    tourData: TourInterface | null;
 }
 
 export const ProfileSet = (props: Props) => {
@@ -102,6 +103,7 @@ export const ProfileSet = (props: Props) => {
                                      onChangeAmount={e => updateData('bid', e)}
                                      onChangeCurrency={e => updateData('currency', e)}
                                      nameId='bid'
+                                     currencyDisable={props.tourData !== null}
                         />
                     </div>
                     <br/>

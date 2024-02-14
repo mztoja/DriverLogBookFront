@@ -1,3 +1,6 @@
+import {formatOdometer} from "../../utils/formatOdometer";
+import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
+
 interface Home {
     welcome: string;
     subTitle: string;
@@ -38,6 +41,8 @@ interface Home {
     back: string;
     startedTour: string;
     startedTourAction: string;
+    finishedTour: string;
+    finishedTourAction: string;
     truckNoExist: string;
     trailerNoExist: string;
     trailerExist: string;
@@ -50,6 +55,7 @@ interface Home {
     startedDay: string;
     finishedDay: string;
     dayExist: string;
+    dayExistRegardRoute: string;
     dayNotExist: string;
     startedDayAction: string;
     startedDayActionCardInsert: string;
@@ -79,6 +85,8 @@ interface Home {
     addLubrication: string;
     addServiceSuccess: string;
     addServiceAction: string;
+    tourStopHelper1: string;
+    tourStopHelper2: (distance: number, burnedFuel: number) => string;
 }
 
 export const home:Home[] = [{
@@ -122,6 +130,8 @@ export const home:Home[] = [{
     back: 'Back',
     startedTour: 'Your tour has started.',
     startedTourAction: 'Route no. has started',
+    finishedTour: 'Your tour has been finished.',
+    finishedTourAction: 'Route no. has been finished',
     truckNoExist: 'Please enter truck number.',
     trailerNoExist: 'Please enter trailer number.',
     placeNoExist: 'Please choose or enter place activity.',
@@ -134,6 +144,7 @@ export const home:Home[] = [{
     startedDay: 'You have started your working day.',
     finishedDay: 'You have finished your working day.',
     dayExist: 'You\'ve already started your working day, so you can\'t start the next one until you finish it.',
+    dayExistRegardRoute: 'You cannot finish your route until you finish your current working day.',
     dayNotExist: 'You don\'t have a working day that you could finish.',
     startedDayAction: 'Starting the day',
     startedDayActionCardInsert: '(card insert)',
@@ -163,6 +174,8 @@ export const home:Home[] = [{
     addLubrication: '5th Wheel Lubrication',
     addServiceSuccess: 'Vehicle service activity successfully added.',
     addServiceAction: 'Vehicle maintenance/service entry added',
+    tourStopHelper1: 'The proposed value was calculated based on on-board computer data. It\'s recommended to measure manually to increase the accuracy of combustion results.',
+    tourStopHelper2: (distance, burnedFuel) => `You passed ${formatOdometer(distance)}. Avg. fuel usage: ${formatFuelCombustion(burnedFuel, distance)}`,
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -203,6 +216,8 @@ export const home:Home[] = [{
     back: 'Powrót',
     startedTour: 'Twoja trasa została rozpoczęta.',
     startedTourAction: 'Trasa nr. została rozpoczęta',
+    finishedTour: 'Twoja trasa została zakończona.',
+    finishedTourAction: 'Trasa nr. została zakończona',
     truckNoExist: 'Podaj nr. rej. ciągnika.',
     trailerNoExist: 'Podaj nr. rej. naczepy.',
     trailerExist: 'Masz już wpisaną podpiętą przyczepę.',
@@ -215,6 +230,7 @@ export const home:Home[] = [{
     startedDay: 'Rozpocząłeś swój dzień pracy.',
     finishedDay: 'Zakończyłeś swój dzień pracy.',
     dayExist: 'Masz już rozpoczęty dzień pracy, więc nie możesz zacząć kolejnego do póki go nie zakończysz.',
+    dayExistRegardRoute: 'Nie możesz zakończyć trasy do póki nie zakończysz obecnego dnia pracy.',
     dayNotExist: 'Nie masz rozpoczętego dnia pracy który mógłbyś zakończyć.',
     startedDayAction: 'Rozpoczęcie dnia',
     startedDayActionCardInsert: '(włożenie karty)',
@@ -244,4 +260,6 @@ export const home:Home[] = [{
     addService: 'Serwis / Obsługa',
     addServiceSuccess: 'Pomyślnie dodano czynność serwisową pojazdu.',
     addServiceAction: 'Dodano wpis obsługi/serwisu pojazdu',
+    tourStopHelper1: 'Proponowaną wartość wyliczono na podstawie danych komputera pokładowego. Zaleca się dokonać ręcznego pomiaru celem zwiększenia dokładności wyników spalania.',
+    tourStopHelper2: (distance, burnedFuel) => `Przejechałeś ${formatOdometer(distance)}. Spalanie: ${formatFuelCombustion(burnedFuel, distance)}`,
 }];

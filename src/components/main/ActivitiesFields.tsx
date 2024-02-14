@@ -17,6 +17,7 @@ import {UnloadingArrival} from "./actions/UnloadingArrival";
 import { UnloadingCompleted } from "./actions/UnloadingCompleted";
 import {AddExpense} from "./actions/AddExpense";
 import {AddService} from "./actions/AddService";
+import {TourStop} from "./actions/TourStop";
 
 interface Props {
     lang: userLangEnum;
@@ -337,6 +338,25 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             serviceType={ServiceEnum.fifthWheelLube}
+        />
+    }
+
+    if (activityForm === 'tourStop') {
+        if (props.dayData !== null) {
+            setActivityForm(null);
+            setAlert(home[props.lang].dayExistRegardRoute, 'info');
+        }
+        return <TourStop
+            formData={generalFormData}
+            lang={props.lang}
+            updateFormData={updateGeneralFormData}
+            setActivityForm={setActivityForm}
+            userData={props.userData}
+            setUserData={props.setUserData}
+            dayData={props.dayData}
+            setTourData={props.setTourData}
+            tourData={props.tourData}
+            setDayData={props.setDayData}
         />
     }
 

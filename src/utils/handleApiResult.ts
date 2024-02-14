@@ -61,6 +61,9 @@ export const handleApiResult = (
                     case 'activeDay':
                         setAlert(home[lang].dayExist, 'info');
                         break;
+                    case 'dayExistRegardRoute':
+                        setAlert(home[lang].dayExistRegardRoute, 'info');
+                        break;
                     case 'vehicle':
                         setAlert(home[lang].noVehicle, 'warning');
                         break;

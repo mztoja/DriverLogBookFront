@@ -8,6 +8,7 @@ export const apiPaths = {
     // routes
     getActiveRoute: '/tours/getActiveRoute',
     createNewRoute: '/tours/create',
+    finishRoute: '/tours/finish',
     // users
     register: '/users/register',
     login: '/auth/login',
@@ -21,10 +22,12 @@ export const apiPaths = {
     getActiveDay: '/days/getActiveDay',
     getLastDay: '/days/getLastDay',
     getDays: '/days',
+    getBurnedFuelByTour: '/days/burnedFuelByTour',
     // logs
     createNewLog: '/logs/create',
     createBorderCross: '/logs/createBorderCross',
     getLogs: '/logs',
+    getLogById: '/logs/getById',
     attachTrailer: '/logs/attachTrailer',
     detachTrailer: '/logs/detachTrailer',
     loadingArrival: '/logs/loadingArrival',
@@ -52,4 +55,5 @@ export const apiPaths = {
     deletePaymentMethod: '/payments/delete',
     selectPaymentMethod: '/payments/select',
     createExpense: '/finances/create',
+    getRefuelValueByTour: '/finances/getRefuelValueByTour',
 }

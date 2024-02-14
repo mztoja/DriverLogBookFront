@@ -34,7 +34,7 @@ export const LoggedInView = (
             <Route path="places"
                    element={<PlacesView page="places" userData={userData} setUserData={setUserData}/>}/>
             <Route path="profile"
-                   element={<ProfileView page="profile" userData={userData} setUserData={setUserData}/>}/>
+                   element={<ProfileView page="profile" userData={userData} setUserData={setUserData} tourData={tourData}/>}/>
             <Route path="vehicles"
                    element={<VehiclesView page="vehicles" userData={userData} setUserData={setUserData}/>}/>
         </Routes>

@@ -1,7 +1,7 @@
 export const formatFuelCombustion = (fuel: number, distance: number): string => {
 const fuelCombustion = fuel * 100 / distance;
-if (isNaN(fuelCombustion)) {
+if (isNaN(fuelCombustion) || !isFinite(fuelCombustion)) {
     return '- - -';
 }
-return '∅ '+fuelCombustion;
+return '∅ '+fuelCombustion.toFixed(1);
 }
