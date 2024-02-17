@@ -19,6 +19,9 @@ interface Places {
     apiError: string;
     markedPlace: string;
     markedPlaceError: string;
+    collapse: string;
+    edit: string;
+    editSuccessInfo: string;
 }
 
 
@@ -44,7 +47,9 @@ export const places: Places[] =
         apiError: 'The place list could not be loaded due to a network problem or login session timeout.',
         markedPlace: 'Marked as destination point:',
         markedPlaceError: 'Something went wrong with the place marking :( Check your connection or try again later.',
-
+        collapse: 'Collapse',
+        edit: 'Edit',
+        editSuccessInfo: 'The chosen place has been successfully edited.',
     },
         {//pl
             addPlace: `Dodaj nowy adres`,
@@ -67,4 +72,7 @@ export const places: Places[] =
             apiError: 'Lista miejsc nie może zostać wczytana przez problem z siecią lub sesja logowania wygasła.',
             markedPlace: 'Oznaczono jako miejsce docelowe:',
             markedPlaceError: 'Coś poszło nie tak z oznaczeniem miejsca :( Problem z połączeniem.',
+            collapse: 'Zwiń',
+            edit: 'Edytuj',
+            editSuccessInfo: 'Wybrane miejsce zostało edytowane pomyślnie.',
         }];

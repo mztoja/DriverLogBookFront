@@ -118,6 +118,9 @@ export const handleApiResult = (
                     case 'noServiceEntry':
                         setAlert(vehicles[lang].noServiceEntry, 'error');
                         break;
+                    case 'youHaveUnloadedLoads':
+                        setAlert(home[lang].youHaveUnloadedLoads, 'warning');
+                        break;
                     case 'Unauthorized':
                         setAlert(commons[lang].apiUnauthorized, 'error');
                         break;

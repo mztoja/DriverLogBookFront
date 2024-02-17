@@ -5,6 +5,7 @@ export const apiPaths = {
     getPlaces: '/places',
     createPlace: '/places/create',
     getCompanyList: '/places/companyList',
+    editPlace: '/places/edit',
     // routes
     getActiveRoute: '/tours/getActiveRoute',
     createNewRoute: '/tours/create',

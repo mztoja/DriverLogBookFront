@@ -22,7 +22,7 @@ export const PlacesView = (props: Props) => {
             <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
             <Content>
                 <AddPlace userId={props.userData.id} lang={props.userData.lang} setRefresh={setRefresh}/>
-                <PlacesList userData={props.userData} setUserData={props.setUserData} refresh={refresh}/>
+                <PlacesList userData={props.userData} setUserData={props.setUserData} refresh={refresh} setRefresh={setRefresh}/>
             </Content>
         </>
     );

@@ -87,6 +87,7 @@ interface Home {
     addServiceAction: string;
     tourStopHelper1: string;
     tourStopHelper2: (distance: number, burnedFuel: number) => string;
+    youHaveUnloadedLoads: string;
 }
 
 export const home:Home[] = [{
@@ -176,6 +177,7 @@ export const home:Home[] = [{
     addServiceAction: 'Vehicle maintenance/service entry added',
     tourStopHelper1: 'The proposed value was calculated based on on-board computer data. It\'s recommended to measure manually to increase the accuracy of combustion results.',
     tourStopHelper2: (distance, burnedFuel) => `You passed ${formatOdometer(distance)}. Avg. fuel usage: ${formatFuelCombustion(burnedFuel, distance)}`,
+    youHaveUnloadedLoads: 'You cannot finish the route because you still have at least 1 unloaded load',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -262,4 +264,5 @@ export const home:Home[] = [{
     addServiceAction: 'Dodano wpis obsługi/serwisu pojazdu',
     tourStopHelper1: 'Proponowaną wartość wyliczono na podstawie danych komputera pokładowego. Zaleca się dokonać ręcznego pomiaru celem zwiększenia dokładności wyników spalania.',
     tourStopHelper2: (distance, burnedFuel) => `Przejechałeś ${formatOdometer(distance)}. Spalanie: ${formatFuelCombustion(burnedFuel, distance)}`,
+    youHaveUnloadedLoads: 'Nie możesz zakończyć trasy ponieważ masz ciągle conajmniej 1 nierozładowany ładunek',
 }];

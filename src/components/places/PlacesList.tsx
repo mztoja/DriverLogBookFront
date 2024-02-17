@@ -15,11 +15,15 @@ import {apiPaths} from "../../config/api";
 import {commons} from "../../assets/txt/commons";
 import {formatCountry} from "../../utils/formatCountry";
 import NavigationIcon from '@mui/icons-material/Navigation';
+import {Link} from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import {PlaceEdit} from "./PlaceEdit";
 
 interface Props {
     userData: UserInterface;
     refresh: boolean;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
+    setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PlacesList = (props: Props) => {
@@ -33,6 +37,7 @@ export const PlacesList = (props: Props) => {
     const [filterCountry, setFilterCountry] = useState<string>(props.userData.country);
     const [filterSearch, setFilterSearch] = useState<string>('');
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
+    const [chosenPlace, setChosenPlace] = useState<PlaceInterface | null>(null);
 
     useEffect(() => {
         (async () => {
@@ -145,6 +150,13 @@ export const PlacesList = (props: Props) => {
                             </tr>
                             </thead>
                             <tbody>
+                            {chosenPlace && <PlaceEdit
+                                lang={props.userData.lang}
+                                place={chosenPlace}
+                                setRefresh={props.setRefresh}
+                                setPlace={setChosenPlace}
+                                setAlert={setAlert}
+                            />}
                             {showData?.map((place, index) => {
                                     index++;
                                     return (
@@ -163,8 +175,11 @@ export const PlacesList = (props: Props) => {
                                                 </tr>
                                             )}
                                             {expandedRow === index && (
-                                                <tr onClick={() => setExpandedRow(null)}>
+                                                <tr>
                                                     <td colSpan={6} className="extended">
+                                                        <Link to='' className="Link" onClick={() => setExpandedRow(null)}>
+                                                            {places[props.userData.lang].collapse}
+                                                        </Link><br/>
                                                         <div>
                                                             {countries[props.userData.lang][place.country]}
                                                         </div>
@@ -197,6 +212,16 @@ export const PlacesList = (props: Props) => {
                                                                 {places[props.userData.lang].navigateSwitchLabel}
                                                             </Fab>
                                                         </div>
+                                                        <br/>
+                                                        <div>
+                                                            <Fab variant="extended" size="small" color="primary" onClick={() => setChosenPlace(place)}>
+                                                                <EditIcon sx={{mr: 1}}/>
+                                                                {places[props.userData.lang].edit}
+                                                            </Fab>
+                                                        </div>
+                                                        <Link to='' className="Link" onClick={() => setExpandedRow(null)}>
+                                                            {places[props.userData.lang].collapse}
+                                                        </Link><br/>
                                                     </td>
                                                 </tr>
                                             )}

@@ -71,7 +71,10 @@ export const DaysList = (props: Props) => {
                                 <React.Fragment key={day.id}>
                                     {expandedRow !== day.id && (
                                         <tr onClick={() => setExpandedRow(day.id)}>
-                                            <td>{(page - 1) * LOGS_PER_PAGE + index + 1}<br/></td>
+                                            <td>
+                                                {(page - 1) * LOGS_PER_PAGE + index + 1}
+                                                <br/>
+                                            </td>
                                             <td>
                                                 {day.startData && formatDate(day.startData.date, props.lang)}
                                                 <br/>
