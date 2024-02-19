@@ -10,6 +10,7 @@ export const apiPaths = {
     getActiveRoute: '/tours/getActiveRoute',
     createNewRoute: '/tours/create',
     finishRoute: '/tours/finish',
+    getRouteNumbers: '/tours/getRouteNumbers',
     // users
     register: '/users/register',
     login: '/auth/login',
@@ -57,4 +58,5 @@ export const apiPaths = {
     selectPaymentMethod: '/payments/select',
     createExpense: '/finances/create',
     getRefuelValueByTour: '/finances/getRefuelValueByTour',
+    getFinances: '/finances',
 }

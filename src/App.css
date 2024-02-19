@@ -212,6 +212,10 @@ tbody tr:hover {
     background-color: #d8690f82 !important;
 }
 
+.highlighted {
+    background-color: #d8690f82 !important;
+}
+
 .tableParting {
     background-color: #0000005e !important;
     text-align: center;

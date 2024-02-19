@@ -2,6 +2,7 @@ interface Logs {
     apiError: string;
     tableHeader: string;
     thLp: string;
+    thTourNr: string;
     thDate: string;
     thLog: string;
     thCountry: string;
@@ -14,6 +15,7 @@ export const logs: Logs[] = [
         apiError: 'Your activity list could not be downloaded due to a connection problem. Please try again later.',
         tableHeader: 'Activities List',
         thLp: 'No.',
+        thTourNr: 'Tour',
         thDate: 'Date',
         thLog: 'Activity',
         thCountry: 'Country',
@@ -24,6 +26,7 @@ export const logs: Logs[] = [
         apiError: 'Twoja lista czynności nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
         tableHeader: 'Lista czynności',
         thLp: 'Lp.',
+        thTourNr: 'Trasa',
         thDate: 'Data',
         thLog: 'Czynność',
         thPlace: 'Miejsce',

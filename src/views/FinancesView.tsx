@@ -4,6 +4,7 @@ import {Content} from "../components/bars/Content/Content";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import { UserInterface } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
+import {FinancesList} from "../components/finances/FinancesList";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -13,6 +14,8 @@ interface Props extends AppMainElementsTypes {
 export const FinancesView = (props:Props) => (
     <>
         <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
-        <Content></Content>
+        <Content>
+            <FinancesList lang={props.userData.lang}/>
+        </Content>
     </>
 );

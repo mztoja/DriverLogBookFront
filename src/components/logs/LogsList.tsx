@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {LogInterface, userLangEnum} from "types";
+import React, {useEffect, useRef, useState} from "react";
+import {LogInterface, TourNumbersInterface, userLangEnum} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
@@ -29,6 +29,8 @@ export const LogsList = (props: Props) => {
     const [filterSearch, setFilterSearch] = useState<string>('');
     const [fetchDelay, setFetchDelay] = useState<number>(0);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
+    const [tourNrs, setTourNrs] = useState<TourNumbersInterface[] | null>(null);
+    const prevTourId = useRef<number>(0);
 
     useEffect(() => {
         if (fetchDelay > 0) {
@@ -58,6 +60,24 @@ export const LogsList = (props: Props) => {
         // eslint-disable-next-line
     }, [page, fetchDelay]);
 
+    useEffect(() => {
+        if (data) {
+            const uniqueTourIds: number[] = data.reduce((uniqueTourIds: number[], log: LogInterface) => {
+                if (!uniqueTourIds.includes(log.tourId)) {
+                    uniqueTourIds.push(log.tourId);
+                }
+                return uniqueTourIds;
+            }, []);
+            (async () => {
+                const result = await fetchData(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setTourNrs(result.responseData);
+                }
+            })();
+        }
+        // eslint-disable-next-line
+    }, [data]);
+
     if (loading) {
         return <CircularProgress/>
     }
@@ -78,7 +98,7 @@ export const LogsList = (props: Props) => {
                     <table>
                         <thead>
                         <tr>
-                            <th>{logs[props.lang].thLp}</th>
+                            <th>{logs[props.lang].thTourNr}</th>
                             <th>{logs[props.lang].thDate}</th>
                             <th>{logs[props.lang].thLog}</th>
                             <th>{logs[props.lang].thCountry}</th>
@@ -89,11 +109,22 @@ export const LogsList = (props: Props) => {
                         </thead>
                         <tbody>
                         {data?.map((log, index) => {
-                            return (
+                            const tourNr = tourNrs?.find(tour => tour.tourId === log.tourId)?.tourNr ?? '';
+                            const division = prevTourId.current !== log.tourId;
+                            prevTourId.current = log.tourId;
+                                return (
                                 <React.Fragment key={log.id}>
+                                    {division && index !== 0 &&
+                                        <tr className='tableParting'>
+                                            <td colSpan={7}></td>
+                                        </tr>
+                                    }
                                     {expandedRow !== log.id && (
                                         <tr onClick={() => setExpandedRow(log.id)}>
-                                            <td>{(page - 1) * LOGS_PER_PAGE + index + 1}</td>
+                                            <td>
+                                                {/*<strong>{(page - 1) * LOGS_PER_PAGE + index + 1}</strong>*/}
+                                                {tourNr}
+                                            </td>
                                             <td>{formatDate(log.date, props.lang)}</td>
                                             <td>{log.action}</td>
                                             <td>{formatCountry(log.country, props.lang)}</td>
