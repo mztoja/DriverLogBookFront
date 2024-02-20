@@ -160,7 +160,7 @@ export const FinancesList = (props: Props) => {
                                                 <td>
                                                     {finance.logData && formatDate(finance.logData.date, props.lang)}
                                                     <br/>
-                                                    {finance.logData && formatPlace(finance.logData.place, finance.logData.placeData)}
+                                                    {finance.logData && formatPlace(finance.logData.place, finance.logData.placeData, props.lang)}
                                                 </td>
                                                 <td>
                                                     {finance.itemDescription}

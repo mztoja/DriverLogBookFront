@@ -1,4 +1,4 @@
-import {dayCardStateEnum, DayInterface, dayStatusEnum, TourNumbersInterface, userLangEnum} from "types";
+import {dayCardStateEnum, DayInterface, TourNumbersInterface, userLangEnum} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import React, {useEffect, useRef, useState} from "react";
@@ -13,6 +13,7 @@ import {TablePagination} from "../common/TablePagination";
 import {formatTime} from "../../utils/formatTime";
 import {formatFuelQuantity} from "../../utils/formatFuelQuantity";
 import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
+import {formatSimplePlace} from "../../utils/formatSimplePlace";
 
 interface Props {
     lang: userLangEnum;
@@ -29,6 +30,15 @@ export const DaysList = (props: Props) => {
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [tourNrs, setTourNrs] = useState<TourNumbersInterface[] | null>(null);
     const prevTourId = useRef<number>(0);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
 
     useEffect(() => {
         (async () => {
@@ -88,123 +98,147 @@ export const DaysList = (props: Props) => {
                         <tbody>
                         {
                             data?.map((day, index) => {
-                            const tourNr = tourNrs?.find(tour => tour.tourId === day.tourId)?.tourNr;
-                            const division = prevTourId.current !== day.tourId;
-                            prevTourId.current = day.tourId;
-                            return (
-                                <React.Fragment key={day.id}>
-                                    {division && index !== 0 &&
-                                        <tr className='tableParting'>
-                                            <td colSpan={8}></td>
-                                        </tr>
-                                    }
-                                    {expandedRow !== day.id && (
-                                        <tr onClick={() => setExpandedRow(day.id)}>
-                                            <td>
-                                                {/*<strong>{(page - 1) * LOGS_PER_PAGE + index + 1}</strong>*/}
-                                                {/*<br/>*/}
-                                                {tourNr ? tourNr : ''}
-                                            </td>
-                                            <td>
-                                                {day.startData && formatDate(day.startData.date, props.lang)}
-                                                <br/>
-                                                {day.stopData ? formatDate(day.stopData.date, props.lang) : days[props.lang].na}
-                                            </td>
-                                            <td>
-                                                ↦ {day.startData && formatOdometer(day.startData.odometer)}
-                                                <br/>
-                                                ⇥ {day.stopData ? formatOdometer(day.stopData.odometer) : days[props.lang].na}
-                                            </td>
-                                            <td>
-                                                1 ⊙ {formatTime(day.driveTime)}
-                                                <br/>
-                                                2 ⊙ {day.doubleCrew ? formatTime(day.driveTime2) : days[props.lang].na}
-                                            </td>
-                                            <td>
-                                                💼 {formatTime(day.workTime)}
-                                                <br/>
-                                                {day.cardState === dayCardStateEnum.notUsed ?
-                                                    days[props.lang].na
-                                                    :
-                                                    <>⏸ {formatTime(day.breakTime)}</>
-                                                }
-                                            </td>
-                                            <td>
-                                                {formatFuelCombustion(day.fuelBurned, day.distance)}
-                                                <br/>
-                                                {formatFuelQuantity(day.fuelBurned)}
-                                            </td>
-                                            <td>
-                                                {formatOdometer(day.distance)}
-                                            </td>
-                                            <td>{(day.startData?.notes || day.stopData?.notes) && <DetailsIcon/>}</td>
-                                        </tr>
-                                    )}
-                                    {expandedRow === day.id && (
-                                        <tr onClick={() => setExpandedRow(null)}>
-                                            <td colSpan={8} className="extended">
-                                                {days[props.lang].tnr}: {tourNr ? tourNr : ''}
-                                                <br/>
-                                                <div className='DivInline'>
-                                                    {day.status === dayStatusEnum.started &&
-                                                        <>
-                                                            <strong>{days[props.lang].curDay}</strong>
-                                                            <br/><br/>
-                                                        </>
-                                                    }
-                                                    <strong>{days[props.lang].start}</strong><br/>
-                                                    ↦ {day.startData && formatOdometer(day.startData.odometer)}<br/>
-                                                    {day.startData && formatDate(day.startData.date, props.lang)}<br/>
-                                                    {day.startData?.placeData ?
-                                                        (<>{day.startData.placeData.name} - {day.startData.placeData.street}, {day.startData.placeData.country} {day.startData.placeData.code} {day.startData.placeData.city}<br/> </>)
+                                const tourNr = tourNrs?.find(tour => tour.tourId === day.tourId)?.tourNr;
+                                const division = prevTourId.current !== day.tourId;
+                                prevTourId.current = day.tourId;
+                                return (
+                                    <React.Fragment key={day.id}>
+                                        {division && index !== 0 &&
+                                            <tr className='tableParting'>
+                                                <td colSpan={8}></td>
+                                            </tr>
+                                        }
+                                        {expandedRow !== day.id && (
+                                            <tr onClick={() => setExpandedRow(day.id)}>
+                                                <td>
+                                                    {/*<strong>{(page - 1) * LOGS_PER_PAGE + index + 1}</strong>*/}
+                                                    {/*<br/>*/}
+                                                    {tourNr ? tourNr : ''}
+                                                </td>
+                                                <td>
+                                                    {day.startData && formatDate(day.startData.date, props.lang)}
+                                                    <br/>
+                                                    {day.stopData ? formatDate(day.stopData.date, props.lang) : days[props.lang].na}
+                                                </td>
+                                                <td>
+                                                    ↦ {day.startData && formatOdometer(day.startData.odometer)}
+                                                    <br/>
+                                                    ⇥ {day.stopData ? formatOdometer(day.stopData.odometer) : days[props.lang].na}
+                                                </td>
+                                                <td>
+                                                    1 ⊙ {formatTime(day.driveTime)}
+                                                    <br/>
+                                                    2
+                                                    ⊙ {day.doubleCrew ? formatTime(day.driveTime2) : days[props.lang].na}
+                                                </td>
+                                                <td>
+                                                    💼 {formatTime(day.workTime)}
+                                                    <br/>
+                                                    {day.cardState === dayCardStateEnum.notUsed ?
+                                                        days[props.lang].na
                                                         :
-                                                        (<>{day.startData && day.startData.place}<br/></>)
+                                                        <>⏸ {formatTime(day.breakTime)}</>
                                                     }
-                                                    {day.startData?.notes &&
-                                                        <>
-                                                            <DetailsIcon/><br/>
-                                                            {day.startData.notes}<br/>
-                                                        </>
-                                                    }
-                                                </div>
-                                                <div className='DivInline'>
-                                                    {day.status === dayStatusEnum.finished &&
-                                                        <>
-                                                            <strong>{days[props.lang].stop}</strong><br/>
-                                                            ⇥ {day.stopData && formatOdometer(day.stopData.odometer)}<br/>
-                                                            {day.stopData && formatDate(day.stopData.date, props.lang)}<br/>
-                                                            {day.stopData?.placeData ?
-                                                                (<>{day.stopData.placeData.name} - {day.stopData.placeData.street}, {day.stopData.placeData.country} {day.stopData.placeData.code} {day.stopData.placeData.city}<br/></>)
-                                                                :
-                                                                (<>{day.stopData && day.stopData.place}<br/></>)
-                                                            }
-                                                            {day.stopData?.notes &&
-                                                                <>
-                                                                    <DetailsIcon/><br/>
-                                                                    {day.stopData.notes}<br/>
-                                                                </>
-                                                            }
-                                                        </>
-                                                    }
-                                                </div>
-                                                <br/><br/>
-                                                <strong>1 ⊙</strong> {formatTime(day.driveTime)} <strong>2
-                                                ⊙</strong> {formatTime(day.driveTime2)}<br/>
-                                                💼 {formatTime(day.workTime)} ⏸ {day.cardState === dayCardStateEnum.notUsed ?
-                                                days[props.lang].na
-                                                :
-                                                formatTime(day.breakTime)}<br/><br/>
-
-                                                {formatFuelCombustion(day.fuelBurned, day.distance)}<br/>
-                                                {formatFuelQuantity(day.fuelBurned)}<br/>
-                                                {formatOdometer(day.distance)}<br/><br/>
-
-                                            </td>
-                                        </tr>
-                                    )}
-                                </React.Fragment>
-                            );
-                        })}
+                                                </td>
+                                                <td>
+                                                    {formatFuelCombustion(day.fuelBurned, day.distance)}
+                                                    <br/>
+                                                    {formatFuelQuantity(day.fuelBurned)}
+                                                </td>
+                                                <td>
+                                                    {formatOdometer(day.distance)}
+                                                </td>
+                                                <td>{(day.startData?.notes || day.stopData?.notes) &&
+                                                    <DetailsIcon/>}</td>
+                                            </tr>
+                                        )}
+                                        {expandedRow === day.id && (
+                                            <>
+                                                <tr
+                                                    onClick={() => setExpandedRow(null)}
+                                                    onMouseEnter={handleMouseEnter}
+                                                    onMouseLeave={handleMouseLeave}
+                                                    className={isHovered ? 'highlighted' : ''}
+                                                >
+                                                    <td>
+                                                        {/*<strong>{(page - 1) * LOGS_PER_PAGE + index + 1}</strong>*/}
+                                                        {/*<br/>*/}
+                                                        {tourNr ? tourNr : ''}
+                                                    </td>
+                                                    <td>
+                                                        {day.startData &&
+                                                            <>
+                                                                {formatDate(day.startData.date, props.lang)}
+                                                                <br/>
+                                                                {formatSimplePlace(day.startData.place, day.startData.placeData)} {day.startData.country}
+                                                            </>
+                                                        }
+                                                        <br/>
+                                                        {day.stopData ?
+                                                            <>
+                                                                {formatDate(day.stopData.date, props.lang)}
+                                                                <br/>
+                                                                {formatSimplePlace(day.stopData.place, day.stopData.placeData)} {day.stopData.country}
+                                                            </> : days[props.lang].na}
+                                                    </td>
+                                                    <td>
+                                                        ↦ {day.startData && formatOdometer(day.startData.odometer)}
+                                                        <br/>
+                                                        ⇥ {day.stopData ? formatOdometer(day.stopData.odometer) : days[props.lang].na}
+                                                    </td>
+                                                    <td>
+                                                        1 ⊙ {formatTime(day.driveTime)}
+                                                        <br/>
+                                                        2
+                                                        ⊙ {day.doubleCrew ? formatTime(day.driveTime2) : days[props.lang].na}
+                                                    </td>
+                                                    <td>
+                                                        💼 {formatTime(day.workTime)}
+                                                        <br/>
+                                                        {day.cardState === dayCardStateEnum.notUsed ?
+                                                            days[props.lang].na
+                                                            :
+                                                            <>⏸ {formatTime(day.breakTime)}</>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        {formatFuelCombustion(day.fuelBurned, day.distance)}
+                                                        <br/>
+                                                        {formatFuelQuantity(day.fuelBurned)}
+                                                    </td>
+                                                    <td>
+                                                        {formatOdometer(day.distance)}
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr></tr>
+                                                <tr
+                                                    onMouseEnter={handleMouseEnter}
+                                                    onMouseLeave={handleMouseLeave}
+                                                    className={isHovered ? 'highlighted' : ''}
+                                                >
+                                                    <td colSpan={8} className="extended">
+                                                        {day.startData?.notes &&
+                                                            <>
+                                                                <br/>
+                                                                <DetailsIcon/><br/>
+                                                                {days[props.lang].start}: {day.startData.notes}<br/>
+                                                            </>
+                                                        }
+                                                        {day.stopData?.notes &&
+                                                            <>
+                                                                <br/>
+                                                                <DetailsIcon/><br/>
+                                                                {days[props.lang].stop}: {day.stopData.notes}<br/>
+                                                            </>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </>
+                                        )}
+                                    </React.Fragment>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </section>

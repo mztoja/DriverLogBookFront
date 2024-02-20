@@ -13,6 +13,7 @@ import {formatCountry} from "../../utils/formatCountry";
 import {formatOdometer} from "../../utils/formatOdometer";
 import DetailsIcon from "@mui/icons-material/Details";
 import {formatPlace} from "../../utils/formatPlace";
+import {formatSimplePlace} from "../../utils/formatSimplePlace";
 
 interface Props {
     lang: userLangEnum;
@@ -31,6 +32,15 @@ export const LogsList = (props: Props) => {
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [tourNrs, setTourNrs] = useState<TourNumbersInterface[] | null>(null);
     const prevTourId = useRef<number>(0);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
 
     useEffect(() => {
         if (fetchDelay > 0) {
@@ -112,7 +122,7 @@ export const LogsList = (props: Props) => {
                             const tourNr = tourNrs?.find(tour => tour.tourId === log.tourId)?.tourNr ?? '';
                             const division = prevTourId.current !== log.tourId;
                             prevTourId.current = log.tourId;
-                                return (
+                            return (
                                 <React.Fragment key={log.id}>
                                     {division && index !== 0 &&
                                         <tr className='tableParting'>
@@ -128,31 +138,45 @@ export const LogsList = (props: Props) => {
                                             <td>{formatDate(log.date, props.lang)}</td>
                                             <td>{log.action}</td>
                                             <td>{formatCountry(log.country, props.lang)}</td>
-                                            <td>{formatPlace(log.place, log.placeData)}</td>
+                                            <td>{formatSimplePlace(log.place, log.placeData)}</td>
                                             <td>{formatOdometer(log.odometer)}</td>
                                             <td>{log.notes !== null && <DetailsIcon/>}</td>
                                         </tr>
                                     )}
                                     {expandedRow === log.id && (
-                                        <tr onClick={() => setExpandedRow(null)}>
-                                            <td colSpan={7} className="extended">
-                                                <div>{formatDate(log.date, props.lang)}</div>
-                                                <div>{log.action}</div>
-                                                {log.placeId === 0 && (<div>{log.place}</div>)}
-                                                {log.placeId !== 0 && (
-                                                    <>
-                                                        <div>{log.placeData?.name}</div>
-                                                        <div>{log.placeData?.street}</div>
-                                                        <div>{log.placeData?.code} - {log.placeData?.city} ({formatCountry(log.country, props.lang)})</div>
-                                                    </>
-                                                )}
-                                                {log.notes !== null && (
-                                                    <div>
-                                                        <br/><DetailsIcon/><br/>
-                                                        {log.notes}
-                                                    </div>)}
-                                            </td>
-                                        </tr>
+                                        <>
+                                            <tr
+                                                onClick={() => setExpandedRow(null)}
+                                                onMouseEnter={handleMouseEnter}
+                                                onMouseLeave={handleMouseLeave}
+                                                className={isHovered ? 'highlighted' : ''}
+                                            >
+                                                <td>
+                                                    {/*<strong>{(page - 1) * LOGS_PER_PAGE + index + 1}</strong>*/}
+                                                    {tourNr}
+                                                </td>
+                                                <td>{formatDate(log.date, props.lang)}</td>
+                                                <td>{log.action}</td>
+                                                <td>{formatCountry(log.country, props.lang)}</td>
+                                                <td>{formatPlace(log.place, log.placeData,props.lang)}</td>
+                                                <td>{formatOdometer(log.odometer)}</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr></tr>
+                                            <tr
+                                                onMouseEnter={handleMouseEnter}
+                                                onMouseLeave={handleMouseLeave}
+                                                className={isHovered ? 'highlighted' : ''}
+                                            >
+                                                <td colSpan={7} className="extended">
+                                                    {log.notes !== null && (
+                                                        <div>
+                                                            <br/><DetailsIcon/><br/>
+                                                            {log.notes}
+                                                        </div>)}
+                                                </td>
+                                            </tr>
+                                        </>
                                     )}
                                 </React.Fragment>
                             );

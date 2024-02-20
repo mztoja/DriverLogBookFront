@@ -3,7 +3,6 @@ import {places} from "../../assets/txt/places";
 import {PlaceInterface, UserInterface} from "types";
 import {CircularProgress, Fab} from "@mui/material";
 import {form} from "../../assets/txt/form";
-import {countries} from "../../assets/txt/countries";
 import DetailsIcon from '@mui/icons-material/Details';
 import RoomIcon from '@mui/icons-material/Room';
 import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
@@ -15,7 +14,6 @@ import {apiPaths} from "../../config/api";
 import {commons} from "../../assets/txt/commons";
 import {formatCountry} from "../../utils/formatCountry";
 import NavigationIcon from '@mui/icons-material/Navigation';
-import {Link} from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import {PlaceEdit} from "./PlaceEdit";
 
@@ -38,6 +36,15 @@ export const PlacesList = (props: Props) => {
     const [filterSearch, setFilterSearch] = useState<string>('');
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [chosenPlace, setChosenPlace] = useState<PlaceInterface | null>(null);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
 
     useEffect(() => {
         (async () => {
@@ -175,55 +182,57 @@ export const PlacesList = (props: Props) => {
                                                 </tr>
                                             )}
                                             {expandedRow === index && (
-                                                <tr>
-                                                    <td colSpan={6} className="extended">
-                                                        <Link to='' className="Link" onClick={() => setExpandedRow(null)}>
-                                                            {places[props.userData.lang].collapse}
-                                                        </Link><br/>
-                                                        <div>
-                                                            {countries[props.userData.lang][place.country]}
-                                                        </div>
-                                                        <div>
-                                                            {form[props.userData.lang][`placeType${place.type}`]}
-                                                        </div>
-
-                                                        <div>
-                                                            {place.name}
-                                                        </div>
-                                                        <div>
-                                                            {place.street}, {place.code} {place.city}
-                                                        </div>
-                                                        <br/>
-                                                        <div>
-                                                            <RoomIcon/><br/>
-                                                            {place.lat}, {place.lon}
-                                                        </div>
-                                                        {place.description !== null && (
+                                                <>
+                                                    <tr
+                                                        onClick={() => setExpandedRow(null)}
+                                                        onMouseEnter={handleMouseEnter}
+                                                        onMouseLeave={handleMouseLeave}
+                                                        className={isHovered ? 'highlighted' : ''}
+                                                    >
+                                                        <td>{index}</td>
+                                                        <td>{form[props.userData.lang][`placeType${place.type}`]}</td>
+                                                        <td>{formatCountry(place.country, props.userData.lang)}</td>
+                                                        <td>{place.code} {place.city}</td>
+                                                        <td>{place.name} - {place.street}</td>
+                                                        <td>
+                                                        </td>
+                                                    </tr>
+                                                    <tr></tr>
+                                                    <tr
+                                                        onMouseEnter={handleMouseEnter}
+                                                        onMouseLeave={handleMouseLeave}
+                                                        className={isHovered ? 'highlighted' : ''}
+                                                    >
+                                                        <td colSpan={6} className="extended">
                                                             <div>
-                                                                <DetailsIcon/><br/>
-                                                                {place.description}
+                                                                <RoomIcon/><br/>
+                                                                {place.lat}, {place.lon}
                                                             </div>
-                                                        )}
-                                                        <br/>
-                                                        <div>
-                                                            <Fab variant="extended" size="small" color="primary"
-                                                                 onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
-                                                                <NavigationIcon sx={{mr: 1}}/>
-                                                                {places[props.userData.lang].navigateSwitchLabel}
-                                                            </Fab>
-                                                        </div>
-                                                        <br/>
-                                                        <div>
-                                                            <Fab variant="extended" size="small" color="primary" onClick={() => setChosenPlace(place)}>
-                                                                <EditIcon sx={{mr: 1}}/>
-                                                                {places[props.userData.lang].edit}
-                                                            </Fab>
-                                                        </div>
-                                                        <Link to='' className="Link" onClick={() => setExpandedRow(null)}>
-                                                            {places[props.userData.lang].collapse}
-                                                        </Link><br/>
-                                                    </td>
-                                                </tr>
+                                                            {place.description !== null && (
+                                                                <div>
+                                                                    <DetailsIcon/><br/>
+                                                                    {place.description}
+                                                                </div>
+                                                            )}
+                                                            <br/>
+                                                            <div>
+                                                                <Fab variant="extended" size="small" color="primary"
+                                                                     onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
+                                                                    <NavigationIcon sx={{mr: 1}}/>
+                                                                    {places[props.userData.lang].navigateSwitchLabel}
+                                                                </Fab>
+                                                            </div>
+                                                            <br/>
+                                                            <div>
+                                                                <Fab variant="extended" size="small" color="primary"
+                                                                     onClick={() => setChosenPlace(place)}>
+                                                                    <EditIcon sx={{mr: 1}}/>
+                                                                    {places[props.userData.lang].edit}
+                                                                </Fab>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </>
                                             )}
                                         </React.Fragment>
                                     );

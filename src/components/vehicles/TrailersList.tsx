@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import { UserInterface, VehicleInterface, vehicleTypeEnum } from "types";
+import {UserInterface, VehicleInterface, vehicleTypeEnum} from "types";
 import {apiPaths} from "../../config/api";
 import {vehicles} from "../../assets/txt/vehicles";
 import {useAlert} from "../../hooks/useAlert";
@@ -9,7 +9,6 @@ import DetailsIcon from "@mui/icons-material/Details";
 import {CompanySelect} from "../common/form/place/CompanySelect";
 import {formatShortDate} from "../../utils/formatShortDate";
 import {formatWeight} from "../../utils/formatWeight";
-import {Link} from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
 import {TrailerEdit} from "./TrailerEdit";
 
@@ -20,7 +19,7 @@ interface Props {
     setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
-export const TrailersList = (props:Props) => {
+export const TrailersList = (props: Props) => {
     const {setAlert} = useAlert();
     const {loading, fetchData} = useApi();
     const [data, setData] = useState<VehicleInterface[] | null>(null);
@@ -28,6 +27,15 @@ export const TrailersList = (props:Props) => {
     const [companyId, setCompanyId] = useState<string>(props.userData.companyId.toString());
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [chosenVehicle, setChosenVehicle] = useState<VehicleInterface | null>(null);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
 
     useEffect(() => {
         (async () => {
@@ -59,7 +67,8 @@ export const TrailersList = (props:Props) => {
                     </section>
                     <section className="Table__Filter">
                         <div>
-                            <CompanySelect lang={props.userData.lang} value={companyId} onChange={e => setCompanyId(e)}/>
+                            <CompanySelect lang={props.userData.lang} value={companyId}
+                                           onChange={e => setCompanyId(e)}/>
                         </div>
                     </section>
                     <section className="Table__Body">
@@ -88,7 +97,7 @@ export const TrailersList = (props:Props) => {
                                     index++;
                                     const today = new Date();
                                     const markTechRevAsExpired = new Date(vehicle.techRev) < today ? 'expired' : '';
-                                    const markInsuranceAsExpired= new Date(vehicle.insurance) < today ? 'expired' : '';
+                                    const markInsuranceAsExpired = new Date(vehicle.insurance) < today ? 'expired' : '';
                                     return (
                                         <React.Fragment key={vehicle.id}>
                                             {expandedRow !== index && (
@@ -104,40 +113,48 @@ export const TrailersList = (props:Props) => {
                                                 </tr>
                                             )}
                                             {expandedRow === index && (
-                                                <tr>
-                                                    <td colSpan={8} className="extended">
-                                                        <Link to='' className="Link" onClick={() => setExpandedRow(null)}>
-                                                            {vehicles[props.userData.lang].collapse}
-                                                        </Link><br/>
-                                                        {vehicle.registrationNr}<br/>
-                                                        {vehicle.model === '' ? '---' : vehicle.model}<br/>
-                                                        {vehicle.year === 0 ? '---' : vehicle.year}<br/>
-                                                        {formatWeight(vehicle.weight)}<br/><br/>
-                                                        {vehicles[props.userData.lang].techRev}<br/>
-                                                        {formatShortDate(vehicle.techRev)}<br/><br/>
-                                                        {vehicles[props.userData.lang].insurance}<br/>
-                                                        {formatShortDate(vehicle.insurance)}<br/><br/>
-                                                        {vehicle.notes !== null && <>
-                                                            <DetailsIcon/><br/>
-                                                            {vehicle.notes.split('\n').map((line, index) => (
-                                                                <React.Fragment key={index}>
-                                                                    {line}
-                                                                    <br />
-                                                                </React.Fragment>
-                                                            ))}<br/>
-                                                        </>}<br/>
-                                                        <div>
-                                                            <Fab variant="extended" size="small" color="primary" onClick={() => setChosenVehicle(vehicle)}>
-                                                                <EditIcon sx={{mr: 1}}/>
-                                                                {vehicles[props.userData.lang].edit}
-                                                            </Fab>
-                                                        </div>
-                                                        <br/>
-                                                        <Link to='' className="Link" onClick={() => setExpandedRow(null)}>
-                                                            {vehicles[props.userData.lang].collapse}
-                                                        </Link><br/>
-                                                    </td>
-                                                </tr>
+                                                <>
+                                                    <tr
+                                                        onClick={() => setExpandedRow(null)}
+                                                        onMouseEnter={handleMouseEnter}
+                                                        onMouseLeave={handleMouseLeave}
+                                                        className={isHovered ? 'highlighted' : ''}
+                                                    >
+                                                        <td>{index}</td>
+                                                        <td>{vehicle.registrationNr}</td>
+                                                        <td>{vehicle.model === '' ? '---' : vehicle.model}</td>
+                                                        <td>{vehicle.year === 0 ? '---' : vehicle.year}</td>
+                                                        <td>{formatWeight(vehicle.weight)}</td>
+                                                        <td className={markTechRevAsExpired}>{formatShortDate(vehicle.techRev)}</td>
+                                                        <td className={markInsuranceAsExpired}>{formatShortDate(vehicle.insurance)}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr></tr>
+                                                    <tr
+                                                        onMouseEnter={handleMouseEnter}
+                                                        onMouseLeave={handleMouseLeave}
+                                                        className={isHovered ? 'highlighted' : ''}
+                                                    >
+                                                        <td colSpan={8} className="extended">
+                                                            {vehicle.notes !== null && <>
+                                                                <DetailsIcon/><br/>
+                                                                {vehicle.notes.split('\n').map((line, index) => (
+                                                                    <React.Fragment key={index}>
+                                                                        {line}
+                                                                        <br/>
+                                                                    </React.Fragment>
+                                                                ))}
+                                                            </>}<br/>
+                                                            <div>
+                                                                <Fab variant="extended" size="small" color="primary"
+                                                                     onClick={() => setChosenVehicle(vehicle)}>
+                                                                    <EditIcon sx={{mr: 1}}/>
+                                                                    {vehicles[props.userData.lang].edit}
+                                                                </Fab>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </>
                                             )}
                                         </React.Fragment>
                                     );
