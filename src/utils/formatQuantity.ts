@@ -5,6 +5,6 @@ export const formatQuantity = (quantity: number): string => {
         const stringifier = quantity.toString();
         return stringifier.endsWith('.00') ? stringifier.slice(0, -3) : stringifier;
     } else {
-        return quantity.toString();
+        return quantity.toFixed(2);
     }
 }

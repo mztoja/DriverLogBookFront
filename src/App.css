@@ -208,17 +208,12 @@ tbody tr:nth-child(even) {
     transition: background 0.05s;
 }
 
-tbody tr:hover {
-    background-color: #d8690f82 !important;
-}
-
-.highlighted {
-    background-color: #d8690f82 !important;
-}
-
-.tableParting {
+.tableParting, .tableParting:hover {
     background-color: #0000005e !important;
     text-align: center;
     font-weight: bold;
 }
 
+tbody tr:hover, .highlighted {
+    background-color: #d8690f82 !important;
+}

@@ -1,0 +1,274 @@
+import {LoadInterface, loadStatusEnum, TourNumbersInterface, userLangEnum} from "types";
+import {useAlert} from "../../hooks/useAlert";
+import {useApi} from "../../hooks/useApi";
+import React, {useEffect, useRef, useState} from "react";
+import {apiPaths} from "../../config/api";
+import {LOADINGS_PER_PAGE} from "../../config/set";
+import {loadings} from "../../assets/txt/loadings";
+import {CircularProgress} from "@mui/material";
+import {TablePagination} from "../common/TablePagination";
+import {formatDate} from "../../utils/formatDate";
+import {formatSimplePlace} from "../../utils/formatSimplePlace";
+import {formatWeight} from "../../utils/formatWeight";
+import {formatOdometer} from "../../utils/formatOdometer";
+import {formatPlace} from "../../utils/formatPlace";
+import DetailsIcon from "@mui/icons-material/Details";
+
+interface Props {
+    lang: userLangEnum;
+}
+
+export const LoadingsList = (props: Props) => {
+    const {setAlert} = useAlert();
+    const {loading, fetchData} = useApi();
+    const [data, setData] = useState<LoadInterface[] | null>(null);
+    const [totalItems, setTotalItems] = useState<number>(0);
+    const [page, setPage] = useState<number>(1);
+    const [expandedRow, setExpandedRow] = useState<number | null>(null);
+    const [tourNrs, setTourNrs] = useState<TourNumbersInterface[] | null>(null);
+    const prevTourId = useRef<number>(0);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+    };
+
+    useEffect(() => {
+        (async () => {
+            const result = await fetchData(apiPaths.getLoadings + '/' + page + '/' + LOADINGS_PER_PAGE, 'GET');
+            if ((result && result.responseData) && (!result.responseData.dtc)) {
+                setData(result.responseData.items);
+                setTotalItems(Number(result.responseData.totalItems));
+            } else {
+                setAlert(loadings[props.lang].apiError, 'error');
+            }
+            console.log(result.responseData);
+        })();
+        // eslint-disable-next-line
+    }, [page]);
+
+    useEffect(() => {
+        if (data) {
+            const uniqueTourIds: number[] = data.reduce((uniqueTourIds: number[], load: LoadInterface) => {
+                if (!uniqueTourIds.includes(load.tourId)) {
+                    uniqueTourIds.push(load.tourId);
+                }
+                return uniqueTourIds;
+            }, []);
+            (async () => {
+                const result = await fetchData(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setTourNrs(result.responseData);
+                }
+            })();
+        }
+        // eslint-disable-next-line
+    }, [data]);
+
+    if (loading) {
+        return <CircularProgress/>
+    }
+
+    return (
+        <>
+            <main className="Table">
+                <section className="Table__Header">
+                    {loadings[props.lang].tableHeader}
+                </section>
+                <section className="Table__Body">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>
+                                {loadings[props.lang].loadNr}
+                                <br/><br/>
+                                {loadings[props.lang].tourNr}
+                            </th>
+                            <th>
+                                {loadings[props.lang].loading}
+                                <br/><br/>
+                                {loadings[props.lang].unloading}
+                            </th>
+                            <th>
+                                {loadings[props.lang].sender}
+                                <br/><br/>
+                                {loadings[props.lang].receiver}
+                            </th>
+                            <th>
+                                {loadings[props.lang].refNr}
+                                <br/><br/>
+                                {loadings[props.lang].vehicle}
+                            </th>
+                            <th>
+                                {loadings[props.lang].description}
+                                <br/><br/>
+                                {loadings[props.lang].quantity}
+                            </th>
+                            <th>
+                                {loadings[props.lang].distance}
+                                <br/><br/>
+                                {loadings[props.lang].weight}
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {data?.map((load, index) => {
+                            const tourNr = tourNrs?.find(tour => tour.tourId === load.tourId)?.tourNr ?? '';
+                            const division = prevTourId.current !== load.tourId;
+                            prevTourId.current = load.tourId;
+                            return (
+                                <React.Fragment key={load.id}>
+                                    {division && index !== 0 &&
+                                        <>
+                                            <tr className='tableParting'>
+                                                <td colSpan={7}></td>
+                                            </tr>
+                                            <tr></tr>
+                                        </>
+                                    }
+                                    {expandedRow !== load.id && (
+                                        <tr onClick={() => setExpandedRow(load.id)}>
+                                            <td>
+                                                {load.loadNr}
+                                                <br/><br/>
+                                                {tourNr}
+                                            </td>
+                                            <td>
+                                                {load.loadingLogData &&
+                                                    <>
+                                                        {formatDate(load.loadingLogData.date, props.lang)}
+                                                        <br/>
+                                                        {formatSimplePlace(load.loadingLogData.place, load.loadingLogData.placeData)}
+                                                    </>
+                                                }
+                                                <br/><br/>
+
+                                                    {load.status === loadStatusEnum.notUnloaded
+                                                        ? loadings[props.lang].notUnloaded
+                                                        :
+                                                        load.unloadingLogData &&
+                                                        <>
+                                                            {formatDate(load.unloadingLogData.date, props.lang)}
+                                                            <br/>
+                                                            {formatSimplePlace(load.unloadingLogData.place, load.unloadingLogData.placeData)}
+                                                        </>
+
+                                                    }
+
+                                            </td>
+                                            <td>
+                                                {formatSimplePlace(loadings[props.lang].na,load.senderData)} {load.senderData?.country}
+                                                <br/><br/>
+                                                {formatSimplePlace(loadings[props.lang].na,load.receiverData)} {load.receiverData?.country}
+                                            </td>
+                                            <td>
+                                                {load.reference === '' ? loadings[props.lang].na : load.reference}
+                                                <br/><br/>
+                                                {load.vehicle}
+                                            </td>
+                                            <td>
+                                                {load.description === '' ? loadings[props.lang].na : load.description}
+                                                <br/><br/>
+                                                {load.quantity === '' ? loadings[props.lang].na : load.quantity}
+                                            </td>
+                                            <td>
+                                                {formatOdometer(load.distance)}
+                                                <br/><br/>
+                                                {formatWeight(load.weight)}
+                                            </td>
+                                            <td>{(load.loadingLogData?.notes || load.unloadingLogData?.notes) && <DetailsIcon/>}</td>
+                                        </tr>
+                                    )}
+                                    {expandedRow === load.id && (
+                                        <>
+                                            <tr
+                                                onClick={() => setExpandedRow(null)}
+                                                onMouseEnter={handleMouseEnter}
+                                                onMouseLeave={handleMouseLeave}
+                                                className={isHovered ? 'highlighted' : ''}
+                                            >
+                                                <td>
+                                                    {load.loadNr}
+                                                    <br/><br/>
+                                                    {tourNr}
+                                                </td>
+                                                <td>
+                                                    {load.loadingLogData &&
+                                                        <>
+                                                            {formatDate(load.loadingLogData.date, props.lang)}
+                                                            <br/>
+                                                            {formatPlace(load.loadingLogData.place, load.loadingLogData.placeData, props.lang)}
+                                                        </>
+                                                    }
+                                                    <br/><br/>
+
+                                                    {load.status === loadStatusEnum.notUnloaded
+                                                        ? loadings[props.lang].notUnloaded
+                                                        :
+                                                        load.unloadingLogData &&
+                                                        <>
+                                                            {formatDate(load.unloadingLogData.date, props.lang)}
+                                                            <br/>
+                                                            {formatPlace(load.unloadingLogData.place, load.unloadingLogData.placeData, props.lang)}
+                                                        </>
+
+                                                    }
+
+                                                </td>
+                                                <td>
+                                                    {formatPlace(loadings[props.lang].na,load.senderData, props.lang)} {load.senderData?.country}
+                                                    <br/><br/>
+                                                    {formatPlace(loadings[props.lang].na,load.receiverData, props.lang)} {load.receiverData?.country}
+                                                </td>
+                                                <td>
+                                                    {load.reference === '' ? loadings[props.lang].na : load.reference}
+                                                    <br/><br/>
+                                                    {load.vehicle}
+                                                </td>
+                                                <td>
+                                                    {load.description === '' ? loadings[props.lang].na : load.description}
+                                                    <br/><br/>
+                                                    {load.quantity === '' ? loadings[props.lang].na : load.quantity}
+                                                </td>
+                                                <td>
+                                                    {formatOdometer(load.distance)}
+                                                    <br/><br/>
+                                                    {formatWeight(load.weight)}
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr></tr>
+                                            <tr
+                                                onMouseEnter={handleMouseEnter}
+                                                onMouseLeave={handleMouseLeave}
+                                                className={isHovered ? 'highlighted' : ''}
+                                            >
+                                                <td colSpan={7} className="extended">
+                                                    {(load.loadingLogData?.notes || load.unloadingLogData?.notes) && <DetailsIcon/>}
+                                                    <br/>
+                                                    {load.loadingLogData?.notes &&
+                                                        <>{loadings[props.lang].loading}: {load.loadingLogData.notes}<br/></>
+                                                    }
+                                                    {load.unloadingLogData?.notes &&
+                                                        <>{loadings[props.lang].unloading}: {load.unloadingLogData.notes}<br/></>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+            <TablePagination totalItems={totalItems} page={page} rowsPerPage={LOADINGS_PER_PAGE} setPage={setPage}/>
+        </>
+    );
+}

@@ -11,6 +11,7 @@ export const labels:MenuLabelTypes[] = [{
     places: 'Address List',
     profile: 'Profile settings',
     vehicles: 'Vehicle Management',
+    loadings: 'Loadings',
 },{
     register: "Rejestracja",
     login: "Logowanie",
@@ -22,6 +23,7 @@ export const labels:MenuLabelTypes[] = [{
     places: 'Lista adresowa',
     profile: 'Ustawienia profilu',
     vehicles: 'Zarządzanie pojazdami',
+    loadings: 'Ładunki',
 }];
 
 
