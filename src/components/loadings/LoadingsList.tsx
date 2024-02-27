@@ -1,11 +1,11 @@
 import {LoadInterface, loadStatusEnum, TourNumbersInterface, userLangEnum} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
-import React, {useEffect, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {LOADINGS_PER_PAGE} from "../../config/set";
 import {loadings} from "../../assets/txt/loadings";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
 import {TablePagination} from "../common/TablePagination";
 import {formatDate} from "../../utils/formatDate";
 import {formatSimplePlace} from "../../utils/formatSimplePlace";
@@ -13,9 +13,14 @@ import {formatWeight} from "../../utils/formatWeight";
 import {formatOdometer} from "../../utils/formatOdometer";
 import {formatPlace} from "../../utils/formatPlace";
 import DetailsIcon from "@mui/icons-material/Details";
+import {tours} from "../../assets/txt/tours";
+import {NavLink} from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
 
 interface Props {
     lang: userLangEnum;
+    tourId?: number;
+    setShowLoadingsList?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const LoadingsList = (props: Props) => {
@@ -37,17 +42,32 @@ export const LoadingsList = (props: Props) => {
         setIsHovered(false);
     };
 
+    const handleClose = () => {
+        props.setShowLoadingsList && props.setShowLoadingsList(false);
+    }
+
     useEffect(() => {
-        (async () => {
-            const result = await fetchData(apiPaths.getLoadings + '/' + page + '/' + LOADINGS_PER_PAGE, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData.items);
-                setTotalItems(Number(result.responseData.totalItems));
-            } else {
-                setAlert(loadings[props.lang].apiError, 'error');
-            }
-            console.log(result.responseData);
-        })();
+        if (props.tourId) {
+            (async () => {
+                const result = await fetchData(apiPaths.getLoadingsByTourId + '/' + props.tourId, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData);
+                    setTotalItems(0);
+                } else {
+                    setAlert(loadings[props.lang].apiError, 'error');
+                }
+            })();
+        } else {
+            (async () => {
+                const result = await fetchData(apiPaths.getLoadings + '/' + page + '/' + LOADINGS_PER_PAGE, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData.items);
+                    setTotalItems(Number(result.responseData.totalItems));
+                } else {
+                    setAlert(loadings[props.lang].apiError, 'error');
+                }
+            })();
+        }
         // eslint-disable-next-line
     }, [page]);
 
@@ -77,7 +97,19 @@ export const LoadingsList = (props: Props) => {
         <>
             <main className="Table">
                 <section className="Table__Header">
-                    {loadings[props.lang].tableHeader}
+                    {props.tourId
+                        ?
+                        <>
+                            {loadings[props.lang].tableHeader}
+                            &nbsp;&nbsp;
+                            <Tooltip title={tours[props.lang].close} arrow>
+                                <NavLink to='' className='CloseLink' onClick={() => handleClose()}>
+                                    <ClearIcon sx={{mr: 1}}/>
+                                </NavLink>
+                            </Tooltip>
+                        </>
+                        :loadings[props.lang].tableHeader
+                    }
                 </section>
                 <section className="Table__Body">
                     <table>
@@ -268,7 +300,7 @@ export const LoadingsList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            <TablePagination totalItems={totalItems} page={page} rowsPerPage={LOADINGS_PER_PAGE} setPage={setPage}/>
+            {!props.tourId && <TablePagination totalItems={totalItems} page={page} rowsPerPage={LOADINGS_PER_PAGE} setPage={setPage}/>}
         </>
     );
 }

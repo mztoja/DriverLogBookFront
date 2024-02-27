@@ -1,11 +1,11 @@
 import {FinanceInterface, TourNumbersInterface, userLangEnum} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
-import React, {useEffect, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {FINANCES_PER_PAGE} from "../../config/set";
 import {finances} from "../../assets/txt/finances";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
 import {formatDate} from "../../utils/formatDate";
 import DetailsIcon from "@mui/icons-material/Details";
 import {TablePagination} from "../common/TablePagination";
@@ -13,9 +13,14 @@ import {formatQuantity} from "../../utils/formatQuantity";
 import {formatAmount} from "../../utils/formatAmount";
 import {formatUnitPrice} from "../../utils/formatUnitPrice";
 import {formatPlace} from "../../utils/formatPlace";
+import {tours} from "../../assets/txt/tours";
+import {NavLink} from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
 
 interface Props {
     lang: userLangEnum;
+    tourId?: number;
+    setShowFinancesList?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const FinancesList = (props: Props) => {
@@ -38,16 +43,32 @@ export const FinancesList = (props: Props) => {
         setIsHovered(false);
     };
 
+    const handleClose = () => {
+        props.setShowFinancesList && props.setShowFinancesList(false);
+    }
+
     useEffect(() => {
-        (async () => {
-            const result = await fetchData(apiPaths.getFinances + '/' + page + '/' + FINANCES_PER_PAGE, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData.items);
-                setTotalItems(Number(result.responseData.totalItems));
-            } else {
-                setAlert(finances[props.lang].apiError, 'error');
-            }
-        })();
+        if (props.tourId) {
+            (async () => {
+                const result = await fetchData(apiPaths.getFinancesByTourId + '/' + props.tourId, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData);
+                    setTotalItems(0);
+                } else {
+                    setAlert(finances[props.lang].apiError, 'error');
+                }
+            })();
+        } else {
+            (async () => {
+                const result = await fetchData(apiPaths.getFinances + '/' + page + '/' + FINANCES_PER_PAGE, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData.items);
+                    setTotalItems(Number(result.responseData.totalItems));
+                } else {
+                    setAlert(finances[props.lang].apiError, 'error');
+                }
+            })();
+        }
         // eslint-disable-next-line
     }, [page]);
 
@@ -77,7 +98,19 @@ export const FinancesList = (props: Props) => {
         <>
             <main className="Table">
                 <section className="Table__Header">
-                    {finances[props.lang].tableHeader}
+                    {props.tourId
+                        ?
+                        <>
+                            {finances[props.lang].tableHeader}
+                            &nbsp;&nbsp;
+                            <Tooltip title={tours[props.lang].close} arrow>
+                                <NavLink to='' className='CloseLink' onClick={() => handleClose()}>
+                                    <ClearIcon sx={{mr: 1}}/>
+                                </NavLink>
+                            </Tooltip>
+                        </>
+                        :finances[props.lang].tableHeader
+                    }
                 </section>
                 <section className="Table__Body">
                     <table>
@@ -206,7 +239,7 @@ export const FinancesList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            <TablePagination totalItems={totalItems} page={page} rowsPerPage={FINANCES_PER_PAGE} setPage={setPage}/>
+            {!props.tourId && <TablePagination totalItems={totalItems} page={page} rowsPerPage={FINANCES_PER_PAGE} setPage={setPage}/>}
         </>
     );
 }

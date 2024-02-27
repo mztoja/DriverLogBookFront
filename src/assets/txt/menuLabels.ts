@@ -12,6 +12,7 @@ export const labels:MenuLabelTypes[] = [{
     profile: 'Profile settings',
     vehicles: 'Vehicle Management',
     loadings: 'Loadings',
+    tours: 'Tours',
 },{
     register: "Rejestracja",
     login: "Logowanie",
@@ -24,6 +25,7 @@ export const labels:MenuLabelTypes[] = [{
     profile: 'Ustawienia profilu',
     vehicles: 'Zarządzanie pojazdami',
     loadings: 'Ładunki',
+    tours: 'Trasy',
 }];
 
 

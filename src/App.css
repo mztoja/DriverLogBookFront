@@ -39,6 +39,18 @@ a {
     text-decoration: underline rgba(144, 202, 249, 0.7);
 }
 
+.CloseLink {
+    font: inherit;
+    color: rgb(119, 12, 12);
+    text-decoration: underline rgba(249, 144, 144, 0.4);
+}
+
+.CloseLink:hover {
+    color: rgb(185, 43, 43);
+    text-decoration: underline rgba(249, 144, 144, 0.7);
+    cursor: pointer;
+}
+
 .ContentLink {
     font: inherit;
     color: rgb(0 33 209);
@@ -142,18 +154,18 @@ main.Table {
     color: whitesmoke;
     width: 99%;
     height: auto;
-    max-height: 80%;
+    max-height: 88%;
     background-color: #ffffff40;
     margin: .8rem auto;
     border-radius: .6rem;
     overflow: auto;
 }
 
-@media screen and (max-width: 860px) {
-    .Table__Body {
-        max-height: 65%;
-    }
-}
+/*@media screen and (max-width: 860px) {*/
+/*    .Table__Body {*/
+/*        max-height: 65%;*/
+/*    }*/
+/*}*/
 
 .Table__Body::-webkit-scrollbar {
     width: 0.5rem;

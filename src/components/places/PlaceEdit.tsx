@@ -45,8 +45,8 @@ export const PlaceEdit = (props: Props) => {
     const {loading, fetchData} = useApi();
 
     const updateForm = (key: keyof EditPlaceFormInterface, value: string) => {
-        setEditPlaceForm((editTruckForm: EditPlaceFormInterface) => ({
-            ...editTruckForm,
+        setEditPlaceForm((editPlaceForm: EditPlaceFormInterface) => ({
+            ...editPlaceForm,
             [key]: value,
         }));
     };

@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {LogInterface, TourNumbersInterface, userLangEnum} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import {FETCH_SEARCH_TIME, LOGS_PER_PAGE} from "../../config/set";
 import {logs} from "../../assets/txt/logs";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
 import {SearchInput} from "../common/form/SearchInput";
 import {TablePagination} from "../common/TablePagination";
 import {formatDate} from "../../utils/formatDate";
@@ -14,9 +14,14 @@ import {formatOdometer} from "../../utils/formatOdometer";
 import DetailsIcon from "@mui/icons-material/Details";
 import {formatPlace} from "../../utils/formatPlace";
 import {formatSimplePlace} from "../../utils/formatSimplePlace";
+import {tours} from "../../assets/txt/tours";
+import {NavLink} from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
 
 interface Props {
     lang: userLangEnum;
+    tourId?: number;
+    setShowLogList?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const LogsList = (props: Props) => {
@@ -42,6 +47,10 @@ export const LogsList = (props: Props) => {
         setIsHovered(false);
     };
 
+    const handleClose = () => {
+        props.setShowLogList && props.setShowLogList(false);
+    }
+
     useEffect(() => {
         if (fetchDelay > 0) {
             const delayTimeout = setTimeout(() => {
@@ -56,19 +65,31 @@ export const LogsList = (props: Props) => {
     }, [filterSearch]);
 
     useEffect(() => {
-        (async () => {
-            const search = filterSearch === '' ? '' : '/' + filterSearch;
-            const result = await fetchData(apiPaths.getLogs + '/' + page + '/' + LOGS_PER_PAGE + search, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData.items);
-                setTotalItems(Number(result.responseData.totalItems));
-            } else {
-                setAlert(logs[props.lang].apiError, 'error');
-            }
-        })();
-        setFetchDelay(1);
+        if (props.tourId) {
+            (async () => {
+                const result = await fetchData(apiPaths.getLogsByTourId + '/' + props.tourId, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData);
+                    setTotalItems(0);
+                } else {
+                    setAlert(logs[props.lang].apiError, 'error');
+                }
+            })();
+        } else {
+            (async () => {
+                const search = filterSearch === '' ? '' : '/' + filterSearch;
+                const result = await fetchData(apiPaths.getLogs + '/' + page + '/' + LOGS_PER_PAGE + search, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData.items);
+                    setTotalItems(Number(result.responseData.totalItems));
+                } else {
+                    setAlert(logs[props.lang].apiError, 'error');
+                }
+            })();
+            setFetchDelay(1);
+        }
         // eslint-disable-next-line
-    }, [page, fetchDelay]);
+    }, [page, fetchDelay, props.tourId]);
 
     useEffect(() => {
         if (data) {
@@ -94,15 +115,29 @@ export const LogsList = (props: Props) => {
 
     return (
         <>
-            <main className="Table">
-                <section className="Table__Header">
-                    {logs[props.lang].tableHeader}
-                </section>
-                <section className="Table__Filter">
+            {!props.tourId &&
+                <div className="Table__Filter">
                     <div className="DivInline">
                         <SearchInput lang={props.lang} value={filterSearch}
                                      onChange={e => setFilterSearch(e.target.value)}/>
                     </div>
+                </div>
+            }
+            <main className="Table">
+                <section className="Table__Header">
+                    {props.tourId
+                        ?
+                        <>
+                            {logs[props.lang].tableHeader}
+                            &nbsp;&nbsp;
+                            <Tooltip title={tours[props.lang].close} arrow>
+                                <NavLink to='' className='CloseLink' onClick={() => handleClose()}>
+                                    <ClearIcon sx={{mr: 1}}/>
+                                </NavLink>
+                            </Tooltip>
+                        </>
+                        :logs[props.lang].tableHeader
+                    }
                 </section>
                 <section className="Table__Body">
                     <table>
@@ -185,7 +220,7 @@ export const LogsList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            <TablePagination totalItems={totalItems} page={page} rowsPerPage={LOGS_PER_PAGE} setPage={setPage}/>
+            {!props.tourId && <TablePagination totalItems={totalItems} page={page} rowsPerPage={LOGS_PER_PAGE} setPage={setPage}/>}
         </>
     );
 }

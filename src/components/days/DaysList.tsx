@@ -1,10 +1,10 @@
 import {dayCardStateEnum, DayInterface, TourNumbersInterface, userLangEnum} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
-import React, {useEffect, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {DAYS_PER_PAGE} from "../../config/set";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
 import {days} from "../../assets/txt/days";
 import {formatDate} from "../../utils/formatDate";
 import {formatOdometer} from "../../utils/formatOdometer";
@@ -14,9 +14,14 @@ import {formatTime} from "../../utils/formatTime";
 import {formatFuelQuantity} from "../../utils/formatFuelQuantity";
 import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
 import {formatSimplePlace} from "../../utils/formatSimplePlace";
+import {tours} from "../../assets/txt/tours";
+import {NavLink} from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
 
 interface Props {
     lang: userLangEnum;
+    tourId?: number;
+    setShowDayList?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const DaysList = (props: Props) => {
@@ -40,16 +45,32 @@ export const DaysList = (props: Props) => {
         setIsHovered(false);
     };
 
+    const handleClose = () => {
+        props.setShowDayList && props.setShowDayList(false);
+    }
+
     useEffect(() => {
-        (async () => {
-            const result = await fetchData(apiPaths.getDays + '/' + page + '/' + DAYS_PER_PAGE, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData.items);
-                setTotalItems(Number(result.responseData.totalItems));
-            } else {
-                setAlert(days[props.lang].apiError, 'error');
-            }
-        })();
+        if (props.tourId) {
+            (async () => {
+                const result = await fetchData(apiPaths.getDaysByTourId + '/' + props.tourId, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData);
+                    setTotalItems(0);
+                } else {
+                    setAlert(days[props.lang].apiError, 'error');
+                }
+            })();
+        } else {
+            (async () => {
+                const result = await fetchData(apiPaths.getDays + '/' + page + '/' + DAYS_PER_PAGE, 'GET');
+                if ((result && result.responseData) && (!result.responseData.dtc)) {
+                    setData(result.responseData.items);
+                    setTotalItems(Number(result.responseData.totalItems));
+                } else {
+                    setAlert(days[props.lang].apiError, 'error');
+                }
+            })();
+        }
         // eslint-disable-next-line
     }, [page]);
 
@@ -79,7 +100,19 @@ export const DaysList = (props: Props) => {
         <>
             <main className="Table">
                 <section className="Table__Header">
-                    {days[props.lang].tableHeader}
+                    {props.tourId
+                        ?
+                        <>
+                            {days[props.lang].tableHeader}
+                            &nbsp;&nbsp;
+                            <Tooltip title={tours[props.lang].close} arrow>
+                                <NavLink to='' className='CloseLink' onClick={() => handleClose()}>
+                                    <ClearIcon sx={{mr: 1}}/>
+                                </NavLink>
+                            </Tooltip>
+                        </>
+                        :days[props.lang].tableHeader
+                    }
                 </section>
                 <section className="Table__Body">
                     <table>
@@ -143,7 +176,7 @@ export const DaysList = (props: Props) => {
                                                 <td>
                                                     {formatFuelCombustion(day.fuelBurned, day.distance)}
                                                     <br/>
-                                                    {formatFuelQuantity(day.fuelBurned)}
+                                                    {formatFuelQuantity(day.fuelBurned, 'oneDecimal')}
                                                 </td>
                                                 <td>
                                                     {formatOdometer(day.distance)}
@@ -204,7 +237,7 @@ export const DaysList = (props: Props) => {
                                                     <td>
                                                         {formatFuelCombustion(day.fuelBurned, day.distance)}
                                                         <br/>
-                                                        {formatFuelQuantity(day.fuelBurned)}
+                                                        {formatFuelQuantity(day.fuelBurned, 'oneDecimal')}
                                                     </td>
                                                     <td>
                                                         {formatOdometer(day.distance)}
@@ -243,7 +276,7 @@ export const DaysList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            <TablePagination totalItems={totalItems} page={page} rowsPerPage={DAYS_PER_PAGE} setPage={setPage}/>
+            {!props.tourId && <TablePagination totalItems={totalItems} page={page} rowsPerPage={DAYS_PER_PAGE} setPage={setPage}/>}
         </>
     );
 }

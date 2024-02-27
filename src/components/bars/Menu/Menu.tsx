@@ -18,6 +18,7 @@ export const Menu = (props: Props) => {
             <Option name={txt.days} url="/days"/>
             <Option name={txt.finances} url="/finances"/>
             <Option name={txt.loadings} url="/loadings"/>
+            <Option name={txt.tours} url="/tours"/>
             <Option name={txt.places} url="/places"/>
             <DivClear/>
         </nav>

@@ -4,6 +4,7 @@ import {home} from "../assets/txt/home";
 import {userLangEnum} from "types";
 import {SetAlertType} from "../context/AlertContext";
 import {vehicles} from "../assets/txt/vehicles";
+import {tours} from "../assets/txt/tours";
 
 export const handleApiResult = (
     result: any,
@@ -120,6 +121,12 @@ export const handleApiResult = (
                         break;
                     case 'youHaveUnloadedLoads':
                         setAlert(home[lang].youHaveUnloadedLoads, 'warning');
+                        break;
+                    case 'youHaveToChooseRoutes':
+                        setAlert(tours[lang].youHaveToChooseRoutes, 'warning');
+                        break;
+                    case 'monthIncorrectFormat':
+                        setAlert(tours[lang].monthIncorrectFormat, 'warning');
                         break;
                     case 'Unauthorized':
                         setAlert(commons[lang].apiUnauthorized, 'error');

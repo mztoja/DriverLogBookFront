@@ -125,24 +125,24 @@ export const PlacesList = (props: Props) => {
     if (data) {
         return (
             <>
+                <div className="Table__Filter">
+                    <div className="DivInline">
+                        <PlaceTypeSelect lang={props.userData.lang} value={filterType}
+                                         onChange={e => setFilterType(e)} displayAll={true}/>
+                    </div>
+                    <div className="DivInline">
+                        <CountrySelect lang={props.userData.lang} value={filterCountry}
+                                       onChange={e => setFilterCountry(e)}/>
+                    </div>
+                    <div className="DivInline">
+                        <SearchInput lang={props.userData.lang} value={filterSearch}
+                                     onChange={e => setFilterSearch(e.target.value)}/>
+                    </div>
+                    <div className="DivClear"/>
+                </div>
                 <main className="Table">
                     <section className="Table__Header">
                         {places[props.userData.lang].tableHeader}
-                    </section>
-                    <section className="Table__Filter">
-                        <div className="DivInline">
-                            <PlaceTypeSelect lang={props.userData.lang} value={filterType}
-                                             onChange={e => setFilterType(e)} displayAll={true}/>
-                        </div>
-                        <div className="DivInline">
-                            <CountrySelect lang={props.userData.lang} value={filterCountry}
-                                           onChange={e => setFilterCountry(e)}/>
-                        </div>
-                        <div className="DivInline">
-                            <SearchInput lang={props.userData.lang} value={filterSearch}
-                                         onChange={e => setFilterSearch(e.target.value)}/>
-                        </div>
-                        <div className="DivClear"/>
                     </section>
                     <section className="Table__Body">
                         <table>

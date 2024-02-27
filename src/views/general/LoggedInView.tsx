@@ -11,6 +11,7 @@ import {TourInterface, UserInterface, DayInterface} from "types";
 import { ProfileView } from "../ProfileView";
 import {VehiclesView} from "../VehiclesView";
 import {LoadingsView} from "../LoadingsView";
+import {ToursView} from "../ToursView";
 
 export const LoggedInView = (
     userData: UserInterface,
@@ -34,6 +35,8 @@ export const LoggedInView = (
                    element={<FinancesView page="finances" userData={userData} setUserData={setUserData}/>}/>
             <Route path="loadings"
                    element={<LoadingsView page="loadings" userData={userData} setUserData={setUserData}/>}/>
+            <Route path="tours"
+                   element={<ToursView page="tours" userData={userData} setUserData={setUserData}/>}/>
             <Route path="places"
                    element={<PlacesView page="places" userData={userData} setUserData={setUserData}/>}/>
             <Route path="profile"
