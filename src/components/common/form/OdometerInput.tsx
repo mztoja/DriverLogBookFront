@@ -5,12 +5,17 @@ import './Form.css';
 import {InputPropsTypes} from "../../../types/InputPropsTypes";
 import {extractDigits} from "../../../utils/extractDigits";
 import InputAdornment from "@mui/material/InputAdornment";
+import ClearIcon from "@mui/icons-material/Clear";
+import IconButton from "@mui/material/IconButton";
 
 export const OdometerInput = (props:InputPropsTypes) => {
 
     const onChange = (v: string) => {
         const newValue = extractDigits(v);
         props.onChange(newValue);
+    }
+    const handleClear = ():void => {
+        props.onChange('');
     }
 
     return (
@@ -20,12 +25,19 @@ export const OdometerInput = (props:InputPropsTypes) => {
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput',
                 endAdornment: (
-                    <InputAdornment className='TextInput' position="end">
+                    <>
+                        <InputAdornment className='TextInput' position="end">
                             <span>km</span>
-                    </InputAdornment>
+                        </InputAdornment>
+                        {props.value.length !== 0 &&
+                            <IconButton onClick={handleClear} size="small">
+                            <ClearIcon />
+                            </IconButton>
+                        }
+                    </>
                 ),}}
             type="text"
-            value={props.value}
+            value={props.value === '0' ? '' : props.value}
             onChange={(e) => onChange(e.target.value)}
             fullWidth
             autoComplete="off"

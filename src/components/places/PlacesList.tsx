@@ -136,7 +136,7 @@ export const PlacesList = (props: Props) => {
                     </div>
                     <div className="DivInline">
                         <SearchInput lang={props.userData.lang} value={filterSearch}
-                                     onChange={e => setFilterSearch(e.target.value)}/>
+                                     onChange={e => setFilterSearch(e)}/>
                     </div>
                     <div className="DivClear"/>
                 </div>
@@ -169,7 +169,7 @@ export const PlacesList = (props: Props) => {
                                     return (
                                         <React.Fragment key={place.id}>
                                             {expandedRow !== index && (
-                                                <tr onClick={() => setExpandedRow(index)}>
+                                                <tr className={place.isFavorite ? 'highlighted' : ''} onClick={() => setExpandedRow(index)}>
                                                     <td>{index}</td>
                                                     <td>{form[props.userData.lang][`placeType${place.type}`]}</td>
                                                     <td>{formatCountry(place.country, props.userData.lang)}</td>
@@ -187,7 +187,7 @@ export const PlacesList = (props: Props) => {
                                                         onClick={() => setExpandedRow(null)}
                                                         onMouseEnter={handleMouseEnter}
                                                         onMouseLeave={handleMouseLeave}
-                                                        className={isHovered ? 'highlighted' : ''}
+                                                        className={isHovered || place.isFavorite ? 'highlighted' : ''}
                                                     >
                                                         <td>{index}</td>
                                                         <td>{form[props.userData.lang][`placeType${place.type}`]}</td>

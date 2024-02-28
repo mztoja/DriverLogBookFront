@@ -34,7 +34,7 @@ export const VehicleWeightAndTankCapacity = (props: Props) => {
                     ),
                 }}
                 type="text"
-                value={props.value}
+                value={props.value === '0' ? '' : props.value}
                 onChange={(e) => onChange(e.target.value)}
                 autoComplete='off'
                 size='small'

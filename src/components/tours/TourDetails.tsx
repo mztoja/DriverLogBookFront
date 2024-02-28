@@ -139,7 +139,7 @@ export const TourDetails = (props: Props) => {
                     <tr>
                         <td>{tours[props.lang].fuelUsage}:</td>
                         <td>
-                            {formatFuelCombustion(Number(data.fuelStateBefore) + Number(data.totalRefuel) - Number(data.fuelStateAfter), data.distance)}
+                            {formatFuelCombustion(Number(data.burnedFuelReal), data.distance)}
                         </td>
                     </tr>
                     <tr>

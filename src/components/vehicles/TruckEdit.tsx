@@ -78,7 +78,7 @@ export const TruckEdit = (props: Props) => {
                     <h2>{vehicles[props.lang].edit} {editTruckForm.registrationNr}</h2>
                     <form onSubmit={sendForm}>
                         <div>
-                            <RegistrationNrInput vehicle={'trailer'} lang={props.lang} value={editTruckForm.registrationNr} onChange={e => updateForm('registrationNr', e)}/>
+                            <RegistrationNrInput vehicle={'truck'} lang={props.lang} value={editTruckForm.registrationNr} onChange={e => updateForm('registrationNr', e)}/>
                         </div>
                         <br/>
                         <div>

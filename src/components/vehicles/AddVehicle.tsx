@@ -1,9 +1,8 @@
 import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
-import {AddVehicleFormInterface, UserInterface, vehicleTypeEnum } from "types";
-import {CircularProgress, Fab} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import {AddVehicleFormInterface, UserInterface, vehicleTypeEnum} from "types";
+import {CircularProgress} from "@mui/material";
 import {VehicleTypeSelect} from "../common/form/vehicles/VehicleTypeSelect";
-import { vehicles } from "../../assets/txt/vehicles";
+import {vehicles} from "../../assets/txt/vehicles";
 import {RegistrationNrInput} from "../common/form/vehicles/RegistrationNrInput";
 import {VehicleProductionYear} from "../common/form/vehicles/VehicleProductionYear";
 import {OnOffSwitch} from "../common/form/OnOffSwitch";
@@ -17,10 +16,13 @@ import {apiPaths} from "../../config/api";
 import {VehicleModelInput} from "../common/form/vehicles/VehicleModelInput";
 import {handleApiResult} from "../../utils/handleApiResult";
 import {useAlert} from "../../hooks/useAlert";
+import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
 
 interface Props {
     userData: UserInterface;
     setRefresh: Dispatch<SetStateAction<boolean>>;
+    show: boolean;
+    setShow: Dispatch<SetStateAction<boolean>>;
 }
 
 const defaultValues: AddVehicleFormInterface = {
@@ -39,7 +41,6 @@ const defaultValues: AddVehicleFormInterface = {
 }
 
 export const AddVehicle = (props: Props) => {
-    const [addVehicleShow, setAddVehicleShow] = useState<boolean>(false);
     const [addVehicleForm, setAddVehicleForm] = useState<AddVehicleFormInterface>(defaultValues);
     const txt = vehicles[props.userData.lang];
     const {loading, fetchData} = useApi();
@@ -57,66 +58,88 @@ export const AddVehicle = (props: Props) => {
         const result = await fetchData(apiPaths.createVehicle, 'POST', addVehicleForm);
         handleApiResult(result, props.userData.lang, setAlert, () => {
             setAlert(vehicles[props.userData.lang].addSuccess, 'success');
-            setAddVehicleShow(false);
             props.setRefresh((prev) => !prev);
         });
+        props.setShow(false);
     }
 
     return (
-        <>
-            <div><Fab  onClick={() => setAddVehicleShow(!addVehicleShow)} color="primary" aria-label="add"><AddIcon /></Fab></div><br/>
-            {addVehicleShow &&
-                <fieldset>
-                    <legend>{txt.addVehicle}</legend>
+        <div>
+            <Modal
+                aria-labelledby="unstyled-modal-title"
+                aria-describedby="unstyled-modal-description"
+                open={props.show}
+                onClose={() => props.setShow(false)}
+                slots={{backdrop: StyledBackdrop}}
+            >
+                <ModalContent sx={{width: 400}}>
+
+                    <center><h2>{txt.addVehicle}</h2></center>
                     <form onSubmit={sendAddVehicleForm}>
                         <div>
-                            <VehicleTypeSelect value={addVehicleForm.type.toString()} onChange={e => updateForm('type', e)} lang={props.userData.lang}/>
+                            <VehicleTypeSelect value={addVehicleForm.type.toString()}
+                                               onChange={e => updateForm('type', e)}
+                                               lang={props.userData.lang}/>
                         </div>
                         <br/>
                         <div>
-                            <RegistrationNrInput vehicle={addVehicleForm.type === vehicleTypeEnum.truck ? 'truck' : 'trailer'} lang={props.userData.lang} value={addVehicleForm.registrationNr} onChange={e => updateForm('registrationNr', e)}/>
+                            <RegistrationNrInput
+                                vehicle={Number(addVehicleForm.type) === vehicleTypeEnum.truck ? 'truck' : 'trailer'}
+                                lang={props.userData.lang} value={addVehicleForm.registrationNr}
+                                onChange={e => updateForm('registrationNr', e)}/>
                         </div>
                         <br/>
                         <div>
-                            <VehicleModelInput lang={props.userData.lang} value={addVehicleForm.model} onChange={e => updateForm('model', e)}/>
+                            <VehicleModelInput lang={props.userData.lang} value={addVehicleForm.model}
+                                               onChange={e => updateForm('model', e)}/>
                         </div>
                         <br/>
                         <div>
-                            <VehicleProductionYear value={addVehicleForm.year} onChange={e => updateForm('year', e)} lang={props.userData.lang}/>
+                            <VehicleProductionYear value={addVehicleForm.year} onChange={e => updateForm('year', e)}
+                                                   lang={props.userData.lang}/>
                         </div>
                         <br/>
                         <div>
-                            <VehicleWeightAndTankCapacity type='weight' value={addVehicleForm.weight} onChange={e => updateForm('weight', e)} lang={props.userData.lang}/>
+                            <VehicleWeightAndTankCapacity type='weight' value={addVehicleForm.weight}
+                                                          onChange={e => updateForm('weight', e)}
+                                                          lang={props.userData.lang}/>
                         </div>
-                        {addVehicleForm.type === vehicleTypeEnum.truck &&
+                        {Number(addVehicleForm.type) === vehicleTypeEnum.truck &&
                             <>
                                 <br/>
                                 <div>
-                                    <OnOffSwitch label={txt.isLoadable} value={addVehicleForm.isLoadable} onChange={e => updateForm('isLoadable', e)}/>
+                                    <OnOffSwitch label={txt.isLoadable} value={addVehicleForm.isLoadable}
+                                                 onChange={e => updateForm('isLoadable', e)}/>
                                 </div>
                                 <br/>
                                 <div>
-                                    <VehicleWeightAndTankCapacity type='fuel' value={addVehicleForm.fuel} onChange={e => updateForm('fuel', e)} lang={props.userData.lang}/>
+                                    <VehicleWeightAndTankCapacity type='fuel' value={addVehicleForm.fuel}
+                                                                  onChange={e => updateForm('fuel', e)}
+                                                                  lang={props.userData.lang}/>
                                 </div>
                             </>
                         }
                         <br/>
                         <div>
-                            <DateInput label={txt.insurance} lang={props.userData.lang} value={addVehicleForm.insurance} onChange={e => updateForm('insurance', e)}/>
+                            <DateInput label={txt.insurance} lang={props.userData.lang} value={addVehicleForm.insurance}
+                                       onChange={e => updateForm('insurance', e)}/>
                         </div>
                         <br/>
                         <div>
-                            <DateInput label={txt.techRev} lang={props.userData.lang} value={addVehicleForm.techRev} onChange={e => updateForm('techRev', e)}/>
+                            <DateInput label={txt.techRev} lang={props.userData.lang} value={addVehicleForm.techRev}
+                                       onChange={e => updateForm('techRev', e)}/>
                         </div>
-                        {addVehicleForm.type === vehicleTypeEnum.truck &&
+                        {Number(addVehicleForm.type) === vehicleTypeEnum.truck &&
                             <>
                                 <br/>
                                 <div>
-                                    <DateInput label={txt.tacho} lang={props.userData.lang} value={addVehicleForm.tacho} onChange={e => updateForm('tacho', e)}/>
+                                    <DateInput label={txt.tacho} lang={props.userData.lang} value={addVehicleForm.tacho}
+                                               onChange={e => updateForm('tacho', e)}/>
                                 </div>
                                 <br/>
                                 <div>
-                                    <VehicleServiceInput lang={props.userData.lang} value={addVehicleForm.service} onChange={e => updateForm('service', e)}/>
+                                    <VehicleServiceInput lang={props.userData.lang} value={addVehicleForm.service}
+                                                         onChange={e => updateForm('service', e)}/>
                                 </div>
                             </>
                         }
@@ -124,13 +147,16 @@ export const AddVehicle = (props: Props) => {
                         <div><TextArea label={txt.notes} value={addVehicleForm.notes}
                                        onChange={e => updateForm('notes', e.target.value)}/></div>
                         <br/>
-                        {loading ?
-                            <CircularProgress/> :
-                            <SubmitButton text={txt.addVehicle}/>
-                        }
+                        <center>
+                            {loading ?
+                                <CircularProgress/> :
+                                <SubmitButton text={txt.addVehicle}/>
+                            }
+                        </center>
                     </form>
-                </fieldset>
-            }
-        </>
-    );
+                </ModalContent>
+            </Modal>
+        </div>
+    )
+        ;
 }

@@ -21,7 +21,7 @@ export const VehicleProductionYear = (props: InputPropsTypes) => {
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput'}}
             type="text"
-            value={props.value}
+            value={props.value === '0' ? '' : props.value}
             onChange={(e) => onChange(e.target.value)}
             fullWidth
             autoComplete="off"

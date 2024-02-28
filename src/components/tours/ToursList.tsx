@@ -229,7 +229,7 @@ export const ToursList = (props: Props) => {
                                             <td>
                                                 {formatFuelQuantity(tour.totalRefuel, 'twoDecimals')}
                                                 <br/><br/>
-                                                {formatFuelCombustion(Number(tour.fuelStateBefore) + Number(tour.totalRefuel) - Number(tour.fuelStateAfter), tour.distance)}
+                                                {formatFuelCombustion(Number(tour.burnedFuelReal), tour.distance)}
                                             </td>
                                             <td>
                                                 {formatWeight(tour.avgWeight)}
@@ -310,7 +310,7 @@ export const ToursList = (props: Props) => {
                                                 <td>
                                                     {formatFuelQuantity(tour.totalRefuel, 'twoDecimals')}
                                                     <br/><br/>
-                                                    {formatFuelCombustion(Number(tour.fuelStateBefore) + Number(tour.totalRefuel) - Number(tour.fuelStateAfter), tour.distance)}
+                                                    {formatFuelCombustion(Number(tour.burnedFuelReal), tour.distance)}
                                                 </td>
                                                 <td>
                                                     {formatWeight(tour.avgWeight)}

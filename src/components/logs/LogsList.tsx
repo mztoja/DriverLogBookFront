@@ -119,7 +119,7 @@ export const LogsList = (props: Props) => {
                 <div className="Table__Filter">
                     <div className="DivInline">
                         <SearchInput lang={props.lang} value={filterSearch}
-                                     onChange={e => setFilterSearch(e.target.value)}/>
+                                     onChange={e => setFilterSearch(e)}/>
                     </div>
                 </div>
             }
