@@ -12,14 +12,14 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import {PaymentsSettings} from "./PaymentsSettings";
 
 export const PaymentSelect = (props: InputPropsTypes) => {
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const [paymentsList, setPaymentsList] = useState<PaymentInterface[]>([]);
     const [value, setValue] = useState<string>(props.value !== '' ? props.value : form[props.lang].cash);
     const [showPaymentsSettings, setShowPaymentsSettings] = useState<boolean>(false);
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getPaymentMethods, 'GET');
+            const result = await fetchDataOld(apiPaths.getPaymentMethods, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setPaymentsList(result.responseData);
                 const defaultPayment = result.responseData.find((payment: PaymentInterface) => payment.default === true);

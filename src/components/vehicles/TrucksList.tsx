@@ -1,5 +1,5 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {UserInterface, VehicleInterface, vehicleTypeEnum} from "types";
+import React, {Dispatch, SetStateAction, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {TourInterface, UserInterface, VehicleInterface, vehicleTypeEnum} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
@@ -7,28 +7,33 @@ import {vehicles} from "../../assets/txt/vehicles";
 import {CircularProgress, Fab} from "@mui/material";
 import {CompanySelect} from "../common/form/place/CompanySelect";
 import {TruckEdit} from "./TruckEdit";
-import {formatWeight} from "../../utils/formatWeight";
-import {formatShortDate} from "../../utils/formatShortDate";
+import {formatWeight} from "../../utils/formats/formatWeight";
+import {formatShortDate} from "../../utils/formats/formatShortDate";
 import DetailsIcon from "@mui/icons-material/Details";
 import EditIcon from "@mui/icons-material/Edit";
-import {formatOdometer} from "../../utils/formatOdometer";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
+import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
+import {useParams} from "react-router-dom";
 
 interface Props {
     userData: UserInterface;
     refresh: boolean;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     setRefresh: Dispatch<SetStateAction<boolean>>;
+    tourData: TourInterface | null,
 }
 
 export const TrucksList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const [data, setData] = useState<VehicleInterface[] | null>(null);
     const [showData, setShowData] = useState<VehicleInterface[] | null>(null);
     const [companyId, setCompanyId] = useState<string>(props.userData.companyId.toString());
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [chosenVehicle, setChosenVehicle] = useState<VehicleInterface | null>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const {id: showVehicleId} = useParams();
+    const trRef = useRef<HTMLTableRowElement | null>(null);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -40,7 +45,7 @@ export const TrucksList = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getTrucksList, 'GET');
+            const result = await fetchDataOld(apiPaths.getTrucksList, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setData(result.responseData);
             } else {
@@ -56,6 +61,17 @@ export const TrucksList = (props: Props) => {
         ));
         setShowData(newData ? newData : null);
     }, [data, companyId]);
+
+    useEffect(() => {
+        if (showVehicleId) {
+            setExpandedRow(Number(showVehicleId));
+        }
+    }, [showVehicleId]);
+
+    useLayoutEffect(() => {
+        trRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // eslint-disable-next-line
+    }, [trRef.current]);
 
     if (loading) return <CircularProgress/>;
 
@@ -121,8 +137,14 @@ export const TrucksList = (props: Props) => {
                                     const markTachoAsExpired = new Date(vehicle.tacho ? vehicle.tacho : '') < today ? 'expired' : '';
                                     return (
                                         <React.Fragment key={vehicle.id}>
-                                            {expandedRow !== index && (
-                                                <tr onClick={() => setExpandedRow(index)}>
+                                            {expandedRow !== vehicle.id && (
+                                                <tr
+                                                    className={
+                                                    props.tourData && props.tourData.truck === vehicle.registrationNr && !showVehicleId
+                                                        ? 'highlighted'
+                                                        : ''}
+                                                    onClick={() => setExpandedRow(vehicle.id)}
+                                                >
                                                     <td>{index}</td>
                                                     <td>
                                                         {vehicle.registrationNr}
@@ -132,7 +154,7 @@ export const TrucksList = (props: Props) => {
                                                     <td>
                                                         {vehicle.isLoadable ? vehicles[props.userData.lang].yes : vehicles[props.userData.lang].no}
                                                         <br/>
-                                                        {vehicle.fuel} L
+                                                        {formatFuelQuantity(vehicle.fuel, 'integer')}
                                                     </td>
                                                     <td>
                                                         {vehicle.year === 0 ? '---' : vehicle.year}
@@ -155,13 +177,14 @@ export const TrucksList = (props: Props) => {
                                                     <td>{vehicle.notes !== null && <DetailsIcon/>}</td>
                                                 </tr>
                                             )}
-                                            {expandedRow === index && (
+                                            {expandedRow === vehicle.id && (
                                                 <>
                                                     <tr
+                                                        ref={vehicle.id.toString() === showVehicleId ? trRef : undefined}
                                                         onClick={() => setExpandedRow(null)}
                                                         onMouseEnter={handleMouseEnter}
                                                         onMouseLeave={handleMouseLeave}
-                                                        className={isHovered ? 'highlighted' : ''}
+                                                        className={isHovered || Number(showVehicleId) === expandedRow ? 'highlighted' : ''}
                                                     >
                                                         <td>{index}</td>
                                                         <td>
@@ -198,7 +221,7 @@ export const TrucksList = (props: Props) => {
                                                     <tr
                                                         onMouseEnter={handleMouseEnter}
                                                         onMouseLeave={handleMouseLeave}
-                                                        className={isHovered ? 'highlighted' : ''}
+                                                        className={isHovered || Number(showVehicleId) === expandedRow ? 'highlighted' : ''}
                                                     >
                                                         <td colSpan={7} className="extended">
                                                             {vehicle.notes !== null && <>

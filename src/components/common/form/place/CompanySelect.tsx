@@ -19,12 +19,12 @@ export const CompanySelect = (props: Props) => {
 
     const [value, setValue] = useState<number>(Number(props.value));
     const [placesList, setPlacesList] = useState<PlaceInterface[]>([]);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const {setAlert} = useAlert();
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getCompanyList, 'GET');
+            const result = await fetchDataOld(apiPaths.getCompanyList, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setPlacesList(result.responseData);
             } else {

@@ -6,6 +6,206 @@ import {SetAlertType} from "../context/AlertContext";
 import {vehicles} from "../assets/txt/vehicles";
 import {tours} from "../assets/txt/tours";
 
+interface HandleDtcErrors {
+    message: string;
+    type: 'warning' | 'info' | 'error';
+}
+
+export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcErrors => {
+    switch (dtc) {
+        case 'invalidLoginData':
+            return {
+                message: login[lang].responseError,
+                type: 'warning',
+            }
+        case 'country':
+            return {
+                message: login[lang].registerCountryNotExist,
+                type: 'warning',
+            }
+        case 'noActiveRoute':
+            return {
+                message: home[lang].noActiveRoute,
+                type: 'info',
+            }
+        case 'activeRoute':
+            return {
+                message: home[lang].tourExist,
+                type: 'info',
+            }
+        case 'email':
+            return {
+                message: login[lang].registerResInvEmail,
+                type: 'warning',
+            }
+        case 'email exist':
+            return {
+                message: login[lang].registerResEmailExist,
+                type: 'warning',
+            }
+        case 'action':
+            return {
+                message: home[lang].actionNoExist,
+                type: 'info',
+            }
+        case 'password':
+            return {
+                message: login[lang].registerResInvPassword,
+                type: 'warning',
+            }
+        case 'companyName':
+            return {
+                message: login[lang].registerCompanyNameNotExist,
+                type: 'warning',
+            }
+        case 'companyCity':
+            return {
+                message: login[lang].registerCompanyCityNotExist,
+                type: 'warning',
+            }
+        case 'trailerExist':
+            return {
+                message: home[lang].trailerExist,
+                type: 'info',
+            }
+        case 'noTrailer':
+            return {
+                message: home[lang].noTrailer,
+                type: 'info',
+            }
+        case 'countryConflict':
+            return {
+                message: home[lang].countryConflict,
+                type: 'warning',
+            }
+        case 'activeDay':
+            return {
+                message: home[lang].dayExist,
+                type: 'info',
+            }
+        case 'dayExistRegardRoute':
+            return {
+                message: home[lang].dayExistRegardRoute,
+                type: 'info',
+            }
+        case 'vehicle':
+            return {
+                message: home[lang].noVehicle,
+                type: 'warning',
+            }
+        case 'truck':
+            return {
+                message: home[lang].truckNoExist,
+                type: 'warning',
+            }
+        case 'weight':
+            return {
+                message: home[lang].noWeight,
+                type: 'warning',
+            }
+        case 'description':
+            return {
+                message: home[lang].noDescription,
+                type: 'warning',
+            }
+        case 'name':
+            return {
+                message: login[lang].registerCompanyNameNotExist,
+                type: 'warning',
+            }
+        case 'city':
+            return {
+                message: login[lang].registerCompanyCityNotExist,
+                type: 'warning',
+            }
+        case 'fuelCombustion':
+            return {
+                message: home[lang].typeFuelBurned,
+                type: 'warning',
+            }
+        case 'dayNotExist':
+            return {
+                message: home[lang].dayNotExist,
+                type: 'info',
+            }
+        case 'loadId':
+            return {
+                message: home[lang].noLoadChosen,
+                type: 'warning',
+            }
+        case 'noChosenLoad':
+            return {
+                message: home[lang].noLoadChosen,
+                type: 'warning',
+            }
+        case 'chosenLoadIsUnloaded':
+            return {
+                message: home[lang].chosenLoadIsUnloaded,
+                type: 'warning',
+            }
+        case 'noLoadReceiver':
+            return {
+                message: home[lang].noLoadReceiver,
+                type: 'warning',
+            }
+        case 'expenseDescriptionEmpty':
+            return {
+                message: home[lang].noExpenseDescription,
+                type: 'warning',
+            }
+        case 'addVehicleRegEmpty':
+            return {
+                message: vehicles[lang].addVehicleRegEmpty,
+                type: 'error',
+            }
+        case 'addVehicleWeightEmpty':
+            return {
+                message: vehicles[lang].addVehicleWeightEmpty,
+                type: 'error',
+            }
+        case 'vehicleRegExist':
+            return {
+                message: vehicles[lang].vehicleRegExist,
+                type: 'error',
+            }
+        case 'chooseServicedVehicle':
+            return {
+                message: vehicles[lang].chooseServicedVehicle,
+                type: 'error',
+            }
+        case 'noServiceEntry':
+            return {
+                message: vehicles[lang].noServiceEntry,
+                type: 'error',
+            }
+        case 'youHaveUnloadedLoads':
+            return {
+                message: home[lang].youHaveUnloadedLoads,
+                type: 'warning',
+            }
+        case 'youHaveToChooseRoutes':
+            return {
+                message: tours[lang].youHaveToChooseRoutes,
+                type: 'warning',
+            }
+        case 'monthIncorrectFormat':
+            return {
+                message: tours[lang].monthIncorrectFormat,
+                type: 'warning',
+            }
+        case 'Unauthorized':
+            return {
+                message: commons[lang].apiUnauthorized,
+                type: 'error',
+            }
+        default:
+            return {
+                message: commons[lang].apiUnknownError,
+                type: 'error',
+            }
+    }
+}
+
 export const handleApiResult = (
     result: any,
     lang: userLangEnum,
@@ -19,122 +219,8 @@ export const handleApiResult = (
             if (!result.responseData.dtc) {
                 action();
             } else {
-                switch (result.responseData.dtc) {
-                    case 'invalidLoginData':
-                        setAlert(login[lang].responseError, 'warning');
-                        break;
-                    case 'country':
-                        setAlert(login[lang].registerCountryNotExist, 'warning');
-                        break;
-                    case 'noActiveRoute':
-                        setAlert(home[lang].noActiveRoute, 'info');
-                        break;
-                    case 'activeRoute':
-                        setAlert(home[lang].tourExist, 'info');
-                        break;
-                    case 'email':
-                        setAlert(login[lang].registerResInvEmail, 'warning');
-                        break;
-                    case 'email exist':
-                        setAlert(login[lang].registerResEmailExist, 'warning');
-                        break;
-                    case 'action':
-                        setAlert(home[lang].actionNoExist, 'info');
-                        break;
-                    case 'password':
-                        setAlert(login[lang].registerResInvPassword, 'warning');
-                        break;
-                    case 'companyName':
-                        setAlert(login[lang].registerCompanyNameNotExist, 'warning');
-                        break;
-                    case 'companyCity':
-                        setAlert(login[lang].registerCompanyCityNotExist, 'warning');
-                        break;
-                    case 'trailerExist':
-                        setAlert(home[lang].trailerExist, 'info');
-                        break;
-                    case 'noTrailer':
-                        setAlert(home[lang].noTrailer, 'info');
-                        break;
-                    case 'countryConflict':
-                        setAlert(home[lang].countryConflict, 'warning');
-                        break;
-                    case 'activeDay':
-                        setAlert(home[lang].dayExist, 'info');
-                        break;
-                    case 'dayExistRegardRoute':
-                        setAlert(home[lang].dayExistRegardRoute, 'info');
-                        break;
-                    case 'vehicle':
-                        setAlert(home[lang].noVehicle, 'warning');
-                        break;
-                    case 'truck':
-                        setAlert(home[lang].truckNoExist, 'warning');
-                        break;
-                    case 'weight':
-                        setAlert(home[lang].noWeight, 'warning');
-                        break;
-                    case 'description':
-                        setAlert(home[lang].noDescription, 'warning');
-                        break;
-                    case 'name':
-                        setAlert(login[lang].registerCompanyNameNotExist, 'warning');
-                        break;
-                    case 'city':
-                        setAlert(login[lang].registerCompanyCityNotExist, 'warning');
-                        break;
-                    case 'fuelCombustion':
-                        setAlert(home[lang].typeFuelBurned, 'warning');
-                        break;
-                    case 'dayNotExist':
-                        setAlert(home[lang].dayNotExist, 'info');
-                        break;
-                    case 'loadId':
-                        setAlert(home[lang].noLoadChosen, 'warning');
-                        break;
-                    case 'noChosenLoad':
-                        setAlert(home[lang].noLoadChosen, 'warning');
-                        break;
-                    case 'chosenLoadIsUnloaded':
-                        setAlert(home[lang].chosenLoadIsUnloaded, 'warning');
-                        break;
-                    case 'noLoadReceiver':
-                        setAlert(home[lang].noLoadReceiver, 'warning');
-                        break;
-                    case 'expenseDescriptionEmpty':
-                        setAlert(home[lang].noExpenseDescription, 'warning');
-                        break;
-                    case 'addVehicleRegEmpty':
-                        setAlert(vehicles[lang].addVehicleRegEmpty, 'error');
-                        break;
-                    case 'addVehicleWeightEmpty':
-                        setAlert(vehicles[lang].addVehicleWeightEmpty, 'error');
-                        break;
-                    case 'vehicleRegExist':
-                        setAlert(vehicles[lang].vehicleRegExist, 'error');
-                        break;
-                    case 'chooseServicedVehicle':
-                        setAlert(vehicles[lang].chooseServicedVehicle, 'error');
-                        break;
-                    case 'noServiceEntry':
-                        setAlert(vehicles[lang].noServiceEntry, 'error');
-                        break;
-                    case 'youHaveUnloadedLoads':
-                        setAlert(home[lang].youHaveUnloadedLoads, 'warning');
-                        break;
-                    case 'youHaveToChooseRoutes':
-                        setAlert(tours[lang].youHaveToChooseRoutes, 'warning');
-                        break;
-                    case 'monthIncorrectFormat':
-                        setAlert(tours[lang].monthIncorrectFormat, 'warning');
-                        break;
-                    case 'Unauthorized':
-                        setAlert(commons[lang].apiUnauthorized, 'error');
-                        break;
-                    default:
-                        setAlert(commons[lang].apiUnknownError, 'error');
-                        break;
-                }
+                const dtc = handleDtcErrors(result.responseData.dtc, lang);
+                setAlert(dtc.message, dtc.type);
             }
         }
     }

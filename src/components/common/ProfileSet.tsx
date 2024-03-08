@@ -25,7 +25,7 @@ interface Props {
 
 export const ProfileSet = (props: Props) => {
 
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const {setAlert} = useAlert();
 
     const [data, setData] = useState<UpdateFormInterface>({
@@ -50,11 +50,25 @@ export const ProfileSet = (props: Props) => {
     const sendForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.userUpdate, 'PATCH', data);
+        const result = await fetchDataOld(apiPaths.userUpdate, 'PATCH', data);
         handleApiResult(result, props.userData.lang, setAlert, () => {
             props.setUserData(result?.responseData);
             setAlert(login[result?.responseData.lang].saveApiSuccess, 'success');
         });
+    }
+
+    const areFieldsEqual = (data: UpdateFormInterface, userData: UserInterface): boolean => {
+        return (
+            data.firstName === userData.firstName &&
+            data.lastName === userData.lastName &&
+            data.lang.toString() === userData.lang.toString() &&
+            data.companyId.toString() === userData.companyId.toString() &&
+            data.customer === userData.customer &&
+            data.bidType.toString() === userData.bidType.toString() &&
+            data.bid.toString() === userData.bid.toString() &&
+            data.currency === userData.currency &&
+            data.fuelConsumptionType.toString() === userData.fuelConType.toString()
+        );
     }
 
     return (
@@ -114,7 +128,10 @@ export const ProfileSet = (props: Props) => {
                     <br/>
                     {loading ?
                         <CircularProgress/> :
-                        <SubmitButton text={login[props.userData.lang].save}/>
+                        <SubmitButton
+                            text={login[props.userData.lang].save}
+                            disabled={areFieldsEqual(data, props.userData)}
+                        />
                     }
                 </form>
             </fieldset>

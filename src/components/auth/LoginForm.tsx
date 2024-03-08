@@ -21,7 +21,7 @@ export const LoginForm = (props: Props) => {
 
     const {setAlert} = useAlert();
     const location = useLocation();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     // show alert after register success
     useEffect(() => {
@@ -50,7 +50,7 @@ export const LoginForm = (props: Props) => {
     const sendLoginForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.login, 'POST', loginForm);
+        const result = await fetchDataOld(apiPaths.login, 'POST', loginForm);
         handleApiResult(result, props.lang, setAlert, () => {
             props.setUserData && props.setUserData(result?.responseData);
         });

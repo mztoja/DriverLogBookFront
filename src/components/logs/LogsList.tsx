@@ -8,12 +8,12 @@ import {logs} from "../../assets/txt/logs";
 import {CircularProgress, Tooltip} from "@mui/material";
 import {SearchInput} from "../common/form/SearchInput";
 import {TablePagination} from "../common/TablePagination";
-import {formatDate} from "../../utils/formatDate";
-import {formatCountry} from "../../utils/formatCountry";
-import {formatOdometer} from "../../utils/formatOdometer";
+import {formatDate} from "../../utils/formats/formatDate";
+import {formatCountry} from "../../utils/formats/formatCountry";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
 import DetailsIcon from "@mui/icons-material/Details";
-import {formatPlace} from "../../utils/formatPlace";
-import {formatSimplePlace} from "../../utils/formatSimplePlace";
+import {formatPlace} from "../../utils/formats/formatPlace";
+import {formatSimplePlace} from "../../utils/formats/formatSimplePlace";
 import {tours} from "../../assets/txt/tours";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -27,7 +27,7 @@ interface Props {
 export const LogsList = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const [data, setData] = useState<LogInterface[] | null>(null);
     const [totalItems, setTotalItems] = useState<number>(0);
@@ -67,7 +67,7 @@ export const LogsList = (props: Props) => {
     useEffect(() => {
         if (props.tourId) {
             (async () => {
-                const result = await fetchData(apiPaths.getLogsByTourId + '/' + props.tourId, 'GET');
+                const result = await fetchDataOld(apiPaths.getLogsByTourId + '/' + props.tourId, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData);
                     setTotalItems(0);
@@ -78,7 +78,7 @@ export const LogsList = (props: Props) => {
         } else {
             (async () => {
                 const search = filterSearch === '' ? '' : '/' + filterSearch;
-                const result = await fetchData(apiPaths.getLogs + '/' + page + '/' + LOGS_PER_PAGE + search, 'GET');
+                const result = await fetchDataOld(apiPaths.getLogs + '/' + page + '/' + LOGS_PER_PAGE + search, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData.items);
                     setTotalItems(Number(result.responseData.totalItems));
@@ -100,7 +100,7 @@ export const LogsList = (props: Props) => {
                 return uniqueTourIds;
             }, []);
             (async () => {
-                const result = await fetchData(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
+                const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setTourNrs(result.responseData);
                 }

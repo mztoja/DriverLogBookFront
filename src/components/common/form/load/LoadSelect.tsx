@@ -10,12 +10,12 @@ import { LoadInterface } from "types";
 
 export const LoadSelect = (props: InputPropsTypes) => {
 
-    const {fetchData} = useApi();
+    const {fetchDataOld} = useApi();
     const [loadList, setLoadList] = useState<LoadInterface[]>([]);
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getNotUnloadedLoads, 'GET');
+            const result = await fetchDataOld(apiPaths.getNotUnloadedLoads, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setLoadList(result.responseData);
             }

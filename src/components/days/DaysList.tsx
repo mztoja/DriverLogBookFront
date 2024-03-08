@@ -6,14 +6,14 @@ import {apiPaths} from "../../config/api";
 import {DAYS_PER_PAGE} from "../../config/set";
 import {CircularProgress, Tooltip} from "@mui/material";
 import {days} from "../../assets/txt/days";
-import {formatDate} from "../../utils/formatDate";
-import {formatOdometer} from "../../utils/formatOdometer";
+import {formatDate} from "../../utils/formats/formatDate";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
 import DetailsIcon from "@mui/icons-material/Details";
 import {TablePagination} from "../common/TablePagination";
-import {formatTime} from "../../utils/formatTime";
-import {formatFuelQuantity} from "../../utils/formatFuelQuantity";
-import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
-import {formatSimplePlace} from "../../utils/formatSimplePlace";
+import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
+import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
+import {formatFuelCombustion} from "../../utils/formats/formatFuelCombustion";
+import {formatSimplePlace} from "../../utils/formats/formatSimplePlace";
 import {tours} from "../../assets/txt/tours";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -27,7 +27,7 @@ interface Props {
 export const DaysList = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const [data, setData] = useState<DayInterface[] | null>(null);
     const [totalItems, setTotalItems] = useState<number>(0);
@@ -52,7 +52,7 @@ export const DaysList = (props: Props) => {
     useEffect(() => {
         if (props.tourId) {
             (async () => {
-                const result = await fetchData(apiPaths.getDaysByTourId + '/' + props.tourId, 'GET');
+                const result = await fetchDataOld(apiPaths.getDaysByTourId + '/' + props.tourId, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData);
                     setTotalItems(0);
@@ -62,7 +62,7 @@ export const DaysList = (props: Props) => {
             })();
         } else {
             (async () => {
-                const result = await fetchData(apiPaths.getDays + '/' + page + '/' + DAYS_PER_PAGE, 'GET');
+                const result = await fetchDataOld(apiPaths.getDays + '/' + page + '/' + DAYS_PER_PAGE, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData.items);
                     setTotalItems(Number(result.responseData.totalItems));
@@ -83,7 +83,7 @@ export const DaysList = (props: Props) => {
                 return uniqueTourIds;
             }, []);
             (async () => {
-                const result = await fetchData(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
+                const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setTourNrs(result.responseData);
                 }
@@ -159,18 +159,18 @@ export const DaysList = (props: Props) => {
                                                     ⇥ {day.stopData ? formatOdometer(day.stopData.odometer) : days[props.lang].na}
                                                 </td>
                                                 <td>
-                                                    1 ⊙ {formatTime(day.driveTime)}
+                                                    1 ⊙ {formatTimeToTime(day.driveTime)}
                                                     <br/>
                                                     2
-                                                    ⊙ {day.doubleCrew ? formatTime(day.driveTime2) : days[props.lang].na}
+                                                    ⊙ {day.doubleCrew ? formatTimeToTime(day.driveTime2) : days[props.lang].na}
                                                 </td>
                                                 <td>
-                                                    💼 {formatTime(day.workTime)}
+                                                    💼 {formatTimeToTime(day.workTime)}
                                                     <br/>
                                                     {day.cardState === dayCardStateEnum.notUsed ?
                                                         days[props.lang].na
                                                         :
-                                                        <>⏸ {formatTime(day.breakTime)}</>
+                                                        <>⏸ {formatTimeToTime(day.breakTime)}</>
                                                     }
                                                 </td>
                                                 <td>
@@ -220,18 +220,18 @@ export const DaysList = (props: Props) => {
                                                         ⇥ {day.stopData ? formatOdometer(day.stopData.odometer) : days[props.lang].na}
                                                     </td>
                                                     <td>
-                                                        1 ⊙ {formatTime(day.driveTime)}
+                                                        1 ⊙ {formatTimeToTime(day.driveTime)}
                                                         <br/>
                                                         2
-                                                        ⊙ {day.doubleCrew ? formatTime(day.driveTime2) : days[props.lang].na}
+                                                        ⊙ {day.doubleCrew ? formatTimeToTime(day.driveTime2) : days[props.lang].na}
                                                     </td>
                                                     <td>
-                                                        💼 {formatTime(day.workTime)}
+                                                        💼 {formatTimeToTime(day.workTime)}
                                                         <br/>
                                                         {day.cardState === dayCardStateEnum.notUsed ?
                                                             days[props.lang].na
                                                             :
-                                                            <>⏸ {formatTime(day.breakTime)}</>
+                                                            <>⏸ {formatTimeToTime(day.breakTime)}</>
                                                         }
                                                     </td>
                                                     <td>

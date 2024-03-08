@@ -7,9 +7,10 @@ export interface ActionsPropsTypes {
     updateFormData: (key: keyof GeneralFormData, value: string) => void;
     setActivityForm: Dispatch<SetStateAction<ActivitiesTypes | null>>;
     userData: UserInterface;
-    setUserData: Dispatch<SetStateAction<UserInterface | null>>,
+    setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     tourData: TourInterface | null;
     setTourData: Dispatch<SetStateAction<TourInterface | null>>;
     dayData: DayInterface | null;
-    setDayData: Dispatch<SetStateAction<DayInterface | null>>,
+    setDayData: Dispatch<SetStateAction<DayInterface | null>>;
+    setRefresh: Dispatch<SetStateAction<boolean>>;
 }

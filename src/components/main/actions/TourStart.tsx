@@ -10,16 +10,15 @@ import {TextArea} from "../../common/form/TextArea";
 import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
-import {StartTourData} from 'types';
+import {StartTourData, TourInterface} from 'types';
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const TourStart = (props:ActionsPropsTypes) => {
 
-    const { loading, fetchData } = useApi();
+    const { loading, fetchData} = useApi();
     const {setAlert} = useAlert();
 
     const sendTourStart = async (e: FormEvent) => {
@@ -35,12 +34,15 @@ export const TourStart = (props:ActionsPropsTypes) => {
             date: props.formData.date,
             fuelStateBefore: props.formData.fuelQuantity,
         }
-        const result = await fetchData(apiPaths.createNewRoute, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].startedTour, 'success');
-            props.setActivityForm(null);
-            props.setTourData(result?.responseData);
-        });
+        fetchData<TourInterface>(apiPaths.createNewRoute, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success && res.responseData) {
+                    setAlert(home[props.lang].startedTour, 'success');
+                    props.setActivityForm(null);
+                    props.setTourData(res.responseData);
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

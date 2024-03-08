@@ -12,10 +12,10 @@ interface Props {
 }
 
 export const LogoutLink = (props: Props) => {
-    const {loading,fetchData} = useApi();
+    const {loading,fetchDataOld} = useApi();
     const click = async () => {
         if (props.setUserData) {
-            await handleLogout(props.setUserData, fetchData);
+            await handleLogout(props.setUserData, fetchDataOld);
         }
     }
 

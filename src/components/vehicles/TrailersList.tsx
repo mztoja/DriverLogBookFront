@@ -1,5 +1,5 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {UserInterface, VehicleInterface, vehicleTypeEnum} from "types";
+import React, {Dispatch, SetStateAction, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {TourInterface, UserInterface, VehicleInterface, vehicleTypeEnum} from "types";
 import {apiPaths} from "../../config/api";
 import {vehicles} from "../../assets/txt/vehicles";
 import {useAlert} from "../../hooks/useAlert";
@@ -7,27 +7,31 @@ import {useApi} from "../../hooks/useApi";
 import {CircularProgress, Fab} from "@mui/material";
 import DetailsIcon from "@mui/icons-material/Details";
 import {CompanySelect} from "../common/form/place/CompanySelect";
-import {formatShortDate} from "../../utils/formatShortDate";
-import {formatWeight} from "../../utils/formatWeight";
+import {formatShortDate} from "../../utils/formats/formatShortDate";
+import {formatWeight} from "../../utils/formats/formatWeight";
 import EditIcon from '@mui/icons-material/Edit';
 import {TrailerEdit} from "./TrailerEdit";
+import {useParams} from "react-router-dom";
 
 interface Props {
     userData: UserInterface;
     refresh: boolean;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     setRefresh: Dispatch<SetStateAction<boolean>>;
+    tourData: TourInterface | null,
 }
 
 export const TrailersList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const [data, setData] = useState<VehicleInterface[] | null>(null);
     const [showData, setShowData] = useState<VehicleInterface[] | null>(null);
     const [companyId, setCompanyId] = useState<string>(props.userData.companyId.toString());
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [chosenVehicle, setChosenVehicle] = useState<VehicleInterface | null>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const {id: showVehicleId} = useParams();
+    const trRef = useRef<HTMLTableRowElement | null>(null);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -39,7 +43,7 @@ export const TrailersList = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getTrailersList, 'GET');
+            const result = await fetchDataOld(apiPaths.getTrailersList, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setData(result.responseData);
             } else {
@@ -55,6 +59,17 @@ export const TrailersList = (props: Props) => {
         ));
         setShowData(newData ? newData : null);
     }, [data, companyId]);
+
+    useEffect(() => {
+        if (showVehicleId) {
+            setExpandedRow(Number(showVehicleId));
+        }
+    }, [showVehicleId]);
+
+    useLayoutEffect(() => {
+            trRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // eslint-disable-next-line
+    }, [trRef.current]);
 
     if (loading) return <CircularProgress/>;
 
@@ -100,8 +115,14 @@ export const TrailersList = (props: Props) => {
                                     const markInsuranceAsExpired = new Date(vehicle.insurance) < today ? 'expired' : '';
                                     return (
                                         <React.Fragment key={vehicle.id}>
-                                            {expandedRow !== index && (
-                                                <tr onClick={() => setExpandedRow(index)}>
+                                            {expandedRow !== vehicle.id && (
+                                                <tr
+                                                    className={
+                                                        props.tourData && props.tourData.trailer === vehicle.registrationNr && !showVehicleId
+                                                            ? 'highlighted'
+                                                            : ''}
+                                                    onClick={() => setExpandedRow(vehicle.id)}
+                                                >
                                                     <td>{index}</td>
                                                     <td>{vehicle.registrationNr}</td>
                                                     <td>{vehicle.model === '' ? '---' : vehicle.model}</td>
@@ -112,13 +133,14 @@ export const TrailersList = (props: Props) => {
                                                     <td>{vehicle.notes !== null && <DetailsIcon/>}</td>
                                                 </tr>
                                             )}
-                                            {expandedRow === index && (
+                                            {expandedRow === vehicle.id && (
                                                 <>
                                                     <tr
+                                                        ref={vehicle.id.toString() === showVehicleId ? trRef : undefined}
                                                         onClick={() => setExpandedRow(null)}
                                                         onMouseEnter={handleMouseEnter}
                                                         onMouseLeave={handleMouseLeave}
-                                                        className={isHovered ? 'highlighted' : ''}
+                                                        className={isHovered || Number(showVehicleId) === expandedRow ? 'highlighted' : ''}
                                                     >
                                                         <td>{index}</td>
                                                         <td>{vehicle.registrationNr}</td>
@@ -133,7 +155,7 @@ export const TrailersList = (props: Props) => {
                                                     <tr
                                                         onMouseEnter={handleMouseEnter}
                                                         onMouseLeave={handleMouseLeave}
-                                                        className={isHovered ? 'highlighted' : ''}
+                                                        className={isHovered || Number(showVehicleId) === expandedRow ? 'highlighted' : ''}
                                                     >
                                                         <td colSpan={8} className="extended">
                                                             {vehicle.notes !== null && <>

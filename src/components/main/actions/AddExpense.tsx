@@ -4,7 +4,6 @@ import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import React, {FormEvent, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../../config/api";
-import {handleApiResult} from "../../../utils/handleApiResult";
 import {home} from "../../../assets/txt/home";
 import {CircularProgress} from "@mui/material";
 import {Link} from "react-router-dom";
@@ -42,7 +41,7 @@ export const AddExpense = (props: Props) => {
             if (find.currency !== props.userData.currency) setSwitchValue('true');
         }
         // eslint-disable-next-line
-    },[]);
+    }, []);
 
     useExpenseMath(
         switchValue,
@@ -72,35 +71,38 @@ export const AddExpense = (props: Props) => {
             placeId: props.formData.placeId,
             odometer: props.formData.odometer,
             notes: props.formData.notes,
-            action: home[props.lang].expenseAddAction+': '+itemDescription,
+            action: home[props.lang].expenseAddAction + ': ' + itemDescription,
             payment: props.formData.payment,
             expenseItemDescription: itemDescription,
             expenseQuantity: props.formData.expenseQuantity !== ''
-            ? props.formData.expenseQuantity
-            : '0',
+                ? props.formData.expenseQuantity
+                : '0',
             expenseUnitPrice: props.formData.expenseUnitPrice !== ''
-            ? props.formData.expenseUnitPrice
-            : '0',
+                ? props.formData.expenseUnitPrice
+                : '0',
             expenseCurrency: props.formData.expenseCurrency,
             expenseAmount: props.formData.expenseAmount !== ''
-            ? props.formData.expenseAmount
-            : '0',
+                ? props.formData.expenseAmount
+                : '0',
             expenseForeignCurrency: props.formData.expenseForeignCurrency,
             expenseForeignAmount: props.formData.expenseForeignAmount !== ''
-            ? props.formData.expenseForeignAmount
-            : '0',
+                ? props.formData.expenseForeignAmount
+                : '0',
             expenseType: props.expenseType,
         }
-        const result = await fetchData(apiPaths.createExpense, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].addedExpenseActionSuccess, 'success');
-            props.setActivityForm(null);
-            props.updateFormData('expenseItemDescription', '');
-            props.updateFormData('expenseQuantity', '1');
-            props.updateFormData('expenseAmount', '');
-            props.updateFormData('expenseUnitPrice', '');
-            props.updateFormData('expenseForeignAmount', '');
-        });
+        fetchData(apiPaths.createExpense, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].addedExpenseActionSuccess, 'success');
+                    props.setActivityForm(null);
+                    props.setRefresh((prev => !prev));
+                    props.updateFormData('expenseItemDescription', '');
+                    props.updateFormData('expenseQuantity', '1');
+                    props.updateFormData('expenseAmount', '');
+                    props.updateFormData('expenseUnitPrice', '');
+                    props.updateFormData('expenseForeignAmount', '');
+                }
+            });
     }
 
     return (
@@ -142,11 +144,11 @@ export const AddExpense = (props: Props) => {
                     <ItemDescriptionInput
                         lang={props.lang}
                         value={
-                        props.expenseType === ExpenseEnum.fuel
-                            ? home[props.lang].addFuelRefuel
-                            : props.expenseType === ExpenseEnum.def
-                                ? home[props.lang].addDefRefuel
-                                : props.formData.expenseItemDescription
+                            props.expenseType === ExpenseEnum.fuel
+                                ? home[props.lang].addFuelRefuel
+                                : props.expenseType === ExpenseEnum.def
+                                    ? home[props.lang].addDefRefuel
+                                    : props.formData.expenseItemDescription
                         }
                         onChange={e => props.updateFormData('expenseItemDescription', e)}
                         disabled={props.expenseType !== ExpenseEnum.standard}
@@ -186,9 +188,9 @@ export const AddExpense = (props: Props) => {
                                 lang={props.lang}
                                 valueAmount={props.formData.expenseForeignAmount}
                                 valueCurrency={
-                                props.formData.expenseForeignCurrency !== ''
-                                    ? props.formData.expenseForeignCurrency
-                                    : foreignCurrency}
+                                    props.formData.expenseForeignCurrency !== ''
+                                        ? props.formData.expenseForeignCurrency
+                                        : foreignCurrency}
                                 onChangeAmount={e => props.updateFormData('expenseForeignAmount', e)}
                                 onChangeCurrency={e => props.updateFormData('expenseForeignCurrency', e)}
                                 nameId='foreignAmount'
@@ -215,7 +217,8 @@ export const AddExpense = (props: Props) => {
                 <br/>
                 {loading ?
                     <CircularProgress/> :
-                    <SubmitButton text={props.expenseType === ExpenseEnum.fuel ? home[props.lang].addFuelRefuel : props.expenseType === ExpenseEnum.def ? home[props.lang].addDefRefuel : home[props.lang].addExpense}/>
+                    <SubmitButton
+                        text={props.expenseType === ExpenseEnum.fuel ? home[props.lang].addFuelRefuel : props.expenseType === ExpenseEnum.def ? home[props.lang].addDefRefuel : home[props.lang].addExpense}/>
                 }
             </form>
             <br/>

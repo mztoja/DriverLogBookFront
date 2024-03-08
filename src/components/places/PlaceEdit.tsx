@@ -42,7 +42,7 @@ export const PlaceEdit = (props: Props) => {
     }
 
     const [editPlaceForm, setEditPlaceForm] = useState<EditPlaceFormInterface>(defaultValues);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const updateForm = (key: keyof EditPlaceFormInterface, value: string) => {
         setEditPlaceForm((editPlaceForm: EditPlaceFormInterface) => ({
@@ -56,7 +56,7 @@ export const PlaceEdit = (props: Props) => {
     const sendForm = async (e: FormEvent) => {
         e.preventDefault();
         if (props.place) {
-            const result = await fetchData(apiPaths.editPlace+'/'+props.place.id, 'PATCH', editPlaceForm);
+            const result = await fetchDataOld(apiPaths.editPlace+'/'+props.place.id, 'PATCH', editPlaceForm);
             handleApiResult(result, props.lang, props.setAlert, () => {
                 props.setAlert(places[props.lang].editSuccessInfo, 'success');
                 props.setPlace(null);

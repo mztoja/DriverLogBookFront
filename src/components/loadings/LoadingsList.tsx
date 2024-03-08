@@ -7,11 +7,11 @@ import {LOADINGS_PER_PAGE} from "../../config/set";
 import {loadings} from "../../assets/txt/loadings";
 import {CircularProgress, Tooltip} from "@mui/material";
 import {TablePagination} from "../common/TablePagination";
-import {formatDate} from "../../utils/formatDate";
-import {formatSimplePlace} from "../../utils/formatSimplePlace";
-import {formatWeight} from "../../utils/formatWeight";
-import {formatOdometer} from "../../utils/formatOdometer";
-import {formatPlace} from "../../utils/formatPlace";
+import {formatDate} from "../../utils/formats/formatDate";
+import {formatSimplePlace} from "../../utils/formats/formatSimplePlace";
+import {formatWeight} from "../../utils/formats/formatWeight";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
+import {formatPlace} from "../../utils/formats/formatPlace";
 import DetailsIcon from "@mui/icons-material/Details";
 import {tours} from "../../assets/txt/tours";
 import {NavLink} from "react-router-dom";
@@ -25,7 +25,7 @@ interface Props {
 
 export const LoadingsList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const [data, setData] = useState<LoadInterface[] | null>(null);
     const [totalItems, setTotalItems] = useState<number>(0);
     const [page, setPage] = useState<number>(1);
@@ -49,7 +49,7 @@ export const LoadingsList = (props: Props) => {
     useEffect(() => {
         if (props.tourId) {
             (async () => {
-                const result = await fetchData(apiPaths.getLoadingsByTourId + '/' + props.tourId, 'GET');
+                const result = await fetchDataOld(apiPaths.getLoadingsByTourId + '/' + props.tourId, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData);
                     setTotalItems(0);
@@ -59,7 +59,7 @@ export const LoadingsList = (props: Props) => {
             })();
         } else {
             (async () => {
-                const result = await fetchData(apiPaths.getLoadings + '/' + page + '/' + LOADINGS_PER_PAGE, 'GET');
+                const result = await fetchDataOld(apiPaths.getLoadings + '/' + page + '/' + LOADINGS_PER_PAGE, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData.items);
                     setTotalItems(Number(result.responseData.totalItems));
@@ -80,7 +80,7 @@ export const LoadingsList = (props: Props) => {
                 return uniqueTourIds;
             }, []);
             (async () => {
-                const result = await fetchData(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
+                const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setTourNrs(result.responseData);
                 }

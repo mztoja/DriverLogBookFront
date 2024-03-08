@@ -10,12 +10,11 @@ import {SubmitButton} from "../../common/form/SubmitButton";
 import {LoadSelect} from "../../common/form/load/LoadSelect";
 import {OnOffSwitch} from "../../common/form/OnOffSwitch";
 import {PlaceInput} from "../../common/form/PlaceInput";
-import {LoadInterface, UnloadingData } from "types";
+import {LoadInterface, UnloadingData} from "types";
 import {apiPaths} from "../../../config/api";
 import {useApi} from "../../../hooks/useApi";
 import {CircularProgress} from "@mui/material";
 import {useAlert} from "../../../hooks/useAlert";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const UnloadingCompleted = (props: ActionsPropsTypes) => {
 
@@ -24,18 +23,30 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
     const [switchValue, setSwitchValue] = useState<'false' | 'true'>('true');
     const [receiverKnown, setReceiverKnown] = useState<boolean>(false);
 
-    const getLoadDetails = async (e: number): Promise<void> => {
-        const result = await fetchData(apiPaths.getLoadDetails + '/' + e, 'GET');
-        if ((result && result.responseData) && (!result.responseData.dtc)) {
-            const loadDetails: LoadInterface = result.responseData;
-            if (loadDetails.receiverId === 0) {
-                setSwitchValue('false');
-                setReceiverKnown(false);
-            } else {
-                setSwitchValue('true');
-                setReceiverKnown(true);
-            }
-        }
+    const getLoadDetails = (e: number): void => {
+        // const result = await fetchDataOld(apiPaths.getLoadDetails + '/' + e, 'GET');
+        // if ((result && result.responseData) && (!result.responseData.dtc)) {
+        //     const loadDetails: LoadInterface = result.responseData;
+        //     if (loadDetails.receiverId === 0) {
+        //         setSwitchValue('false');
+        //         setReceiverKnown(false);
+        //     } else {
+        //         setSwitchValue('true');
+        //         setReceiverKnown(true);
+        //     }
+        // }
+        fetchData<LoadInterface>(`${apiPaths.getLoadDetails}/${e}`)
+            .then((res) => {
+                if (res.responseData) {
+                    if (res.responseData.receiverId === 0) {
+                        setSwitchValue('false');
+                        setReceiverKnown(false);
+                    } else {
+                        setSwitchValue('true');
+                        setReceiverKnown(true);
+                    }
+                }
+            });
     }
 
     useEffect(() => {
@@ -58,11 +69,14 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
             loadId: props.formData.loadId,
             isPlaceAsReceiver: switchValue,
         }
-        const result = await fetchData(apiPaths.unloadingLoad, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            props.setActivityForm(null);
-            setAlert(home[props.lang].unloadingSuccess, 'success');
-        });
+        fetchData(apiPaths.unloadingLoad, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    props.setActivityForm(null);
+                    setAlert(home[props.lang].unloadingSuccess, 'success');
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (
@@ -104,17 +118,18 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
                 </div>
                 <br/>
                 {switchValue === 'false' &&
-                    <><div><PlaceInput
-                        lang={props.lang}
-                        defaultCountry={props.userData.country}
-                        countryValue={props.formData.country}
-                        countryOnChange={e => props.updateFormData('country', e)}
-                        placeValue={props.formData.place}
-                        placeOnChange={e => props.updateFormData('place', e)}
-                        placeIdValue={props.formData.placeId}
-                        placeIdOnChange={e => props.updateFormData('placeId', e)}
-                    />
-                    </div>
+                    <>
+                        <div><PlaceInput
+                            lang={props.lang}
+                            defaultCountry={props.userData.country}
+                            countryValue={props.formData.country}
+                            countryOnChange={e => props.updateFormData('country', e)}
+                            placeValue={props.formData.place}
+                            placeOnChange={e => props.updateFormData('place', e)}
+                            placeIdValue={props.formData.placeId}
+                            placeIdOnChange={e => props.updateFormData('placeId', e)}
+                        />
+                        </div>
                         <br/></>
                 }
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}

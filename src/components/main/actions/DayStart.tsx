@@ -14,7 +14,6 @@ import {Link} from "react-router-dom";
 import {apiPaths} from "../../../config/api";
 import {OnOffSwitch} from "../../common/form/OnOffSwitch";
 import {dayCardStateEnum, DayInterface, StartDayData} from "types";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const DayStart = (props: ActionsPropsTypes) => {
 
@@ -23,15 +22,21 @@ export const DayStart = (props: ActionsPropsTypes) => {
     const [lastDay, setLastDay] = useState<DayInterface | null>(null);
 
     useEffect(() => {
-        (async () => {
-            const result = await fetchData(apiPaths.getLastDay, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setLastDay(result.responseData);
-                if (result.responseData.cardState === dayCardStateEnum.inserted) {
+        // (async () => {
+        //     const result = await fetchDataOld(apiPaths.getLastDay, 'GET');
+        //     if ((result && result.responseData) && (!result.responseData.dtc)) {
+        //         setLastDay(result.responseData);
+        //         if (result.responseData.cardState === dayCardStateEnum.inserted) {
+        //             props.updateFormData('cardInserted', 'true');
+        //         }
+        //     }
+        // })();
+        fetchData<DayInterface>(apiPaths.getLastDay, {setData: setLastDay})
+            .then((res) => {
+                if (res.responseData?.cardState === dayCardStateEnum.inserted) {
                     props.updateFormData('cardInserted', 'true');
                 }
-            }
-        })();
+            });
         // eslint-disable-next-line
     }, []);
 
@@ -48,12 +53,15 @@ export const DayStart = (props: ActionsPropsTypes) => {
             doubleCrew: props.formData.doubleCrew,
             action: home[props.lang].startedDayAction + ' ' + (props.formData.cardInserted === 'true' ? home[props.lang].startedDayActionCardInsert : ''),
         }
-        const result = await fetchData(apiPaths.createNewDay, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].startedDay, 'success');
-            props.setActivityForm(null);
-            props.setDayData(result?.responseData);
-        });
+        fetchData<DayInterface>(apiPaths.createNewDay, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success && res.responseData) {
+                    setAlert(home[props.lang].startedDay, 'success');
+                    props.setActivityForm(null);
+                    props.setDayData(res.responseData);
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

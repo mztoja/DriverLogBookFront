@@ -17,7 +17,7 @@ interface Props extends InputPropsTypes {
 export const VehicleRegistrationSelect = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {fetchData} = useApi();
+    const {fetchDataOld} = useApi();
     const [value, setValue] = React.useState<number>(Number(props.value));
     const [data, setData] = useState<VehicleInterface[] | null>(null);
 
@@ -26,7 +26,7 @@ export const VehicleRegistrationSelect = (props: Props) => {
         setValue(0);
         if (props.vehicleType === vehicleTypeEnum.truck) {
             (async () => {
-                const result = await fetchData(apiPaths.getTrucksList, 'GET');
+                const result = await fetchDataOld(apiPaths.getTrucksList, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData);
                 } else {
@@ -36,7 +36,7 @@ export const VehicleRegistrationSelect = (props: Props) => {
         }
         if (props.vehicleType === vehicleTypeEnum.trailer) {
             (async () => {
-                const result = await fetchData(apiPaths.getTrailersList, 'GET');
+                const result = await fetchDataOld(apiPaths.getTrailersList, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData);
                 } else {

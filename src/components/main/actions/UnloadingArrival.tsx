@@ -9,26 +9,36 @@ import {places} from "../../../assets/txt/places";
 import {SubmitButton} from "../../common/form/SubmitButton";
 import {LoadSelect} from "../../common/form/load/LoadSelect";
 import {PlaceInput} from "../../common/form/PlaceInput";
-import {AddLogData} from "types";
+import {AddLogData, PlaceInterface} from "types";
 import {apiPaths} from "../../../config/api";
 import {useApi} from "../../../hooks/useApi";
 import {CircularProgress} from "@mui/material";
 import {useAlert} from "../../../hooks/useAlert";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const UnloadingArrival = (props: ActionsPropsTypes) => {
 
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
 
-    const getLoadDetails = async (e: number) => {
-        const result = await fetchData(apiPaths.getUnloadingPlace + '/' + e, 'GET');
-        if ((result && result.responseData) && (!result.responseData.dtc)) {
-            const place = result.responseData;
-            props.updateFormData('country', place.country);
-            props.updateFormData('placeId', place.id);
-            props.updateFormData('place', '');
-        }
+    // const getLoadDetails = async (e: number) => {
+    //     const result = await fetchDataOld(apiPaths.getUnloadingPlace + '/' + e, 'GET');
+    //     if ((result && result.responseData) && (!result.responseData.dtc)) {
+    //         const place = result.responseData;
+    //         props.updateFormData('country', place.country);
+    //         props.updateFormData('placeId', place.id);
+    //         props.updateFormData('place', '');
+    //     }
+    // }
+
+    const getLoadDetails = (e: number): void => {
+        fetchData<PlaceInterface>(`${apiPaths.getUnloadingPlace}/${e}`).then((res) => {
+            const place = res.responseData;
+            if (place) {
+                props.updateFormData('country', place.country);
+                props.updateFormData('placeId', place.id.toString());
+                props.updateFormData('place', '');
+            }
+        });
     }
 
     useEffect(() => {
@@ -41,11 +51,6 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
     const send = async (e: FormEvent) => {
         e.preventDefault();
         if (Number(props.formData.loadId) > 0) {
-            let loadNr = '?';
-            const result2 = await fetchData(apiPaths.getLoadDetails + '/' + props.formData.loadId, 'GET');
-            if ((result2 && result2.responseData) && (!result2.responseData.dtc)) {
-                loadNr = result2.responseData.loadNr.toString();
-            }
             const sendData: AddLogData = {
                 date: props.formData.date,
                 country: props.formData.country,
@@ -53,13 +58,16 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                 placeId: props.formData.placeId,
                 odometer: props.formData.odometer,
                 notes: props.formData.notes,
-                action: home[props.lang].unloadingArrivalAction(loadNr),
+                action: home[props.lang].unloadingArrivalAction,
             }
-            const result = await fetchData(apiPaths.unloadingArrival, 'POST', sendData);
-            handleApiResult(result, props.lang, setAlert, () => {
-                setAlert(home[props.lang].unloadingArrivalSuccess, 'success');
-                props.setActivityForm(null);
-            });
+            fetchData(apiPaths.unloadingArrival, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+                .then((res) => {
+                    if (res.success) {
+                        setAlert(home[props.lang].unloadingArrivalSuccess, 'success');
+                        props.setActivityForm(null);
+                        props.setRefresh((prev => !prev));
+                    }
+                });
         } else {
             setAlert(home[props.lang].noLoadChosen, 'warning');
         }

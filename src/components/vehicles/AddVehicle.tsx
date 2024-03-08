@@ -23,27 +23,27 @@ interface Props {
     setRefresh: Dispatch<SetStateAction<boolean>>;
     show: boolean;
     setShow: Dispatch<SetStateAction<boolean>>;
-}
-
-const defaultValues: AddVehicleFormInterface = {
-    type: vehicleTypeEnum.trailer,
-    registrationNr: '',
-    model: '',
-    isLoadable: 'false',
-    weight: '',
-    year: '',
-    fuel: '',
-    techRev: '',
-    insurance: '',
-    tacho: '',
-    service: '',
-    notes: '',
+    vehicleType?: vehicleTypeEnum;
+    registrationNr?: string;
 }
 
 export const AddVehicle = (props: Props) => {
-    const [addVehicleForm, setAddVehicleForm] = useState<AddVehicleFormInterface>(defaultValues);
+    const [addVehicleForm, setAddVehicleForm] = useState<AddVehicleFormInterface>({
+        type: props.vehicleType !== undefined ? props.vehicleType : vehicleTypeEnum.trailer,
+        registrationNr: props.registrationNr ? props.registrationNr : '',
+        model: '',
+        isLoadable: 'false',
+        weight: '',
+        year: '',
+        fuel: '',
+        techRev: '',
+        insurance: '',
+        tacho: '',
+        service: '',
+        notes: '',
+    });
     const txt = vehicles[props.userData.lang];
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const {setAlert} = useAlert();
 
     const updateForm = (key: keyof AddVehicleFormInterface, value: string) => {
@@ -55,7 +55,7 @@ export const AddVehicle = (props: Props) => {
 
     const sendAddVehicleForm = async (e: FormEvent) => {
         e.preventDefault();
-        const result = await fetchData(apiPaths.createVehicle, 'POST', addVehicleForm);
+        const result = await fetchDataOld(apiPaths.createVehicle, 'POST', addVehicleForm);
         handleApiResult(result, props.userData.lang, setAlert, () => {
             setAlert(vehicles[props.userData.lang].addSuccess, 'success');
             props.setRefresh((prev) => !prev);

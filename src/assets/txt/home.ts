@@ -1,5 +1,5 @@
-import {formatOdometer} from "../../utils/formatOdometer";
-import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
+import {formatFuelCombustion} from "../../utils/formats/formatFuelCombustion";
 
 interface Home {
     welcome: string;
@@ -26,7 +26,7 @@ interface Home {
     loadingSenderSwitchLabel: string;
     unloadingArrival: string;
     unloadingArrivalSuccess: string;
-    unloadingArrivalAction: (x: string) => string;
+    unloadingArrivalAction: string;
     unloading: string;
     unloadingAction: string;
     unloadingSuccess: string;
@@ -108,7 +108,7 @@ export const home:Home[] = [{
     loadingArrivalAction: 'Arrival for loading',
     loadingArrivalSuccess: 'The arrival for loading was recorded successfully.',
     loading: 'Loading completed',
-    loadingAction: 'Completion of loading no.',
+    loadingAction: 'Loading completed',
     loadingSuccess: 'Loading completed successfully entered.',
     loadingPlace: 'Loading place',
     loadingSender: 'Sender',
@@ -116,9 +116,9 @@ export const home:Home[] = [{
     loadingSenderSwitchLabel: 'enter the sender in the place of loading',
     unloadingArrival: 'Ariving at unloading',
     unloadingArrivalSuccess: 'The arrival for loading was recorded successfully.',
-    unloadingArrivalAction: (x) => `Arrival for unloading load nr. ${x}`,
+    unloadingArrivalAction: `Arrival for unloading`,
     unloading: 'Unloading completed',
-    unloadingAction: `Completion of unloading the load no. .value.`,
+    unloadingAction: `Unloading completed`,
     unloadingSuccess: 'Unloading completed successfully entered.',
     unloadingLoadSelectLabel: 'enter the receiver in the place of unloading',
     attachTrailer: 'Attach Trailer',
@@ -130,9 +130,9 @@ export const home:Home[] = [{
     detachTrailerConfirm: (x) => `You are trying to unhook the trailer even though you still have ${x === 1 ? 'unloaded load.' : 'unloaded loads.'} If you detach the trailer now, they will be entered as unloaded in the current place with a note that the trailer was detached.`,
     back: 'Back',
     startedTour: 'Your tour has started.',
-    startedTourAction: 'Route no. has started',
+    startedTourAction: 'The tour has started',
     finishedTour: 'Your tour has been finished.',
-    finishedTourAction: 'Route no. has been finished',
+    finishedTourAction: 'Route completed',
     truckNoExist: 'Please enter truck number.',
     trailerNoExist: 'Please enter trailer number.',
     placeNoExist: 'Please choose or enter place activity.',
@@ -195,7 +195,7 @@ export const home:Home[] = [{
     loadingArrivalAction: 'Dojazd na załadunek',
     loadingArrivalSuccess: 'Dojazd na załadunek został zapisany pomyślnie.',
     loading: 'Zakończenie załadunku',
-    loadingAction: 'Zakończenie załadunku nr.',
+    loadingAction: 'Zakończenie załadunku',
     loadingSuccess: 'Pomyślnie wpisano zakończenie załadunku.',
     loadingPlace: 'Miejsce załadunku',
     loadingSender: 'Nadawca',
@@ -203,9 +203,9 @@ export const home:Home[] = [{
     loadingSenderSwitchLabel: 'wpisz nadawcę w miejsce załadunku',
     unloadingArrival: 'Dojazd na rozładunek',
     unloadingArrivalSuccess: 'Dojazd na rozładunek został zapisany pomyślnie.',
-    unloadingArrivalAction: (x) => `Dojazd na rozładunek ładunktu nr. ${x}`,
+    unloadingArrivalAction: `Dojazd na rozładunek`,
     unloading: 'Zakończenie rozładunku',
-    unloadingAction: `Zakończenie rozładunku (ładunek nr. .value.)`,
+    unloadingAction: `Zakończenie rozładunku`,
     unloadingSuccess: 'Pomyślnie wpisano zakończenie rozładunku.',
     unloadingLoadSelectLabel: 'wpisz odbiorcę w miejsce rozładunku',
     attachTrailer: 'Podepnij naczepę',
@@ -217,9 +217,9 @@ export const home:Home[] = [{
     detachTrailerConfirm: (x) => `Próbujesz odczepić naczepę mimo, że masz ciągle ${x} ${x === 1 ? 'nierozładowany ładunek.' : 'nierozładowane ładunki.'} Jeżeli odczepisz teraz naczepę to zostaną one wpisane jako rozładowane w obecnym miejscu z adnotacją, że była odczepiona naczepa.`,
     back: 'Powrót',
     startedTour: 'Twoja trasa została rozpoczęta.',
-    startedTourAction: 'Trasa nr. została rozpoczęta',
+    startedTourAction: 'Rozpoczęto trasę',
     finishedTour: 'Twoja trasa została zakończona.',
-    finishedTourAction: 'Trasa nr. została zakończona',
+    finishedTourAction: 'Zakończono trasę',
     truckNoExist: 'Podaj nr. rej. ciągnika.',
     trailerNoExist: 'Podaj nr. rej. naczepy.',
     trailerExist: 'Masz już wpisaną podpiętą przyczepę.',

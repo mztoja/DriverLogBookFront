@@ -42,7 +42,7 @@ const defaultValues: AddPlaceFormInterface = {
 export const AddPlace = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const [addPlaceForm, setAddPlaceForm] = useState<AddPlaceFormInterface>(defaultValues);
 
@@ -56,7 +56,7 @@ export const AddPlace = (props: Props) => {
     const sendAddPlaceForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.createPlace, 'POST', addPlaceForm);
+        const result = await fetchDataOld(apiPaths.createPlace, 'POST', addPlaceForm);
         handleApiResult(result, props.lang, setAlert, () => {
             setAddPlaceForm(defaultValues);
             props.setRefresh((prev) => !prev);

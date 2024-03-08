@@ -13,7 +13,6 @@ import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
 import {apiPaths} from "../../../config/api";
-import {handleApiResult} from "../../../utils/handleApiResult";
 import {WindowConfirm} from "../../common/WindowConfirm";
 
 export const DetachTrailer = (props: ActionsPropsTypes) => {
@@ -25,16 +24,25 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
 
     const check = async (e: FormEvent) => {
         e.preventDefault();
-        const result = await fetchData(apiPaths.getNotUnloadedLoads, 'GET');
-        if ((result && result.responseData) && (!result.responseData.dtc)) {
-            const loads = result.responseData.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
-            if (loads.length>0) {
+        // const result = await fetchDataOld(apiPaths.getNotUnloadedLoads, 'GET');
+        // if ((result && result.responseData) && (!result.responseData.dtc)) {
+        //     const loads = result.responseData.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
+        //     if (loads.length>0) {
+        //         setText(home[props.lang].detachTrailerConfirm(loads.length));
+        //         setConfirm(true);
+        //     } else {
+        //         await send();
+        //     }
+        // }
+        fetchData<LoadInterface[]>(apiPaths.getNotUnloadedLoads).then((res) => {
+            if (res.responseData) {
+                const loads = res.responseData.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
                 setText(home[props.lang].detachTrailerConfirm(loads.length));
                 setConfirm(true);
             } else {
-                await send();
+                send();
             }
-        }
+        });
     }
 
     const send = async () => {
@@ -48,14 +56,17 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
             action: home[props.lang].detachTrailerAction,
             unloadAction: home[props.lang].unloadingAction,
         }
-        const result = await fetchData(apiPaths.detachTrailer, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].detachTrailerSuccess, 'success');
-            if (props.tourData) {
-                props.setTourData({...props.tourData, trailer: null});
-            }
-            props.setActivityForm(null);
-        });
+        fetchData(apiPaths.detachTrailer, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].detachTrailerSuccess, 'success');
+                    if (props.tourData) {
+                        props.setTourData({...props.tourData, trailer: null});
+                    }
+                    props.setActivityForm(null);
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (<>

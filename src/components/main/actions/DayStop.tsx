@@ -16,7 +16,6 @@ import {dayCardStateEnum, StopDayData} from "types";
 import {DriveTimeInput} from "../../common/form/DriveTimeInput";
 import {FuelInput} from "../../common/form/FuelInput";
 import {apiPaths} from "../../../config/api";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const DayStop = (props: ActionsPropsTypes) => {
     const {loading, fetchData} = useApi();
@@ -37,13 +36,15 @@ export const DayStop = (props: ActionsPropsTypes) => {
             driveTime2: props.formData.driveTime2,
             action: home[props.lang].finishedDayAction + ' ' + (props.formData.cardTakeOut === 'true' ? home[props.lang].startedDayActionCardTakeOut : ''),
         }
-
-        const result = await fetchData(apiPaths.finishDay, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].finishedDay, 'success');
-            props.setActivityForm(null);
-            props.setDayData(null);
-        });
+        fetchData(apiPaths.finishDay, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].finishedDay, 'success');
+                    props.setActivityForm(null);
+                    props.setDayData(null);
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

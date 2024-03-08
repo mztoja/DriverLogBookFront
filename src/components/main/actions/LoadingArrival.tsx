@@ -13,7 +13,6 @@ import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import { AddLogData } from "types";
 import {apiPaths} from "../../../config/api";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const LoadingArrival = (props: ActionsPropsTypes) => {
 
@@ -46,12 +45,15 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
             notes: props.formData.notes,
             action: home[props.lang].loadingArrivalAction,
         }
-        const result = await fetchData(apiPaths.loadingArrival, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].loadingArrivalSuccess, 'success');
-            props.setActivityForm(null);
-            props.setUserData({...props.userData, markedDepart: 0, markedArrive: Number(sendData.placeId)});
-        });
+        fetchData(apiPaths.loadingArrival, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].loadingArrivalSuccess, 'success');
+                    props.setActivityForm(null);
+                    props.setUserData({...props.userData, markedDepart: 0, markedArrive: Number(sendData.placeId)});
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

@@ -24,7 +24,7 @@ interface Props {
 
 export const BorderInput = (props: Props) => {
 
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const {setAlert} = useAlert();
     const [value, setValue] = useState<BorderInterface | null>(null);
     const [bordersData, setBordersData] = useState<BorderInterface[] | null>(null);
@@ -32,7 +32,7 @@ export const BorderInput = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getBordersByCountry+'/'+props.country, 'GET');
+            const result = await fetchDataOld(apiPaths.getBordersByCountry+'/'+props.country, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setBordersData(result.responseData);
             } else {

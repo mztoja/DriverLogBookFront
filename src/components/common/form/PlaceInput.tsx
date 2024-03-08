@@ -33,11 +33,11 @@ export const PlaceInput = (props: Props) => {
     const [places, setPlaces] = useState<PlaceInterface[] | null>(null);
     const [defaultPlaceValue, setDefaultPlaceValue] = useState<PlaceInterface | null>(null);
     const [clear, setClear] = useState<number>(0);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getPlaces, 'GET');
+            const result = await fetchDataOld(apiPaths.getPlaces, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setPlacesList(result.responseData);
             }

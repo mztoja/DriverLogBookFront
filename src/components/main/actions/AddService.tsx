@@ -13,7 +13,6 @@ import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
 import { AddServiceData, vehicleTypeEnum, ServiceEnum, serviceTypeEnum } from "types";
 import {apiPaths} from "../../../config/api";
-import {handleApiResult} from "../../../utils/handleApiResult";
 import {VehicleServiceTypeSelect} from "../../common/form/vehicles/VehicleServiceTypeSelect";
 import {VehicleTypeSelect} from "../../common/form/vehicles/VehicleTypeSelect";
 import {VehicleRegistrationSelect} from "../../common/form/vehicles/VehicleRegistrationSelect";
@@ -46,11 +45,14 @@ export const AddService = (props: Props) => {
                 ? home[props.lang].addLubrication
                 : props.formData.serviceEntry,
         }
-        const result = await fetchData(apiPaths.createService, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].addServiceSuccess, 'success');
-            props.setActivityForm(null);
-        });
+        fetchData(apiPaths.createService, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].addServiceSuccess, 'success');
+                    props.setActivityForm(null);
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

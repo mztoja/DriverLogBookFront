@@ -1,0 +1,24 @@
+#InfoBar {
+    background-color: #464918;
+    margin: 0.5rem auto;
+    /*width: 90vw;*/
+    color: #ffffffb5;
+    padding: 0.4rem;
+    border-radius: 0.7rem;
+}
+.InfoBar_Left {
+    float: left;
+    text-align: left;
+}
+.InfoBar_Right {
+    float: right;
+    text-align: left;
+}
+.InfoBar_Button {
+    text-decoration: underline;
+}
+.InfoBar_Button:hover {
+    cursor: pointer;
+    color: #ffffff;
+    text-decoration: underline;
+}

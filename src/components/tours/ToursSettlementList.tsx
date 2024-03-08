@@ -5,15 +5,15 @@ import {tours} from "../../assets/txt/tours";
 import {CircularProgress, Fab} from "@mui/material";
 import {useApi} from "../../hooks/useApi";
 import {useAlert} from "../../hooks/useAlert";
-import {formatTime} from "../../utils/formatTime";
-import {formatFuelQuantity} from "../../utils/formatFuelQuantity";
-import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
-import {formatWeight} from "../../utils/formatWeight";
-import {formatOdometer} from "../../utils/formatOdometer";
-import {formatAmount} from "../../utils/formatAmount";
+import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
+import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
+import {formatFuelCombustion} from "../../utils/formats/formatFuelCombustion";
+import {formatWeight} from "../../utils/formats/formatWeight";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
+import {formatAmount} from "../../utils/formats/formatAmount";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import {formatShortDate} from "../../utils/formatShortDate";
+import {formatShortDate} from "../../utils/formats/formatShortDate";
 import {ToursList} from "./ToursList";
 import {MonthlySettlementTypes} from "../../types/MonthlySettlementTypes";
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
@@ -44,7 +44,7 @@ const defaultMonthlySettlement = (): MonthlySettlementTypes | null => {
 }
 
 export const ToursSettlementList = (props: Props) => {
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const {setAlert} = useAlert();
     const [data, setData] = useState<TourMInterface[]>([]);
     const [year, setYear] = useState<number>(defaultYear());
@@ -78,7 +78,7 @@ export const ToursSettlementList = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getRouteSettlements + '/' + year, 'GET');
+            const result = await fetchDataOld(apiPaths.getRouteSettlements + '/' + year, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setData(result.responseData);
             } else {
@@ -97,7 +97,7 @@ export const ToursSettlementList = (props: Props) => {
                 return uniqueTourIds;
             }, new Set<number>()));
             (async () => {
-                const result = await fetchData(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
+                const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setTourNrs(result.responseData);
                 }
@@ -220,9 +220,9 @@ export const ToursSettlementList = (props: Props) => {
                                                 }).join(' ')}
                                             </td>
                                             <td>
-                                                {formatTime(settlement.driveTime)}
+                                                {formatTimeToTime(settlement.driveTime)}
                                                 <br/><br/>
-                                                {formatTime(settlement.workTime)}
+                                                {formatTimeToTime(settlement.workTime)}
                                             </td>
                                             <td>
                                                 {settlement.daysOnDuty}
@@ -292,9 +292,9 @@ export const ToursSettlementList = (props: Props) => {
                                                     }).join(' ')}
                                                 </td>
                                                 <td>
-                                                    {formatTime(settlement.driveTime)}
+                                                    {formatTimeToTime(settlement.driveTime)}
                                                     <br/><br/>
-                                                    {formatTime(settlement.workTime)}
+                                                    {formatTimeToTime(settlement.workTime)}
                                                 </td>
                                                 <td>
                                                     {settlement.daysOnDuty}

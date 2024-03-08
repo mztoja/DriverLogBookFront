@@ -12,7 +12,7 @@ import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
 import {apiPaths} from "../../config/api";
 import {commons} from "../../assets/txt/commons";
-import {formatCountry} from "../../utils/formatCountry";
+import {formatCountry} from "../../utils/formats/formatCountry";
 import NavigationIcon from '@mui/icons-material/Navigation';
 import EditIcon from "@mui/icons-material/Edit";
 import {PlaceEdit} from "./PlaceEdit";
@@ -27,7 +27,7 @@ interface Props {
 export const PlacesList = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const [data, setData] = useState<PlaceInterface[] | null>(null);
     const [showData, setShowData] = useState<PlaceInterface[] | null>(null);
@@ -48,7 +48,7 @@ export const PlacesList = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getPlaces, 'GET');
+            const result = await fetchDataOld(apiPaths.getPlaces, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setData(result.responseData);
             } else {
@@ -59,7 +59,7 @@ export const PlacesList = (props: Props) => {
     }, [props.refresh]);
 
     const markPlace = async (id: number, info: string) => {
-        const result = await fetchData(apiPaths.markDepart, 'PATCH', {placeId: id});
+        const result = await fetchDataOld(apiPaths.markDepart, 'PATCH', {placeId: id});
         if (result && !result.success) {
             setAlert(commons[props.userData.lang].apiConnectionError, 'error');
         } else {

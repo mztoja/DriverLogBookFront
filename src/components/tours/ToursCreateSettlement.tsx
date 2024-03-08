@@ -3,8 +3,8 @@ import {TourInterface, TourSettleFormInterface, tourStatusEnum, userLangEnum } f
 import {SetAlertType} from "../../context/AlertContext";
 import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
 import {tours} from "../../assets/txt/tours";
-import {formatDate} from "../../utils/formatDate";
-import {formatOdometer} from "../../utils/formatOdometer";
+import {formatDate} from "../../utils/formats/formatDate";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
 import {getFirstDayOfPreviousMonth} from "../../utils/getFirstDayOfPerviousMonth";
 import {AmountInput} from "../common/form/finance/AmountInput";
 import {DateInput} from "../common/form/DateInput";
@@ -31,7 +31,7 @@ export const ToursCreateSettlement = (props: Props) => {
         currency: '',
     };
     const [settlementForm, setSettlementForm] = useState<TourSettleFormInterface>(defaultValues);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const updateForm = (key: keyof TourSettleFormInterface, value: any):void => {
         setSettlementForm((editForm: TourSettleFormInterface) => ({
@@ -54,7 +54,7 @@ export const ToursCreateSettlement = (props: Props) => {
     }
 
     const sendForm = async ():Promise<void> => {
-        const result = await fetchData(apiPaths.createSettlement, 'POST', settlementForm);
+        const result = await fetchDataOld(apiPaths.createSettlement, 'POST', settlementForm);
         handleApiResult(result, props.lang, props.setAlert, () => {
             props.setAlert(tours[props.lang].createSettlementSuccess, 'success');
             props.setRefresh(prev => !prev);

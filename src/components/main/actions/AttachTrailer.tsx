@@ -14,7 +14,6 @@ import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
 import {apiPaths} from "../../../config/api";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const AttachTrailer = (props: ActionsPropsTypes) => {
 
@@ -36,12 +35,15 @@ export const AttachTrailer = (props: ActionsPropsTypes) => {
                 notes: props.formData.notes,
                 action: home[props.lang].attachTrailerAction + ': ' + trailer.replace(/\s/g, ''),
             }
-            const result = await fetchData(apiPaths.attachTrailer, 'POST', sendData);
-            handleApiResult(result, props.lang, setAlert, () => {
-                setAlert(home[props.lang].attachTrailerSuccess, 'success');
-                if (props.tourData) {props.setTourData({...props.tourData, trailer});}
-                props.setActivityForm(null);
-            });
+            fetchData(apiPaths.attachTrailer, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+                .then((res) => {
+                    if (res.success) {
+                        setAlert(home[props.lang].attachTrailerSuccess, 'success');
+                        if (props.tourData) {props.setTourData({...props.tourData, trailer});}
+                        props.setActivityForm(null);
+                        props.setRefresh((prev => !prev));
+                    }
+                });
         }
     }
 

@@ -24,7 +24,7 @@ export const LoadOnVehicleSelect = (props: Props) => {
     }
 
     const [value, setValue] = useState<string>(props.value);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const [truckState, setTruckState] = useState<number>(state.notFound);
     const [trailerState, setTrailerState] = useState<number>(state.notFound);
 
@@ -35,7 +35,7 @@ export const LoadOnVehicleSelect = (props: Props) => {
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.getVehicleByRegistration + '/' + props.truck, 'GET');
+            const result = await fetchDataOld(apiPaths.getVehicleByRegistration + '/' + props.truck, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 if (result.responseData.isLoadable) {
                     setTruckState(state.loadable);
@@ -45,7 +45,7 @@ export const LoadOnVehicleSelect = (props: Props) => {
                 }
             }
             if (props.trailer){
-                const result2 = await fetchData(apiPaths.getVehicleByRegistration + '/' + props.trailer, 'GET');
+                const result2 = await fetchDataOld(apiPaths.getVehicleByRegistration + '/' + props.trailer, 'GET');
                 if ((result2 && result2.responseData) && (!result2.responseData.dtc)) {
                     if (result2.responseData.isLoadable) {
                         setTrailerState(state.loadable);

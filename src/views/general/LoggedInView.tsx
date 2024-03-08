@@ -7,7 +7,7 @@ import {DaysView} from "../DaysView";
 import {FinancesView} from "../FinancesView";
 import {PlacesView} from "../PlacesView";
 import {Footer} from "../../components/bars/Footer/Footer";
-import {TourInterface, UserInterface, DayInterface} from "types";
+import {TourInterface, UserInterface} from "types";
 import { ProfileView } from "../ProfileView";
 import {VehiclesView} from "../VehiclesView";
 import {LoadingsView} from "../LoadingsView";
@@ -18,15 +18,13 @@ export const LoggedInView = (
     setUserData: Dispatch<SetStateAction<UserInterface | null>>,
     tourData: TourInterface | null,
     setTourData: Dispatch<SetStateAction<TourInterface | null>>,
-    dayData: DayInterface | null,
-    setDayData: Dispatch<SetStateAction<DayInterface | null>>,
 ) => (
     <div className="App">
         <Menu lang={userData.lang}/>
         <Routes>
             <Route path="*" element={<Navigate to="/"/>}/>
             <Route path="/"
-                   element={<HomeView page="home" userData={userData} setUserData={setUserData} tourData={tourData} setTourData = {setTourData} dayData={dayData} setDayData={setDayData}/>}/>
+                   element={<HomeView page="home" userData={userData} setUserData={setUserData} tourData={tourData} setTourData={setTourData}/>}/>
             <Route path="logs"
                    element={<LogsView page="logs" userData={userData} setUserData={setUserData}/>}/>
             <Route path="days"
@@ -41,8 +39,8 @@ export const LoggedInView = (
                    element={<PlacesView page="places" userData={userData} setUserData={setUserData}/>}/>
             <Route path="profile"
                    element={<ProfileView page="profile" userData={userData} setUserData={setUserData} tourData={tourData}/>}/>
-            <Route path="vehicles"
-                   element={<VehiclesView page="vehicles" userData={userData} setUserData={setUserData}/>}/>
+            <Route path="vehicles/:id?"
+                   element={<VehiclesView page="vehicles" userData={userData} setUserData={setUserData} tourData={tourData}/>}/>
         </Routes>
         <Footer lang={userData.lang}/>
     </div>

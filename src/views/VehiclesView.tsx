@@ -8,9 +8,11 @@ import {TrailersList} from "../components/vehicles/TrailersList";
 import {TrucksList} from "../components/vehicles/TrucksList";
 import {Fab} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { TourInterface } from "types";
 
 interface Props extends AppMainElementsTypes {
     page: keyof MenuLabelTypes;
+    tourData: TourInterface | null,
 }
 
 export const VehiclesView = (props: Props) => {
@@ -28,9 +30,9 @@ export const VehiclesView = (props: Props) => {
                     </div>
                     <br/>
                     <AddVehicle userData={props.userData} setRefresh={setRefresh} show={showAddVehicle} setShow={setShowAddVehicle}/>
-                    <TrucksList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh}/>
+                    <TrucksList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh} tourData={props.tourData}/>
                     <br/>
-                    <TrailersList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh}/>
+                    <TrailersList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh} tourData={props.tourData}/>
                 </Content>
             </>
         );

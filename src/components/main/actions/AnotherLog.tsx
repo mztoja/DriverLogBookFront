@@ -14,7 +14,6 @@ import {Link} from "react-router-dom";
 import {ActionInput} from "../../common/form/ActionInput";
 import { AddLogData } from "types";
 import {apiPaths} from "../../../config/api";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const AnotherLog = (props: ActionsPropsTypes) => {
 
@@ -32,11 +31,14 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
             notes: props.formData.notes,
             action: props.formData.action,
         }
-        const result = await fetchData(apiPaths.createNewLog, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].anotherActionSuccess, 'success');
-            props.setActivityForm(null);
-        });
+        fetchData(apiPaths.createNewLog, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].anotherActionSuccess, 'success');
+                    props.setActivityForm(null);
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

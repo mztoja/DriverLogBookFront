@@ -24,7 +24,7 @@ export const PaymentsSettings = (props: Props) => {
     const [newMethod, setNewMethod] = useState<string>('');
     const [validation, setValidation] = useState<boolean>(false);
     const [isDefault, setIsDefault] = useState<boolean>(false);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     useEffect(() => {
         const findDefault = props.paymentsList.find((payment) => (payment.default === true));
@@ -47,7 +47,7 @@ export const PaymentsSettings = (props: Props) => {
         }
         const find = props.paymentsList.find((payment) => (payment.method === newMethod));
         if (!find) {
-            const result = await fetchData(apiPaths.addPaymentMethod, 'POST', sendData);
+            const result = await fetchDataOld(apiPaths.addPaymentMethod, 'POST', sendData);
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 props.setPaymentsList(result.responseData);
                 setNewMethod('');
@@ -61,7 +61,7 @@ export const PaymentsSettings = (props: Props) => {
         const sendData: DeletePaymentData = {
             paymentId: id.toString(),
         }
-        const result = await fetchData(apiPaths.deletePaymentMethod, 'DELETE', sendData);
+        const result = await fetchDataOld(apiPaths.deletePaymentMethod, 'DELETE', sendData);
         if ((result && result.responseData) && (!result.responseData.dtc)) {
             props.setPaymentsList(result.responseData);
         }
@@ -71,7 +71,7 @@ export const PaymentsSettings = (props: Props) => {
         const sendData: DeletePaymentData = {
             paymentId: id.toString(),
         }
-        const result = await fetchData(apiPaths.selectPaymentMethod, 'PATCH', sendData);
+        const result = await fetchDataOld(apiPaths.selectPaymentMethod, 'PATCH', sendData);
         if ((result && result.responseData) && (!result.responseData.dtc)) {
             props.setPaymentsList(result.responseData);
         }

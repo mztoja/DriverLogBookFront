@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {UserInterface, userLangEnum, userStatusEnum, TourInterface, DayInterface} from "types";
+import {UserInterface, userLangEnum, userStatusEnum, TourInterface} from "types";
 import './App.css';
 import {DownloadFromLocalStorage} from "./hooks/LocalStorageHook";
 import {LinearProgress} from "@mui/material";
@@ -21,12 +21,11 @@ export const App = () => {
     const [appView, setAppView] = useState<AppView>(AppView.loggedOut);
     const [userData, setUserData] = useState<UserInterface | null>(null);
     const [tourData, setTourData] = useState<TourInterface | null>(null);
-    const [dayData, setDayData] = useState<DayInterface | null>(null);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     useEffect(() => {
         (async () => {
-            const result = await fetchData(apiPaths.get, 'GET');
+            const result = await fetchDataOld(apiPaths.get, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setUserData(result.responseData);
             } else {
@@ -45,16 +44,6 @@ export const App = () => {
                 setAppView(AppView.blocked);
             } else {
                 setAppView(AppView.loggedIn);
-                (async () => {
-                    const result = await fetchData(apiPaths.getActiveRoute, 'GET');
-                    if ((result && result.responseData) && (!result.responseData.dtc)) {
-                        setTourData(result.responseData);
-                        const result2 = await fetchData(apiPaths.getActiveDay, 'GET');
-                        if ((result2 && result2.responseData) && (!result2.responseData.dtc)) {
-                            setDayData(result2.responseData);
-                        }
-                    }
-                })();
             }
         } else {
             const lang = DownloadFromLocalStorage('lang');
@@ -64,7 +53,7 @@ export const App = () => {
             setAppView(AppView.loggedOut);
         }
 // eslint-disable-next-line
-    }, [userData?.currentTokenId]);
+    }, [userData?.currentTokenId, userData?.status]);
 
     if (loading) {
         return <LinearProgress/>;
@@ -73,7 +62,10 @@ export const App = () => {
     return (
         <>
             {appView === AppView.blocked && userData ? BlockedUserView(userData, setUserData) : null}
-            {appView === AppView.loggedIn && userData ? LoggedInView(userData, setUserData, tourData, setTourData, dayData, setDayData) : null}
+            {appView === AppView.loggedIn && userData
+                ? LoggedInView(userData, setUserData, tourData, setTourData)
+                : null
+            }
             {appView === AppView.loggedOut ? LoggedOutView(lang, setLang, setUserData) : null}
         </>
     );

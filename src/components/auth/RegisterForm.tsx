@@ -33,7 +33,7 @@ export const RegisterForm = (props: Props) => {
 
     const navigate = useNavigate();
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const [registerForm, setRegisterForm] = useState<RegisterFormInterface>({
         firstName: '',
@@ -63,7 +63,7 @@ export const RegisterForm = (props: Props) => {
     const sendForm = async (e: FormEvent) => {
         e.preventDefault();
 
-        const result = await fetchData(apiPaths.register, 'POST', registerForm);
+        const result = await fetchDataOld(apiPaths.register, 'POST', registerForm);
         handleApiResult(result, props.lang, setAlert, () => {
             SaveToLocalStorage('alertSuccess', login[props.lang].registerSuccess);
             setAlert(login[props.lang].registerSuccess, 'success');

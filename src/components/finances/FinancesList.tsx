@@ -6,13 +6,13 @@ import {apiPaths} from "../../config/api";
 import {FINANCES_PER_PAGE} from "../../config/set";
 import {finances} from "../../assets/txt/finances";
 import {CircularProgress, Tooltip} from "@mui/material";
-import {formatDate} from "../../utils/formatDate";
+import {formatDate} from "../../utils/formats/formatDate";
 import DetailsIcon from "@mui/icons-material/Details";
 import {TablePagination} from "../common/TablePagination";
-import {formatQuantity} from "../../utils/formatQuantity";
-import {formatAmount} from "../../utils/formatAmount";
-import {formatUnitPrice} from "../../utils/formatUnitPrice";
-import {formatPlace} from "../../utils/formatPlace";
+import {formatQuantity} from "../../utils/formats/formatQuantity";
+import {formatAmount} from "../../utils/formats/formatAmount";
+import {formatUnitPrice} from "../../utils/formats/formatUnitPrice";
+import {formatPlace} from "../../utils/formats/formatPlace";
 import {tours} from "../../assets/txt/tours";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -25,7 +25,7 @@ interface Props {
 
 export const FinancesList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const [data, setData] = useState<FinanceInterface[] | null>(null);
     const [totalItems, setTotalItems] = useState<number>(0);
@@ -50,7 +50,7 @@ export const FinancesList = (props: Props) => {
     useEffect(() => {
         if (props.tourId) {
             (async () => {
-                const result = await fetchData(apiPaths.getFinancesByTourId + '/' + props.tourId, 'GET');
+                const result = await fetchDataOld(apiPaths.getFinancesByTourId + '/' + props.tourId, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData);
                     setTotalItems(0);
@@ -60,7 +60,7 @@ export const FinancesList = (props: Props) => {
             })();
         } else {
             (async () => {
-                const result = await fetchData(apiPaths.getFinances + '/' + page + '/' + FINANCES_PER_PAGE, 'GET');
+                const result = await fetchDataOld(apiPaths.getFinances + '/' + page + '/' + FINANCES_PER_PAGE, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData.items);
                     setTotalItems(Number(result.responseData.totalItems));
@@ -81,7 +81,7 @@ export const FinancesList = (props: Props) => {
                 return uniqueTourIds;
             }, []);
             (async () => {
-                const result = await fetchData(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
+                const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setTourNrs(result.responseData);
                 }

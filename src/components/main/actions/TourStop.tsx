@@ -13,8 +13,7 @@ import {SubmitButton} from "../../common/form/SubmitButton";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {apiPaths} from "../../../config/api";
-import { StopTourData } from "types";
-import {handleApiResult} from "../../../utils/handleApiResult";
+import {DayBurnedFuelRes, LogInterface, StopTourData, FinanceRefuelValueRes } from "types";
 
 export const TourStop = (props:ActionsPropsTypes) => {
 
@@ -22,29 +21,45 @@ export const TourStop = (props:ActionsPropsTypes) => {
     const [addedFuel, setAddedFuel] = useState<number>(-999);
     const [startOdometer, setStartOdometer] = useState<number>(-999);
 
-    const { loading, fetchData } = useApi();
+    const { loading, fetchData} = useApi();
     const {setAlert} = useAlert();
 
     useEffect(() => {
         (async () => {
             if (props.tourData) {
                 let fuelState = props.tourData.fuelStateBefore;
-                const refuelResult = await fetchData(apiPaths.getRefuelValueByTour+'/'+props.tourData.id, 'GET');
-                if ((refuelResult && refuelResult.responseData) && (!refuelResult.responseData.dtc)) {
-                    setAddedFuel(refuelResult.responseData.refuelValue);
-                    fuelState = Number(fuelState) + Number(refuelResult.responseData.refuelValue);
-                }
-                const burnedFuelResult = await fetchData(apiPaths.getBurnedFuelByTour+'/'+props.tourData.id, 'GET');
-                if ((burnedFuelResult && burnedFuelResult.responseData) && (!burnedFuelResult.responseData.dtc)) {
-                    setBurnedFuel(burnedFuelResult.responseData.burnedFuel);
-                    fuelState = Number(fuelState) - Number(burnedFuelResult.responseData.burnedFuel);
-                }
+                // const refuelResult = await fetchDataOld(apiPaths.getRefuelValueByTour+'/'+props.tourData.id, 'GET');
+                // if ((refuelResult && refuelResult.responseData) && (!refuelResult.responseData.dtc)) {
+                //     setAddedFuel(refuelResult.responseData.refuelValue);
+                //     fuelState = Number(fuelState) + Number(refuelResult.responseData.refuelValue);
+                // }
+                // const burnedFuelResult = await fetchDataOld(apiPaths.getBurnedFuelByTour+'/'+props.tourData.id, 'GET');
+                // if ((burnedFuelResult && burnedFuelResult.responseData) && (!burnedFuelResult.responseData.dtc)) {
+                //     setBurnedFuel(burnedFuelResult.responseData.burnedFuel);
+                //     fuelState = Number(fuelState) - Number(burnedFuelResult.responseData.burnedFuel);
+                // }
+                fetchData<FinanceRefuelValueRes>(`${apiPaths.getRefuelValueByTour}/${props.tourData.id}`).then((res) => {
+                    if (res.responseData) {
+                        setAddedFuel(res.responseData.refuelValue);
+                        fuelState = Number(fuelState) + Number(res.responseData.refuelValue);
+                    }
+                });
+                fetchData<DayBurnedFuelRes>(`${apiPaths.getBurnedFuelByTour}/${props.tourData.id}`).then((res) => {
+                    if (res.responseData) {
+                        setBurnedFuel(res.responseData.burnedFuel);
+                        fuelState = Number(fuelState) - Number(res.responseData.burnedFuel);
+                    }
+                });
                 props.updateFormData('fuelQuantity', fuelState.toFixed(0));
-                const startLogResult = await fetchData(apiPaths.getLogById+'/'+props.tourData.startLogId, 'GET');
-                console.log(startLogResult);
-                if ((startLogResult && startLogResult.responseData) && (!startLogResult.responseData.dtc)) {
-                    setStartOdometer(startLogResult.responseData.odometer);
-                }
+                // const startLogResult = await fetchDataOld(apiPaths.getLogById+'/'+props.tourData.startLogId, 'GET');
+                // if ((startLogResult && startLogResult.responseData) && (!startLogResult.responseData.dtc)) {
+                //     setStartOdometer(startLogResult.responseData.odometer);
+                // }
+                fetchData<LogInterface>(`${apiPaths.getBurnedFuelByTour}/${props.tourData.id}`).then((res) => {
+                    if (res.responseData) {
+                        setStartOdometer(res.responseData.odometer);
+                    }
+                });
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,12 +77,15 @@ export const TourStop = (props:ActionsPropsTypes) => {
             date: props.formData.date,
             fuelStateAfter: props.formData.fuelQuantity,
         }
-        const result = await fetchData(apiPaths.finishRoute, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].finishedTour, 'success');
-            props.setActivityForm(null);
-            props.setTourData(null);
-        });
+        fetchData(apiPaths.finishRoute, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].finishedTour, 'success');
+                    props.setActivityForm(null);
+                    props.setTourData(null);
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

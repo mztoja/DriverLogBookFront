@@ -5,13 +5,13 @@ import {useApi} from "../../hooks/useApi";
 import {useAlert} from "../../hooks/useAlert";
 import {CircularProgress, Fab, Tooltip} from "@mui/material";
 import {tours} from "../../assets/txt/tours";
-import {formatDate} from "../../utils/formatDate";
-import {formatTime} from "../../utils/formatTime";
-import {formatFuelQuantity} from "../../utils/formatFuelQuantity";
-import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
-import {formatWeight} from "../../utils/formatWeight";
-import {formatOdometer} from "../../utils/formatOdometer";
-import {formatAmount} from "../../utils/formatAmount";
+import {formatDate} from "../../utils/formats/formatDate";
+import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
+import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
+import {formatFuelCombustion} from "../../utils/formats/formatFuelCombustion";
+import {formatWeight} from "../../utils/formats/formatWeight";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
+import {formatAmount} from "../../utils/formats/formatAmount";
 import DetailsIcon from "@mui/icons-material/Details";
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { ToursCreateSettlement } from "./ToursCreateSettlement";
@@ -33,7 +33,7 @@ interface Props {
 
 export const ToursList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const [data, setData] = useState<TourInterface[]>([]);
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
@@ -72,8 +72,8 @@ export const ToursList = (props: Props) => {
     useEffect(() => {
         (async () => {
             const result = props.monthlySettlement
-                ? await fetchData(apiPaths.getRoutes + '/' + props.monthlySettlement.id, 'GET')
-                : await fetchData(apiPaths.getRoutes, 'GET');
+                ? await fetchDataOld(apiPaths.getRoutes + '/' + props.monthlySettlement.id, 'GET')
+                : await fetchDataOld(apiPaths.getRoutes, 'GET');
             if ((result && result.responseData) && (!result.responseData.dtc)) {
                 setData(result.responseData);
             } else {
@@ -207,9 +207,9 @@ export const ToursList = (props: Props) => {
                                                 }
                                             </td>
                                             <td>
-                                                {formatTime(tour.driveTime)}
+                                                {formatTimeToTime(tour.driveTime)}
                                                 <br/><br/>
-                                                {formatTime(tour.workTime)}
+                                                {formatTimeToTime(tour.workTime)}
                                             </td>
                                             <td>
                                                 {tour.daysOnDuty}
@@ -288,9 +288,9 @@ export const ToursList = (props: Props) => {
                                                     }
                                                 </td>
                                                 <td>
-                                                    {formatTime(tour.driveTime)}
+                                                    {formatTimeToTime(tour.driveTime)}
                                                     <br/><br/>
-                                                    {formatTime(tour.workTime)}
+                                                    {formatTimeToTime(tour.workTime)}
                                                 </td>
                                                 <td>
                                                     {tour.daysOnDuty}

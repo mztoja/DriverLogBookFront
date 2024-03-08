@@ -13,7 +13,6 @@ import {apiPaths} from "../../../config/api";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const BorderCross = (props: ActionsPropsTypes) => {
 
@@ -33,12 +32,15 @@ export const BorderCross = (props: ActionsPropsTypes) => {
             action: home[props.lang].borderCross+' '+props.userData.country+' > '+props.formData.country,
             addNewBorder: props.formData.addNewBorder,
         }
-        const result = await fetchData(apiPaths.createBorderCross, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].borderCrossSuccess, 'success');
-            props.setActivityForm(null);
-            props.setUserData({ ...props.userData, country: sendData.country });
-        });
+        fetchData(apiPaths.createBorderCross, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].borderCrossSuccess, 'success');
+                    props.setActivityForm(null);
+                    props.setUserData({ ...props.userData, country: sendData.country });
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

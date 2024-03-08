@@ -2,7 +2,8 @@ export const apiURL = process.env.REACT_APP_API_URL ?? 'http://localhost:3001/v3
 
 export const apiPaths = {
     // places
-    getPlaces: '/places',
+    getPlaces: '/places/get',
+    getPlace: '/places/getOne',
     createPlace: '/places/create',
     getCompanyList: '/places/companyList',
     editPlace: '/places/edit',
@@ -15,6 +16,7 @@ export const apiPaths = {
     createSettlement: '/tours/createSettlement',
     getRouteSettlements: '/tours/getSettlements',
     getRouteById: '/tours/getRouteById',
+    countDistanceOfActiveRoute: '/tours/countDistanceOfActiveRoute',
     // users
     register: '/users/register',
     login: '/auth/login',
@@ -27,15 +29,18 @@ export const apiPaths = {
     finishDay: '/days/finish',
     getActiveDay: '/days/getActiveDay',
     getLastDay: '/days/getLastDay',
+    getYourLastDay: '/days/getYourLastDay',
     getDays: '/days/get',
     getDaysByTourId: '/days/getByTourId',
     getBurnedFuelByTour: '/days/burnedFuelByTour',
+    countDistanceOfActiveDay: '/days/countDistanceOfActiveRoute',
     // logs
     createNewLog: '/logs/create',
     createBorderCross: '/logs/createBorderCross',
     getLogs: '/logs/get',
     getLogById: '/logs/getById',
     getLogsByTourId: '/logs/getByTourId',
+    getLastLog: '/logs/getLastLog',
     attachTrailer: '/logs/attachTrailer',
     detachTrailer: '/logs/detachTrailer',
     loadingArrival: '/logs/loadingArrival',
@@ -59,6 +64,7 @@ export const apiPaths = {
     getLoadDetails: '/loads/getLoadDetails',
     getLoadings: '/loads/get',
     getLoadingsByTourId: '/loads/getByTourId',
+    getNotUnloadedLoadsMass: '/loads/getNotUnloadedLoadsMass',
     // finances
     getPaymentMethods: '/payments',
     addPaymentMethod: '/payments/add',

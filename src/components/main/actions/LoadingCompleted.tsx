@@ -19,7 +19,6 @@ import {apiPaths} from "../../../config/api";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import {CircularProgress} from "@mui/material";
-import {handleApiResult} from "../../../utils/handleApiResult";
 
 export const LoadingCompleted = (props: ActionsPropsTypes) => {
 
@@ -67,12 +66,15 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
             reference: props.formData.reference,
             description: props.formData.description,
         }
-        const result = await fetchData(apiPaths.createLoad, 'POST', sendData);
-        handleApiResult(result, props.lang, setAlert, () => {
-            setAlert(home[props.lang].loadingSuccess, 'success');
-            props.setActivityForm(null);
-            props.setUserData({...props.userData, markedArrive: 0});
-        });
+        fetchData(apiPaths.createLoad, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success) {
+                    setAlert(home[props.lang].loadingSuccess, 'success');
+                    props.setActivityForm(null);
+                    props.setUserData({...props.userData, markedArrive: 0});
+                    props.setRefresh((prev => !prev));
+                }
+            });
     }
 
     return (

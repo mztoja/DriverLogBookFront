@@ -5,13 +5,13 @@ import {tours} from "../../assets/txt/tours";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {CircularProgress, Fab} from "@mui/material";
-import {formatDate} from "../../utils/formatDate";
-import {formatTime} from "../../utils/formatTime";
-import {formatFuelQuantity} from "../../utils/formatFuelQuantity";
-import {formatFuelCombustion} from "../../utils/formatFuelCombustion";
-import {formatWeight} from "../../utils/formatWeight";
-import {formatOdometer} from "../../utils/formatOdometer";
-import {formatAmount} from "../../utils/formatAmount";
+import {formatDate} from "../../utils/formats/formatDate";
+import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
+import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
+import {formatFuelCombustion} from "../../utils/formats/formatFuelCombustion";
+import {formatWeight} from "../../utils/formats/formatWeight";
+import {formatOdometer} from "../../utils/formats/formatOdometer";
+import {formatAmount} from "../../utils/formats/formatAmount";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import ListIcon from '@mui/icons-material/List';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -28,7 +28,7 @@ interface Props {
 
 export const TourDetails = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
     const [data, setData] = useState<TourInterface | null>(null);
     const [showLogList, setShowLogList] = useState<boolean>(false);
     const [showDayList, setShowDayList] = useState<boolean>(false);
@@ -42,7 +42,7 @@ export const TourDetails = (props: Props) => {
     useEffect(() => {
         if (props.tourId) {
             (async () => {
-                const result = await fetchData(apiPaths.getRouteById + '/' + props.tourId, 'GET');
+                const result = await fetchDataOld(apiPaths.getRouteById + '/' + props.tourId, 'GET');
                 if ((result && result.responseData) && (!result.responseData.dtc)) {
                     setData(result.responseData);
                 } else {
@@ -106,11 +106,11 @@ export const TourDetails = (props: Props) => {
                     </tr>
                     <tr>
                         <td>{tours[props.lang].driveTime}:</td>
-                        <td>{formatTime(data.driveTime)}</td>
+                        <td>{formatTimeToTime(data.driveTime)}</td>
                     </tr>
                     <tr>
                         <td>{tours[props.lang].workTime}:</td>
-                        <td>{formatTime(data.workTime)}</td>
+                        <td>{formatTimeToTime(data.workTime)}</td>
                     </tr>
                     <tr>
                         <td>{tours[props.lang].onDuty} / {tours[props.lang].offDuty}:</td>

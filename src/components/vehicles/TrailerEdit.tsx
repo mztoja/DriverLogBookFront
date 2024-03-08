@@ -36,7 +36,7 @@ export const TrailerEdit = (props: Props) => {
     }
 
     const [editTrailerForm, setEditTrailerForm] = useState<EditTrailerFormInterface>(defaultValues);
-    const {loading, fetchData} = useApi();
+    const {loading, fetchDataOld} = useApi();
 
     const updateForm = (key: keyof EditTrailerFormInterface, value: string) => {
         setEditTrailerForm((editTrailerForm: EditTrailerFormInterface) => ({
@@ -50,7 +50,7 @@ export const TrailerEdit = (props: Props) => {
     const sendForm = async (e: FormEvent) => {
         e.preventDefault();
         if (props.vehicle) {
-            const result = await fetchData(apiPaths.editTrailer+'/'+props.vehicle.id, 'PATCH', editTrailerForm);
+            const result = await fetchDataOld(apiPaths.editTrailer+'/'+props.vehicle.id, 'PATCH', editTrailerForm);
             handleApiResult(result, props.lang, props.setAlert, () => {
                 props.setAlert(vehicles[props.lang].editSuccessInfo, 'success');
                 props.setVehicle(null);

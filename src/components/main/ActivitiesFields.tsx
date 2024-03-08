@@ -1,5 +1,5 @@
-import React, {Dispatch, SetStateAction, useState} from "react";
-import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface, DayInterface, ExpenseEnum, ServiceEnum} from "types";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {ActivitiesTypes, userLangEnum, TourInterface, GeneralFormData, UserInterface, DayInterface, ExpenseEnum, ServiceEnum, LogInterface} from "types";
 import {home} from "../../assets/txt/home";
 import {DivClear} from "../common/DivClear";
 import {NavigateButton} from "./NavigateButton";
@@ -23,10 +23,12 @@ interface Props {
     lang: userLangEnum;
     tourData: TourInterface | null;
     userData: UserInterface;
-    setUserData: Dispatch<SetStateAction<UserInterface | null>>,
+    setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     setTourData: Dispatch<SetStateAction<TourInterface | null>>;
-    dayData: DayInterface | null,
-    setDayData: Dispatch<SetStateAction<DayInterface | null>>,
+    dayData: DayInterface | null;
+    setDayData: Dispatch<SetStateAction<DayInterface | null>>;
+    setRefresh: Dispatch<SetStateAction<boolean>>;
+    lastLogData: LogInterface | null;
 }
 
 export const ActivitiesFields = (props: Props) => {
@@ -80,6 +82,14 @@ export const ActivitiesFields = (props: Props) => {
         }));
     };
 
+    useEffect(() => {
+        if (props.lastLogData) {
+            if (props.lastLogData.odometer) updateGeneralFormData('odometer', props.lastLogData.odometer.toString());
+            if (props.lastLogData.placeId) updateGeneralFormData('placeId', props.lastLogData.placeId.toString());
+            if (props.lastLogData.place) updateGeneralFormData('place', props.lastLogData.place.toString());
+        }
+    }, [props.lastLogData]);
+
     if (activityForm === 'tourStart') {
         return <TourStart
             formData={generalFormData}
@@ -92,6 +102,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -111,6 +122,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -130,6 +142,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -145,6 +158,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -160,6 +174,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -179,6 +194,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -198,6 +214,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -213,6 +230,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -228,6 +246,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -243,6 +262,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -258,6 +278,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -274,6 +295,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             expenseType={ExpenseEnum.standard}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -290,6 +312,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             expenseType={ExpenseEnum.fuel}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -306,6 +329,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             expenseType={ExpenseEnum.def}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -322,6 +346,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             serviceType={ServiceEnum.standard}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -338,6 +363,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             serviceType={ServiceEnum.fifthWheelLube}
+            setRefresh={props.setRefresh}
         />
     }
 
@@ -357,6 +383,7 @@ export const ActivitiesFields = (props: Props) => {
             setTourData={props.setTourData}
             tourData={props.tourData}
             setDayData={props.setDayData}
+            setRefresh={props.setRefresh}
         />
     }
 
