@@ -8,9 +8,9 @@ export const formatDate = (dateString: string, lang: number): string => {
     const date = new Date(dateString);
     const dayOfWeek = daysOfWeek[date.getUTCDay()];
     const day = date.getUTCDate().toString().padStart(2, '0');
-    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
-    const year = date.getUTCFullYear().toString().slice(-2);
-    const hours = date.getUTCHours().toString().padStart(2, '0');
-    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear().toString().slice(-2);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${dayOfWeek} ${day}.${month}.${year} ${hours}:${minutes}`;
 }

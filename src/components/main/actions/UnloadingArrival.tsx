@@ -1,4 +1,4 @@
-import React, {FormEvent, useEffect} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {Link} from "react-router-dom";
 import {home} from "../../../assets/txt/home";
@@ -19,6 +19,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
 
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
+    const [placeInputRefresh, setPlaceInputRefresh] = useState<number>(0);
 
     // const getLoadDetails = async (e: number) => {
     //     const result = await fetchDataOld(apiPaths.getUnloadingPlace + '/' + e, 'GET');
@@ -37,6 +38,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                 props.updateFormData('country', place.country);
                 props.updateFormData('placeId', place.id.toString());
                 props.updateFormData('place', '');
+                setPlaceInputRefresh((prev) => prev+1);
             }
         });
     }
@@ -103,6 +105,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                 </div>
                 <br/>
                 <div><PlaceInput
+                    key={placeInputRefresh}
                     lang={props.lang}
                     defaultCountry={props.userData.country}
                     countryValue={props.formData.country}

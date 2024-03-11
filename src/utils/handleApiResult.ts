@@ -178,11 +178,6 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
                 message: vehicles[lang].noServiceEntry,
                 type: 'error',
             }
-        case 'youHaveUnloadedLoads':
-            return {
-                message: home[lang].youHaveUnloadedLoads,
-                type: 'warning',
-            }
         case 'youHaveToChooseRoutes':
             return {
                 message: tours[lang].youHaveToChooseRoutes,

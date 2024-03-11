@@ -184,7 +184,7 @@ export const InfoBar = (props: Props) => {
         }
         setTotalWeight(weight);
         // eslint-disable-next-line
-    }, [truckData, trailerData, goodsWeight]);
+    }, [truckData, trailerData, goodsWeight, props.refresh]);
 
     const handleShowDetails = (type: vehicleTypeEnum): void => {
         if (type === vehicleTypeEnum.truck) {
@@ -327,6 +327,7 @@ export const InfoBar = (props: Props) => {
                     </>
                 }
                 <br/>
+
                 {truckData && truckData.fuel !== null && truckData.fuel > 0 && tourData && (
                     <>
                         {txt.fuel}: <meter min={0} max={truckData.fuel ? truckData.fuel : 0}

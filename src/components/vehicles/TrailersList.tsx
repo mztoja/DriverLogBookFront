@@ -6,12 +6,13 @@ import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {CircularProgress, Fab} from "@mui/material";
 import DetailsIcon from "@mui/icons-material/Details";
-import {CompanySelect} from "../common/form/place/CompanySelect";
 import {formatShortDate} from "../../utils/formats/formatShortDate";
 import {formatWeight} from "../../utils/formats/formatWeight";
 import EditIcon from '@mui/icons-material/Edit';
 import {TrailerEdit} from "./TrailerEdit";
 import {useParams} from "react-router-dom";
+import {ServiceList} from "./ServiceList";
+import HandymanIcon from "@mui/icons-material/Handyman";
 
 interface Props {
     userData: UserInterface;
@@ -19,19 +20,20 @@ interface Props {
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     setRefresh: Dispatch<SetStateAction<boolean>>;
     tourData: TourInterface | null,
+    companyId: number | null;
 }
 
 export const TrailersList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchDataOld} = useApi();
+    const {loading, fetchData} = useApi();
     const [data, setData] = useState<VehicleInterface[] | null>(null);
     const [showData, setShowData] = useState<VehicleInterface[] | null>(null);
-    const [companyId, setCompanyId] = useState<string>(props.userData.companyId.toString());
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [chosenVehicle, setChosenVehicle] = useState<VehicleInterface | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const {id: showVehicleId} = useParams();
     const trRef = useRef<HTMLTableRowElement | null>(null);
+    const [vehicleIdService, setVehicleIdService] = useState<number | null>(null);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -42,23 +44,22 @@ export const TrailersList = (props: Props) => {
     };
 
     useEffect(() => {
-        (async () => {
-            const result = await fetchDataOld(apiPaths.getTrailersList, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData);
+        fetchData<VehicleInterface[]>(apiPaths.getTrailersList).then((res => {
+            if (res.responseData) {
+                setData(res.responseData);
             } else {
                 setAlert(vehicles[props.userData.lang].apiTrailersError, 'error');
             }
-        })();
+        }));
         // eslint-disable-next-line
     }, [props.refresh]);
 
     useEffect(() => {
         const newData = data?.filter(vehicle => (
-            vehicle.type === vehicleTypeEnum.trailer && vehicle.companyId === Number(companyId)
+            vehicle.type === vehicleTypeEnum.trailer && vehicle.companyId === Number(props.companyId)
         ));
         setShowData(newData ? newData : null);
-    }, [data, companyId]);
+    }, [data, props.companyId]);
 
     useEffect(() => {
         if (showVehicleId) {
@@ -79,12 +80,6 @@ export const TrailersList = (props: Props) => {
                 <main className="Table">
                     <section className="Table__Header">
                         {vehicles[props.userData.lang].trailersTableHeader}
-                    </section>
-                    <section className="Table__Filter">
-                        <div>
-                            <CompanySelect lang={props.userData.lang} value={companyId}
-                                           onChange={e => setCompanyId(e)}/>
-                        </div>
                     </section>
                     <section className="Table__Body">
                         <table>
@@ -168,8 +163,24 @@ export const TrailersList = (props: Props) => {
                                                                 ))}
                                                             </>}<br/>
                                                             <div>
-                                                                <Fab variant="extended" size="small" color="primary"
-                                                                     onClick={() => setChosenVehicle(vehicle)}>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => setVehicleIdService(vehicle.id)}
+                                                                >
+                                                                    <HandymanIcon sx={{mr: 1}}/>
+                                                                    {vehicles[props.userData.lang].showServices}
+                                                                </Fab>
+                                                            </div>
+                                                            <br/>
+                                                            <div>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => setChosenVehicle(vehicle)}
+                                                                >
                                                                     <EditIcon sx={{mr: 1}}/>
                                                                     {vehicles[props.userData.lang].edit}
                                                                 </Fab>
@@ -186,6 +197,13 @@ export const TrailersList = (props: Props) => {
                         </table>
                     </section>
                 </main>
+                {
+                    vehicleIdService &&
+                    <>
+                        <br/>
+                        <ServiceList lang={props.userData.lang} vehicleId={vehicleIdService} setVehicleId={setVehicleIdService}/>
+                    </>
+                }
             </>
         );
     }

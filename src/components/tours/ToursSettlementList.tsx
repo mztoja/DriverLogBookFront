@@ -89,7 +89,7 @@ export const ToursSettlementList = (props: Props) => {
     }, [props.refresh, year]);
 
     useEffect(() => {
-        if (data) {
+        if (data.length > 0) {
             const uniqueTourIds: number[] = Array.from(data.reduce((uniqueTourIds: Set<number>, settlement: TourMInterface) => {
                 settlement.toursId.forEach(id => {
                     uniqueTourIds.add(id);

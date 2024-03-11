@@ -32,8 +32,9 @@ export const ToursView = (props:Props) => {
                         </>
                         :
                         <>
-                            <ToursSettlementList lang={props.userData.lang} refresh={refresh} setRefresh={setRefresh} setSelectedTour={setTourId}/><br/>
                             <ToursList lang={props.userData.lang} refresh={refresh} setRefresh={setRefresh} setSelectedTour={setTourId}/>
+                            <br/>
+                            <ToursSettlementList lang={props.userData.lang} refresh={refresh} setRefresh={setRefresh} setSelectedTour={setTourId}/>
                         </>
                 }
             </Content>

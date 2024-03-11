@@ -9,6 +9,7 @@ import {TrucksList} from "../components/vehicles/TrucksList";
 import {Fab} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { TourInterface } from "types";
+import {CompanySelect} from "../components/common/form/place/CompanySelect";
 
 interface Props extends AppMainElementsTypes {
     page: keyof MenuLabelTypes;
@@ -18,6 +19,7 @@ interface Props extends AppMainElementsTypes {
 export const VehiclesView = (props: Props) => {
     const [refresh, setRefresh] = React.useState<boolean>(false);
     const [showAddVehicle, setShowAddVehicle] = useState<boolean>(false);
+    const [companyId, setCompanyId] = useState<string | null>(props.userData? props.userData.companyId.toString() : null);
     if (props.userData && props.setUserData) {
         return (
             <>
@@ -28,11 +30,24 @@ export const VehiclesView = (props: Props) => {
                             <Fab  onClick={() => setShowAddVehicle(true)} color="primary" aria-label="add"><AddIcon /></Fab>
                         }
                     </div>
+
                     <br/>
+
                     <AddVehicle userData={props.userData} setRefresh={setRefresh} show={showAddVehicle} setShow={setShowAddVehicle}/>
-                    <TrucksList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh} tourData={props.tourData}/>
+
+                    <div>
+                        <CompanySelect lang={props.userData.lang} value={companyId? companyId.toString() : '0'}
+                                       onChange={e => setCompanyId(e)}/>
+                    </div>
+
                     <br/>
-                    <TrailersList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh} tourData={props.tourData}/>
+
+                    <TrucksList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh} tourData={props.tourData} companyId={Number(companyId)}/>
+
+                    <br/>
+
+                    <TrailersList userData={props.userData} refresh={refresh} setUserData={props.setUserData} setRefresh={setRefresh} tourData={props.tourData} companyId={Number(companyId)}/>
+
                 </Content>
             </>
         );

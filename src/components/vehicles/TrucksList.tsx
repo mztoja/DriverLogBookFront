@@ -5,7 +5,6 @@ import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import {vehicles} from "../../assets/txt/vehicles";
 import {CircularProgress, Fab} from "@mui/material";
-import {CompanySelect} from "../common/form/place/CompanySelect";
 import {TruckEdit} from "./TruckEdit";
 import {formatWeight} from "../../utils/formats/formatWeight";
 import {formatShortDate} from "../../utils/formats/formatShortDate";
@@ -14,26 +13,29 @@ import EditIcon from "@mui/icons-material/Edit";
 import {formatOdometer} from "../../utils/formats/formatOdometer";
 import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
 import {useParams} from "react-router-dom";
+import HandymanIcon from '@mui/icons-material/Handyman';
+import {ServiceList} from "./ServiceList";
 
 interface Props {
     userData: UserInterface;
     refresh: boolean;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     setRefresh: Dispatch<SetStateAction<boolean>>;
-    tourData: TourInterface | null,
+    tourData: TourInterface | null;
+    companyId: number | null;
 }
 
 export const TrucksList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchDataOld} = useApi();
+    const {loading, fetchData} = useApi();
     const [data, setData] = useState<VehicleInterface[] | null>(null);
     const [showData, setShowData] = useState<VehicleInterface[] | null>(null);
-    const [companyId, setCompanyId] = useState<string>(props.userData.companyId.toString());
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [chosenVehicle, setChosenVehicle] = useState<VehicleInterface | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const {id: showVehicleId} = useParams();
     const trRef = useRef<HTMLTableRowElement | null>(null);
+    const [vehicleIdService, setVehicleIdService] = useState<number | null>(null);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -44,23 +46,22 @@ export const TrucksList = (props: Props) => {
     };
 
     useEffect(() => {
-        (async () => {
-            const result = await fetchDataOld(apiPaths.getTrucksList, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData);
+        fetchData<VehicleInterface[]>(apiPaths.getTrucksList).then((res => {
+            if (res.responseData) {
+                setData(res.responseData);
             } else {
                 setAlert(vehicles[props.userData.lang].apiTrucksError, 'error');
             }
-        })();
+        }));
         // eslint-disable-next-line
     }, [props.refresh]);
 
     useEffect(() => {
         const newData = data?.filter(vehicle => (
-            vehicle.type === vehicleTypeEnum.truck && vehicle.companyId === Number(companyId)
+            vehicle.type === vehicleTypeEnum.truck && vehicle.companyId === Number(props.companyId)
         ));
         setShowData(newData ? newData : null);
-    }, [data, companyId]);
+    }, [data, props.companyId]);
 
     useEffect(() => {
         if (showVehicleId) {
@@ -69,7 +70,7 @@ export const TrucksList = (props: Props) => {
     }, [showVehicleId]);
 
     useLayoutEffect(() => {
-        trRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        trRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'});
         // eslint-disable-next-line
     }, [trRef.current]);
 
@@ -81,12 +82,6 @@ export const TrucksList = (props: Props) => {
                 <main className="Table">
                     <section className="Table__Header">
                         {vehicles[props.userData.lang].trucksTableHeader}
-                    </section>
-                    <section className="Table__Filter">
-                        <div>
-                            <CompanySelect lang={props.userData.lang} value={companyId}
-                                           onChange={e => setCompanyId(e)}/>
-                        </div>
                     </section>
                     <section className="Table__Body">
                         <table>
@@ -140,9 +135,9 @@ export const TrucksList = (props: Props) => {
                                             {expandedRow !== vehicle.id && (
                                                 <tr
                                                     className={
-                                                    props.tourData && props.tourData.truck === vehicle.registrationNr && !showVehicleId
-                                                        ? 'highlighted'
-                                                        : ''}
+                                                        props.tourData && props.tourData.truck === vehicle.registrationNr && !showVehicleId
+                                                            ? 'highlighted'
+                                                            : ''}
                                                     onClick={() => setExpandedRow(vehicle.id)}
                                                 >
                                                     <td>{index}</td>
@@ -184,7 +179,11 @@ export const TrucksList = (props: Props) => {
                                                         onClick={() => setExpandedRow(null)}
                                                         onMouseEnter={handleMouseEnter}
                                                         onMouseLeave={handleMouseLeave}
-                                                        className={isHovered || Number(showVehicleId) === expandedRow ? 'highlighted' : ''}
+                                                        className=
+                                                            {isHovered ||
+                                                            Number(showVehicleId) === expandedRow ? 'highlighted' : '' ||
+                                                            vehicleIdService === expandedRow ? 'highlighted' : ''
+                                                            }
                                                     >
                                                         <td>{index}</td>
                                                         <td>
@@ -221,7 +220,11 @@ export const TrucksList = (props: Props) => {
                                                     <tr
                                                         onMouseEnter={handleMouseEnter}
                                                         onMouseLeave={handleMouseLeave}
-                                                        className={isHovered || Number(showVehicleId) === expandedRow ? 'highlighted' : ''}
+                                                        className=
+                                                            {isHovered ||
+                                                            Number(showVehicleId) === expandedRow ? 'highlighted' : '' ||
+                                                            vehicleIdService === expandedRow ? 'highlighted' : ''
+                                                            }
                                                     >
                                                         <td colSpan={7} className="extended">
                                                             {vehicle.notes !== null && <>
@@ -229,12 +232,29 @@ export const TrucksList = (props: Props) => {
                                                                 {vehicle.notes.split('\n').map((line, index) => (
                                                                     <React.Fragment key={index}>
                                                                         {line}
-                                                                        <br />
+                                                                        <br/>
                                                                     </React.Fragment>
                                                                 ))}
                                                             </>}<br/>
                                                             <div>
-                                                                <Fab variant="extended" size="small" color="primary" onClick={() => setChosenVehicle(vehicle)}>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => setVehicleIdService(vehicle.id)}
+                                                                >
+                                                                    <HandymanIcon sx={{mr: 1}}/>
+                                                                    {vehicles[props.userData.lang].showServices}
+                                                                </Fab>
+                                                            </div>
+                                                            <br/>
+                                                            <div>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => setChosenVehicle(vehicle)}
+                                                                >
                                                                     <EditIcon sx={{mr: 1}}/>
                                                                     {vehicles[props.userData.lang].edit}
                                                                 </Fab>
@@ -251,6 +271,13 @@ export const TrucksList = (props: Props) => {
                         </table>
                     </section>
                 </main>
+                {
+                    vehicleIdService &&
+                    <>
+                        <br/>
+                        <ServiceList lang={props.userData.lang} vehicleId={vehicleIdService} setVehicleId={setVehicleIdService}/>
+                    </>
+                }
             </>
         );
     }

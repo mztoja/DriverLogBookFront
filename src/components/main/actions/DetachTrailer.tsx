@@ -24,28 +24,20 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
 
     const check = async (e: FormEvent) => {
         e.preventDefault();
-        // const result = await fetchDataOld(apiPaths.getNotUnloadedLoads, 'GET');
-        // if ((result && result.responseData) && (!result.responseData.dtc)) {
-        //     const loads = result.responseData.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
-        //     if (loads.length>0) {
-        //         setText(home[props.lang].detachTrailerConfirm(loads.length));
-        //         setConfirm(true);
-        //     } else {
-        //         await send();
-        //     }
-        // }
         fetchData<LoadInterface[]>(apiPaths.getNotUnloadedLoads).then((res) => {
             if (res.responseData) {
                 const loads = res.responseData.filter((obj: LoadInterface) => obj.vehicle === props.tourData?.trailer);
-                setText(home[props.lang].detachTrailerConfirm(loads.length));
-                setConfirm(true);
-            } else {
-                send();
+                if (loads.length > 0) {
+                    setText(home[props.lang].detachTrailerConfirm(loads.length));
+                    setConfirm(true);
+                } else {
+                    send();
+                }
             }
         });
     }
 
-    const send = async () => {
+    const send = () => {
         const sendData: DetachTrailerData = {
             date: props.formData.date,
             country: props.formData.country,

@@ -65,6 +65,24 @@ export const TruckEdit = (props: Props) => {
         }
     }
 
+    const areFieldsEqual = (data: VehicleInterface, formData: EditTruckFormInterface): boolean => {
+        return (
+            data.isLoadable === (formData.isLoadable === 'true') &&
+            data.registrationNr === formData.registrationNr &&
+            data.model === formData.model &&
+            data.fuel?.toString() === formData.fuel.toString() &&
+            data.techRev === formData.techRev &&
+            data.year.toString() === formData.year.toString() &&
+            data.insurance === formData.insurance &&
+            data.tacho === formData.tacho &&
+            data.service?.toString() === formData.service.toString() &&
+            (
+                (data.notes === null && formData.notes === '') ||
+                data.notes === formData.notes
+            )
+        );
+    }
+
     return (
         <div>
             <Modal
@@ -123,7 +141,10 @@ export const TruckEdit = (props: Props) => {
                         <center>
                             {loading ?
                                 <CircularProgress/> :
-                                <SubmitButton text={vehicles[props.lang].edit}/>
+                                <SubmitButton
+                                    text={vehicles[props.lang].edit}
+                                    disabled={!props.vehicle || areFieldsEqual(props.vehicle, editTruckForm)}
+                                />
                             }
                         </center>
                     </form>

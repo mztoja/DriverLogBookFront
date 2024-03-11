@@ -65,6 +65,24 @@ export const PlaceEdit = (props: Props) => {
         }
     }
 
+    const areFieldsEqual = (data: PlaceInterface, formData: EditPlaceFormInterface): boolean => {
+        return (
+            data.isFavorite === (formData.isFavorite === 'true') &&
+            data.type.toString() === formData.type.toString() &&
+            data.name === formData.name &&
+            data.country === formData.country &&
+            data.code === formData.code &&
+            data.city === formData.city &&
+            data.street === formData.street &&
+            data.lat.toString() === formData.lat.toString() &&
+            data.lon.toString() === formData.lon.toString() &&
+            (
+                (data.description === null && formData.description === '') ||
+                data.description === formData.description
+            )
+        );
+    }
+
     return (
         <div>
             <Modal
@@ -112,7 +130,10 @@ export const PlaceEdit = (props: Props) => {
                         <center>
                             {loading ?
                                 <CircularProgress/> :
-                                <SubmitButton text={places[props.lang].edit}/>
+                                <SubmitButton
+                                    text={places[props.lang].edit}
+                                    disabled={!props.place || areFieldsEqual(props.place, editPlaceForm)}
+                                />
                             }
                         </center>
                     </form>

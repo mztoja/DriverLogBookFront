@@ -32,10 +32,18 @@ interface Vehicles {
     serviceType: string;
     serviceMaintenance: string;
     serviceService: string;
+    serviceAll: string;
     serviceMaintenanceHelper: string;
     serviceServiceHelper: string;
     chooseServicedVehicle: string;
     noServiceEntry: string;
+    showServices: string;
+    serviceHeader: (x: string) => string;
+    serviceDate: string;
+    servicePlace: string;
+    serviceAction: string;
+    serviceOdometer: string;
+    close: string;
 }
 
 export const vehicles: Vehicles[] = [
@@ -73,10 +81,18 @@ export const vehicles: Vehicles[] = [
         serviceType: 'Type of Service',
         serviceMaintenance: 'Maintenance',
         serviceService: 'Service',
+        serviceAll: 'All',
         serviceMaintenanceHelper: 'e.g. replacing a light bulb, adding fluid or oil',
         serviceServiceHelper: 'e.g. replacing tires, oil, major repairs',
         chooseServicedVehicle: 'The vehicle for service/service has not been selected.',
         noServiceEntry: 'No operation/service activity has been entered.',
+        showServices: 'Maintenance / services list',
+        serviceHeader: (x) => `Vehicle: ${x} service list`,
+        serviceAction: 'Service activity',
+        serviceDate: 'Date',
+        servicePlace: 'Place',
+        serviceOdometer: 'Mileage',
+        close: 'Close',
     },
     {//pl
         type: 'Pojazd',
@@ -112,9 +128,17 @@ export const vehicles: Vehicles[] = [
         serviceType: 'Rodzaj serwisu',
         serviceMaintenance: 'Obsługa',
         serviceService: 'Serwis',
+        serviceAll: 'Wszystko',
         serviceMaintenanceHelper: 'np. wymiana żarówki, dolanie płynu lub oleju, etc.',
         serviceServiceHelper: 'np. wymiana opon, oleju, poważniejsze naprawy',
         chooseServicedVehicle: 'Nie wybrano pojazdu którego ma dotyczyć obsługa/serwis.',
         noServiceEntry: 'Nie wpisano żadnej czynności obsługi/serwisu.',
+        showServices: 'Lista obsługi / serwisów',
+        serviceHeader: (x) => `Lista serwisów pojazdu ${x}`,
+        servicePlace: 'Miejsce',
+        serviceDate: 'Data',
+        serviceAction: 'Czynność serwisowa',
+        serviceOdometer: 'Przebieg',
+        close: 'Zamknij',
     }
 ];

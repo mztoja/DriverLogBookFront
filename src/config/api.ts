@@ -54,8 +54,10 @@ export const apiPaths = {
     getTrucksList: '/vehicles/trucks',
     editTrailer: '/vehicles/trailer/edit',
     editTruck: '/vehicles/truck/edit',
+    getVehicleRegById: '/vehicles/getRegistrationById',
     // services
     createService: '/services/create',
+    getServiceByVehicleId: '/services/getByVehicleId',
     // loadings
     createLoad: '/loads/create',
     unloadingLoad: '/loads/unload',
