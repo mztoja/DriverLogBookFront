@@ -4,7 +4,7 @@ import {useApi} from "../../hooks/useApi";
 import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {DAYS_PER_PAGE} from "../../config/set";
-import {CircularProgress, Tooltip} from "@mui/material";
+import {CircularProgress, Fab, Tooltip} from "@mui/material";
 import {days} from "../../assets/txt/days";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatOdometer} from "../../utils/formats/formatOdometer";
@@ -17,6 +17,8 @@ import {formatSimplePlace} from "../../utils/formats/formatSimplePlace";
 import {tours} from "../../assets/txt/tours";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
+import {DaysEdit} from "./DaysEdit";
 
 interface Props {
     lang: userLangEnum;
@@ -28,7 +30,6 @@ export const DaysList = (props: Props) => {
 
     const {setAlert} = useAlert();
     const {loading, fetchDataOld} = useApi();
-
     const [data, setData] = useState<DayInterface[] | null>(null);
     const [totalItems, setTotalItems] = useState<number>(0);
     const [page, setPage] = useState<number>(1);
@@ -36,6 +37,8 @@ export const DaysList = (props: Props) => {
     const [tourNrs, setTourNrs] = useState<TourNumbersInterface[] | null>(null);
     const prevTourId = useRef<number>(0);
     const [isHovered, setIsHovered] = useState(false);
+    const [editDayData, setEditDayData] = useState<DayInterface | null>(null);
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -72,7 +75,7 @@ export const DaysList = (props: Props) => {
             })();
         }
         // eslint-disable-next-line
-    }, [page]);
+    }, [page, refresh]);
 
     useEffect(() => {
         if (data) {
@@ -129,6 +132,12 @@ export const DaysList = (props: Props) => {
                         </tr>
                         </thead>
                         <tbody>
+                        {editDayData && <DaysEdit
+                            day={editDayData}
+                            setDay={setEditDayData}
+                            lang={props.lang}
+                            setRefresh={setRefresh}
+                        />}
                         {
                             data?.map((day, index) => {
                                 const tourNr = tourNrs?.find(tour => tour.tourId === day.tourId)?.tourNr;
@@ -265,6 +274,18 @@ export const DaysList = (props: Props) => {
                                                                 {days[props.lang].stop}: {day.stopData.notes}<br/>
                                                             </>
                                                         }
+                                                        <br/>
+                                                            <div>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => setEditDayData(day)}
+                                                                >
+                                                                    <EditIcon sx={{mr: 1}}/>
+                                                                    {days[props.lang].edit}
+                                                                </Fab>
+                                                            </div>
                                                     </td>
                                                 </tr>
                                             </>

@@ -70,7 +70,7 @@ export const TrailersList = (props: Props) => {
     useLayoutEffect(() => {
             trRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         // eslint-disable-next-line
-    }, [trRef.current]);
+    }, [trRef.current, showVehicleId]);
 
     if (loading) return <CircularProgress/>;
 

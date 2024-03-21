@@ -11,6 +11,7 @@ import {extractNumberWithDecimal} from "../../../utils/extractNumberWithDecimal"
 interface Props extends InputPropsTypes {
     type: 'quantity' | 'combustion';
     userFuelConType: userFuelContypeEnum;
+    disableHelper?: boolean;
 }
 
 export const FuelInput = (props: Props) => {
@@ -47,10 +48,12 @@ export const FuelInput = (props: Props) => {
                 autoComplete='off'
                 size='small'
             />
-            <FormHelperText className='TextInput__Label'>
-                {props.type === 'combustion' && props.userFuelConType === userFuelContypeEnum.liters ? form[props.lang].fuelConTypeHelper1 : null}
-                {props.type === 'combustion' && props.userFuelConType === userFuelContypeEnum.per100km ? form[props.lang].fuelConTypeHelper2 : null}
-            </FormHelperText>
+            {props.disableHelper &&
+                <FormHelperText className='TextInput__Label'>
+                    {props.type === 'combustion' && props.userFuelConType === userFuelContypeEnum.liters ? form[props.lang].fuelConTypeHelper1 : null}
+                    {props.type === 'combustion' && props.userFuelConType === userFuelContypeEnum.per100km ? form[props.lang].fuelConTypeHelper2 : null}
+                </FormHelperText>
+            }
         </>
     );
 }

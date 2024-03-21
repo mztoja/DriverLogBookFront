@@ -4,12 +4,22 @@ import {form} from "../../../assets/txt/form";
 import './Form.css';
 import {InputPropsTypes} from "../../../types/InputPropsTypes";
 
-export const DateTimeInput = (props: InputPropsTypes) => {
+interface Props extends InputPropsTypes {
+    valueAsDefault?: boolean;
+}
 
-    const [selectedDate, setSelectedDate] = useState(new Date(new Date().getTime() + 60*60*1000).toISOString().slice(0, 16));
+export const DateTimeInput = (props: Props) => {
+
+    const [selectedDate, setSelectedDate] = useState(
+        props.valueAsDefault
+            ? new Date(new Date(props.value).getTime() + 60*60*1000).toISOString().slice(0, 16)
+            : new Date(new Date().getTime() + 60*60*1000).toISOString().slice(0, 16)
+    );
 
     const handleDateChange = (e: any) => {
-        setSelectedDate(e.target.value);
+        if (!isNaN(Date.parse(e.target.value))) {
+            setSelectedDate(e.target.value);
+        }
     };
 
     useEffect(() => {

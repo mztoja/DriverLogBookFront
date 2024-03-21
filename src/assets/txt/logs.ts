@@ -8,6 +8,9 @@ interface Logs {
     thCountry: string;
     thPlace: string;
     thOdometer: string;
+    edit: string;
+    logEditHeader: string;
+    editSuccess: string;
 }
 
 export const logs: Logs[] = [
@@ -21,6 +24,9 @@ export const logs: Logs[] = [
         thCountry: 'Country',
         thPlace: 'Place',
         thOdometer: 'Odometer',
+        edit: 'Edit',
+        logEditHeader: 'Edit your activity',
+        editSuccess: 'The selected activity has been successfully edited.',
     },
     {//pl
         apiError: 'Twoja lista czynności nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -32,5 +38,8 @@ export const logs: Logs[] = [
         thPlace: 'Miejsce',
         thCountry: 'Kraj',
         thOdometer: 'Przebieg',
+        edit: 'Edytuj',
+        logEditHeader: 'Edytuj czynność',
+        editSuccess: 'Wybrana czynność została pomyślnie edytowana.',
     },
 ];

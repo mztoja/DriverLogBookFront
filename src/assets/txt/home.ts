@@ -89,6 +89,7 @@ interface Home {
     tourStopHelper2: (distance: number, burnedFuel: number) => string;
     finishTourUnloadedLoadsConfirm: (x: number) => string;
     finishTourUnloadNote: string;
+    cannotEditSettledTourData: string;
 }
 
 export const home:Home[] = [{
@@ -180,6 +181,7 @@ export const home:Home[] = [{
     tourStopHelper2: (distance, burnedFuel) => `You passed ${formatOdometer(distance)}. Avg. fuel usage: ${formatFuelCombustion(burnedFuel, distance)}`,
     finishTourUnloadedLoadsConfirm: (x) => `You try to finish the route even though you still have ${x} ${x === 1 ? 'unloaded load.' : 'unloaded loads.'} If you finish the route, they will be described in the system as unloaded with a note in the notes that they were marked as such due to the end of the route.`,
     finishTourUnloadNote: 'Marked as unloaded due to end of tour',
+    cannotEditSettledTourData: 'You cannot edit data assigned to a route that has already been settled.',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -268,4 +270,5 @@ export const home:Home[] = [{
     tourStopHelper2: (distance, burnedFuel) => `Przejechałeś ${formatOdometer(distance)}. Spalanie: ${formatFuelCombustion(burnedFuel, distance)}`,
     finishTourUnloadedLoadsConfirm: (x) => `Próbujesz zakończyć trasę pomimo, że masz jeszcze ${x} ${x === 1 ? 'nierozładowany ładunek.' : 'nierozładowane ładunki.'} Jeżeli zakończysz trasę to zostaną one w systemie opisane jako rozładowane z wpisaną w notatkach adnotacją, że zostały tak oznaczone z powodu zakończenia trasy.`,
     finishTourUnloadNote: 'Oznaczony jako rozładowany z powodu zakończenia trasy',
+    cannotEditSettledTourData: 'Nie możesz edytować danych przypisanych do rozliczonej już trasy.',
 }];

@@ -31,9 +31,12 @@ export const apiPaths = {
     getLastDay: '/days/getLastDay',
     getYourLastDay: '/days/getYourLastDay',
     getDays: '/days/get',
+    getDayByLogId: '/days/getDayByLogId',
     getDaysByTourId: '/days/getByTourId',
     getBurnedFuelByTour: '/days/burnedFuelByTour',
     countDistanceOfActiveDay: '/days/countDistanceOfActiveRoute',
+    editDay: '/days/edit',
+    editSimpleDay: '/days/simpleEdit',
     // logs
     createNewLog: '/logs/create',
     createBorderCross: '/logs/createBorderCross',
@@ -45,6 +48,7 @@ export const apiPaths = {
     detachTrailer: '/logs/detachTrailer',
     loadingArrival: '/logs/loadingArrival',
     unloadingArrival: '/logs/unloadingArrival',
+    editLog: '/logs/edit',
     // borders
     getBordersByCountry: '/borders/getByCountry',
     // vehicles

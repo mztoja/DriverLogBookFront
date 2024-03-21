@@ -43,6 +43,7 @@ interface Form {
     fuelConTypeHelper1: string;
     fuelConTypeHelper2: string;
     odometer: string;
+    distance: string;
     place: string;
     switchToPlace: string;
     switchToPlaceId: string;
@@ -123,6 +124,7 @@ export const form: Form[] =
         fuelConTypeHelper1: 'W ustawieniach profilu wybrano wpisywanie spalania po ilości paliwa',
         fuelConTypeHelper2: 'W ustawieniach profilu wybrano wpisywanie spalania po średnim spalaniu',
         odometer: 'Odometer',
+        distance: 'Distance',
         place: 'Place',
         switchToPlace: 'Change to manual enter',
         switchToPlaceId: 'Switch to selection from the address list',
@@ -200,6 +202,7 @@ export const form: Form[] =
             fuelConTypeHelper1: 'W ustawieniach profilu wybrano wpisywanie spalania po ilości paliwa',
             fuelConTypeHelper2: 'W ustawieniach profilu wybrano wpisywanie spalania po średnim spalaniu',
             odometer: 'Stan licznika',
+            distance: 'Odległość',
             place: 'Miejsce',
             switchToPlace: 'Przełącz na wpis manualny',
             switchToPlaceId: 'Przełącz na wybór z listy adresowej',

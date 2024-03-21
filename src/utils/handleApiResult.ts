@@ -23,6 +23,16 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
                 message: login[lang].registerCountryNotExist,
                 type: 'warning',
             }
+        case 'startData.country':
+            return {
+                message: login[lang].registerCountryNotExist,
+                type: 'warning',
+            }
+        case 'stopData.country':
+            return {
+                message: login[lang].registerCountryNotExist,
+                type: 'warning',
+            }
         case 'noActiveRoute':
             return {
                 message: home[lang].noActiveRoute,
@@ -44,6 +54,16 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
                 type: 'warning',
             }
         case 'action':
+            return {
+                message: home[lang].actionNoExist,
+                type: 'info',
+            }
+        case 'startData.action':
+            return {
+                message: home[lang].actionNoExist,
+                type: 'info',
+            }
+        case 'stopData.action':
             return {
                 message: home[lang].actionNoExist,
                 type: 'info',
@@ -186,6 +206,11 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
         case 'monthIncorrectFormat':
             return {
                 message: tours[lang].monthIncorrectFormat,
+                type: 'warning',
+            }
+        case 'cannotEditSettledTourData':
+            return {
+                message: home[lang].cannotEditSettledTourData,
                 type: 'warning',
             }
         case 'Unauthorized':
