@@ -127,8 +127,6 @@ export const DaysEdit = (props: Props) => {
         });
     }
 
-    // dodaj akcję liczenia odległości przy edycji przebiegów !!!
-
     return (
         <Modal
             aria-labelledby="day-edit"

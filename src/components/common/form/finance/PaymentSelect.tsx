@@ -11,21 +11,37 @@ import {Link} from "react-router-dom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {PaymentsSettings} from "./PaymentsSettings";
 
-export const PaymentSelect = (props: InputPropsTypes) => {
-    const {loading, fetchDataOld} = useApi();
+interface Props extends InputPropsTypes {
+    editMode?: boolean;
+}
+
+export const PaymentSelect = (props: Props) => {
+    const {loading, fetchData} = useApi();
     const [paymentsList, setPaymentsList] = useState<PaymentInterface[]>([]);
     const [value, setValue] = useState<string>(props.value !== '' ? props.value : form[props.lang].cash);
     const [showPaymentsSettings, setShowPaymentsSettings] = useState<boolean>(false);
 
     useEffect(() => {
-        (async () => {
-            const result = await fetchDataOld(apiPaths.getPaymentMethods, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setPaymentsList(result.responseData);
-                const defaultPayment = result.responseData.find((payment: PaymentInterface) => payment.default === true);
+        // (async () => {
+        //     const result = await fetchDataOld(apiPaths.getPaymentMethods, 'GET');
+        //     if ((result && result.responseData) && (!result.responseData.dtc)) {
+        //         setPaymentsList(result.responseData);
+        //         const defaultPayment = result.responseData.find((payment: PaymentInterface) => payment.default === true);
+        //         setValue(defaultPayment ? defaultPayment.method : form[props.lang].cash);
+        //     }
+        // })();
+        fetchData<PaymentInterface[]>(apiPaths.getPaymentMethods).then((r) => {
+            const payments = r.responseData;
+            if (payments) {
+                setPaymentsList(payments);
+                const defaultPayment = payments.find((payment) =>
+                    props.editMode
+                        ? payment.method === props.value
+                        : payment.default === true
+                );
                 setValue(defaultPayment ? defaultPayment.method : form[props.lang].cash);
             }
-        })();
+        })
         // eslint-disable-next-line
     }, []);
 

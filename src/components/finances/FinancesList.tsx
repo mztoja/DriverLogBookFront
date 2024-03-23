@@ -1,11 +1,11 @@
-import {FinanceInterface, TourNumbersInterface, userLangEnum} from "types";
+import {FinanceInterface, TourNumbersInterface, userLangEnum, FinanceListResponse} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {FINANCES_PER_PAGE} from "../../config/set";
 import {finances} from "../../assets/txt/finances";
-import {CircularProgress, Tooltip} from "@mui/material";
+import {CircularProgress, Fab, Tooltip} from "@mui/material";
 import {formatDate} from "../../utils/formats/formatDate";
 import DetailsIcon from "@mui/icons-material/Details";
 import {TablePagination} from "../common/TablePagination";
@@ -16,6 +16,8 @@ import {formatPlace} from "../../utils/formats/formatPlace";
 import {tours} from "../../assets/txt/tours";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
+import EditIcon from "@mui/icons-material/Edit";
+import {FinanceEdit} from "./FinanceEdit";
 
 interface Props {
     lang: userLangEnum;
@@ -25,7 +27,7 @@ interface Props {
 
 export const FinancesList = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchDataOld} = useApi();
+    const {loading, fetchData} = useApi();
 
     const [data, setData] = useState<FinanceInterface[] | null>(null);
     const [totalItems, setTotalItems] = useState<number>(0);
@@ -34,14 +36,20 @@ export const FinancesList = (props: Props) => {
     const [tourNrs, setTourNrs] = useState<TourNumbersInterface[] | null>(null);
     const prevTourId = useRef<number>(0);
     const [isHovered, setIsHovered] = useState(false);
+    const [refresh, setRefresh] = useState<boolean>(false);
+    const [editFinanceData, setEditFinanceData] = useState<FinanceInterface | null>(null);
 
-    const handleMouseEnter = () => {
+    const handleMouseEnter = (): void => {
         setIsHovered(true);
     };
 
-    const handleMouseLeave = () => {
+    const handleMouseLeave = (): void => {
         setIsHovered(false);
     };
+
+    const handleEditButton = (financeData: FinanceInterface | null): void => {
+        setEditFinanceData(financeData);
+    }
 
     const handleClose = () => {
         props.setShowFinancesList && props.setShowFinancesList(false);
@@ -49,28 +57,26 @@ export const FinancesList = (props: Props) => {
 
     useEffect(() => {
         if (props.tourId) {
-            (async () => {
-                const result = await fetchDataOld(apiPaths.getFinancesByTourId + '/' + props.tourId, 'GET');
-                if ((result && result.responseData) && (!result.responseData.dtc)) {
-                    setData(result.responseData);
-                    setTotalItems(0);
+            fetchData<FinanceListResponse>(`${apiPaths.getFinancesByTourId}/${props.tourId}`).then((res) => {
+                if (res.responseData) {
+                    setData(res.responseData.items);
+                    setTotalItems(res.responseData.totalItems);
                 } else {
                     setAlert(finances[props.lang].apiError, 'error');
                 }
-            })();
+            });
         } else {
-            (async () => {
-                const result = await fetchDataOld(apiPaths.getFinances + '/' + page + '/' + FINANCES_PER_PAGE, 'GET');
-                if ((result && result.responseData) && (!result.responseData.dtc)) {
-                    setData(result.responseData.items);
-                    setTotalItems(Number(result.responseData.totalItems));
+            fetchData<FinanceListResponse>(`${apiPaths.getFinances}/${page}/${FINANCES_PER_PAGE}`).then((res) => {
+                if (res.responseData) {
+                    setData(res.responseData.items);
+                    setTotalItems(res.responseData.totalItems);
                 } else {
                     setAlert(finances[props.lang].apiError, 'error');
                 }
-            })();
+            });
         }
         // eslint-disable-next-line
-    }, [page]);
+    }, [page, refresh]);
 
     useEffect(() => {
         if (data) {
@@ -80,12 +86,11 @@ export const FinancesList = (props: Props) => {
                 }
                 return uniqueTourIds;
             }, []);
-            (async () => {
-                const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
-                if ((result && result.responseData) && (!result.responseData.dtc)) {
-                    setTourNrs(result.responseData);
+            fetchData<TourNumbersInterface[]>(apiPaths.getRouteNumbers, {method: 'POST', sendData: {tourIds: uniqueTourIds}}).then((res) => {
+                if (res.responseData) {
+                    setTourNrs(res.responseData);
                 }
-            })();
+            });
         }
         // eslint-disable-next-line
     }, [data]);
@@ -128,6 +133,12 @@ export const FinancesList = (props: Props) => {
                         </tr>
                         </thead>
                         <tbody>
+                        {editFinanceData && <FinanceEdit
+                            lang={props.lang}
+                            finance={editFinanceData}
+                            setFinance={setEditFinanceData}
+                            setRefresh={setRefresh}
+                        />}
                         {
                             data?.map((finance, index) => {
                                 const tourNr = tourNrs?.find(tour => tour.tourId === finance.tourId)?.tourNr;
@@ -228,6 +239,18 @@ export const FinancesList = (props: Props) => {
                                             >
                                                 <td colSpan={9} className="extended">
                                                     {(finance.logData?.notes) && <><br/><DetailsIcon/><br/>{finance.logData?.notes}</>}
+                                                    <br/>
+                                                    <div>
+                                                        <Fab
+                                                            variant="extended"
+                                                            size="small"
+                                                            color="primary"
+                                                            onClick={() => handleEditButton(finance)}
+                                                        >
+                                                            <EditIcon sx={{mr: 1}}/>
+                                                            {finances[props.lang].edit}
+                                                        </Fab>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             </>

@@ -1,5 +1,13 @@
 import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
-import {DayInterface, LogInterface, LogListResponse, logTypeEnum, TourNumbersInterface, userLangEnum} from "types";
+import {
+    DayInterface,
+    FinanceInterface,
+    LogInterface,
+    LogListResponse,
+    logTypeEnum,
+    TourNumbersInterface,
+    userLangEnum
+} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
@@ -20,6 +28,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import {LogsEdit} from "./LogsEdit";
 import {DaysEdit} from "../days/DaysEdit";
+import {FinanceEdit} from "../finances/FinanceEdit";
 
 interface Props {
     lang: userLangEnum;
@@ -43,6 +52,7 @@ export const LogsList = (props: Props) => {
     const [isHovered, setIsHovered] = useState(false);
     const [editLogData, setEditLogData] = useState<LogInterface | null>(null);
     const [editDayData, setEditDayData] = useState<DayInterface | null>(null);
+    const [editFinanceData, setEditFinanceData] = useState<FinanceInterface | null>(null);
     const [refresh, setRefresh] = useState<boolean>(false);
 
     const handleMouseEnter = () => {
@@ -66,6 +76,15 @@ export const LogsList = (props: Props) => {
                     fetchData<DayInterface>(`${apiPaths.getDayByLogId}/${log.id}`).then((res) => {
                         if (res.responseData) {
                             setEditDayData(res.responseData);
+                        }
+                    });
+                    break;
+                case logTypeEnum.refuelAdblue:
+                case logTypeEnum.refuelDiesel:
+                case logTypeEnum.generalExpense:
+                    fetchData<FinanceInterface>(`${apiPaths.getFinanceByLogId}/${log.id}`).then((res) => {
+                        if (res.responseData) {
+                            setEditFinanceData(res.responseData);
                         }
                     });
                     break;
@@ -100,13 +119,13 @@ export const LogsList = (props: Props) => {
             //         setAlert(logs[props.lang].apiError, 'error');
             //     }
             // })();
-            fetchData<LogInterface[]>(`${apiPaths.getLogsByTourId}/${props.tourId}`).then((res) =>{
-               if (res.responseData) {
-                   setData(res.responseData);
-                   setTotalItems(0);
-               } else {
-                   setAlert(logs[props.lang].apiError, 'error');
-               }
+            fetchData<LogInterface[]>(`${apiPaths.getLogsByTourId}/${props.tourId}`).then((res) => {
+                if (res.responseData) {
+                    setData(res.responseData);
+                    setTotalItems(0);
+                } else {
+                    setAlert(logs[props.lang].apiError, 'error');
+                }
             });
         } else {
             // (async () => {
@@ -120,7 +139,7 @@ export const LogsList = (props: Props) => {
             //     }
             // })();
             const search = filterSearch === '' ? '' : '/' + filterSearch;
-            fetchData<LogListResponse>(`${apiPaths.getLogs}/${page}/${LOGS_PER_PAGE+search}`).then((res) =>{
+            fetchData<LogListResponse>(`${apiPaths.getLogs}/${page}/${LOGS_PER_PAGE + search}`).then((res) => {
                 if (res.responseData) {
                     setData(res.responseData.items);
                     setTotalItems(Number(res.responseData.totalItems));
@@ -147,7 +166,10 @@ export const LogsList = (props: Props) => {
             //         setTourNrs(result.responseData);
             //     }
             // })();
-            fetchData<TourNumbersInterface[]>(apiPaths.getRouteNumbers, {method: 'POST',sendData: {tourIds: uniqueTourIds}}).then((res) => {
+            fetchData<TourNumbersInterface[]>(apiPaths.getRouteNumbers, {
+                method: 'POST',
+                sendData: {tourIds: uniqueTourIds}
+            }).then((res) => {
                 if (res.responseData) {
                     setTourNrs(res.responseData);
                 }
@@ -209,6 +231,12 @@ export const LogsList = (props: Props) => {
                         {editDayData && <DaysEdit
                             day={editDayData}
                             setDay={setEditDayData}
+                            lang={props.lang}
+                            setRefresh={setRefresh}
+                        />}
+                        {editFinanceData && <FinanceEdit
+                            finance={editFinanceData}
+                            setFinance={setEditFinanceData}
                             lang={props.lang}
                             setRefresh={setRefresh}
                         />}

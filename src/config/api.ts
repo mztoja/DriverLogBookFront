@@ -80,4 +80,6 @@ export const apiPaths = {
     getRefuelValueByTour: '/finances/getRefuelValueByTour',
     getFinances: '/finances/get',
     getFinancesByTourId: '/finances/getByTourId',
+    getFinanceByLogId: '/finances/getByLogId',
+    editFinance: '/finances/edit',
 }

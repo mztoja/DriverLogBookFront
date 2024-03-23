@@ -11,6 +11,10 @@ interface Finances {
     payment: string;
     na: string;
     notes: string;
+    edit: string;
+    financeEditHeader: string;
+    logLegend: string;
+    editSuccess: string;
 }
 
 export const finances: Finances[] = [
@@ -27,6 +31,10 @@ export const finances: Finances[] = [
         unitPrice: 'u/p',
         na: '- - -',
         notes: 'Notes',
+        edit: 'Edit',
+        financeEditHeader: 'Finance Edit',
+        logLegend: 'Finance log',
+        editSuccess: 'The details of the selected finance have been edited successfully.',
     },
     {//pl
         apiError: 'Twoja lista finansów nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -41,5 +49,9 @@ export const finances: Finances[] = [
         unitPrice: 'c/j',
         na: '- - -',
         notes: 'Notatki',
+        edit: 'Edytuj',
+        financeEditHeader: 'Edytuj wydatek',
+        logLegend: 'Czynność wydatku',
+        editSuccess: 'Szczegóły wybranego wydatku zostały edytowane pomyślnie.',
     },
 ];

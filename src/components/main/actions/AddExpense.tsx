@@ -20,7 +20,7 @@ import {AmountInput} from "../../common/form/finance/AmountInput";
 import {OnOffSwitch} from "../../common/form/OnOffSwitch";
 import {form} from "../../../assets/txt/form";
 import {ExpanseChangeType} from "../../../hooks/useExpenseMath";
-import {useExpenseMath} from "../../../hooks/useExpenseMath";
+import {useAddExpenseMath} from "../../../hooks/useExpenseMath";
 import {ItemDescriptionInput} from "../../common/form/finance/ItemDescriptionInput";
 import {countries} from "../../../data/countries";
 
@@ -43,7 +43,7 @@ export const AddExpense = (props: Props) => {
         // eslint-disable-next-line
     }, []);
 
-    useExpenseMath(
+    useAddExpenseMath(
         switchValue,
         props.formData,
         props.updateFormData,
