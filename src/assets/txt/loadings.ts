@@ -15,6 +15,9 @@ interface Loadings {
     quantity: string;
     weight: string;
     distance: string;
+    edit: string;
+    loadingEditHeader: string;
+    editSuccess: string;
 }
 
 export const loadings: Loadings[] = [
@@ -35,6 +38,9 @@ export const loadings: Loadings[] = [
         quantity: 'Quantity',
         distance: 'Distance',
         weight: 'Weight',
+        edit: 'Edit',
+        loadingEditHeader: 'Loading Edit',
+        editSuccess: 'The details of the selected loading have been edited successfully.'
     },
     {//pl
         apiError: 'Twoja lista ładunków nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -53,5 +59,8 @@ export const loadings: Loadings[] = [
         quantity: 'Ilość towaru',
         weight: 'Waga towaru',
         distance: 'Odległość',
+        edit: 'Edytuj',
+        loadingEditHeader: 'Edytuj ładunek',
+        editSuccess: 'Szczegóły wybranego ładunku zostały edytowane pomyślnie.'
     },
 ];

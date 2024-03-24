@@ -38,6 +38,16 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
                 message: login[lang].registerCountryNotExist,
                 type: 'warning',
             }
+        case 'unloadingLogData.country':
+            return {
+                message: login[lang].registerCountryNotExist,
+                type: 'warning',
+            }
+        case 'loadingLogData.country':
+            return {
+                message: login[lang].registerCountryNotExist,
+                type: 'warning',
+            }
         case 'noActiveRoute':
             return {
                 message: home[lang].noActiveRoute,
@@ -64,6 +74,16 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
                 type: 'info',
             }
         case 'startData.action':
+            return {
+                message: home[lang].actionNoExist,
+                type: 'info',
+            }
+        case 'unloadingLogData.action':
+            return {
+                message: home[lang].actionNoExist,
+                type: 'info',
+            }
+        case 'loadingLogData.action':
             return {
                 message: home[lang].actionNoExist,
                 type: 'info',

@@ -16,7 +16,8 @@ export const areFieldsEqual = (data: DayInterface, formData: DayEditData): boole
             (data.startData.notes === null && formData.startData.notes === '') ||
             data.startData.notes === formData.startData.notes
         ) &&
-        data.doubleCrew === (formData.doubleCrew === 'true')
+        data.doubleCrew === (formData.doubleCrew === 'true') &&
+        Number(data.distance) === Number(formData.distance)
     );
 
     if (!data.stopData) {
@@ -41,7 +42,6 @@ export const areFieldsEqual = (data: DayInterface, formData: DayEditData): boole
         (formData.doubleCrew !== 'true' || data.driveTime2.toString() === formData.driveTime2.toString() + ':00') &&
         data.workTime.toString() === formData.workTime.toString() + ':00' &&
         data.breakTime.toString() === formData.breakTime.toString() + ':00' &&
-        Number(data.fuelBurned) === Number(formData.fuelBurned) &&
-        Number(data.distance) === Number(formData.distance)
+        Number(data.fuelBurned) === Number(formData.fuelBurned)
     );
 }

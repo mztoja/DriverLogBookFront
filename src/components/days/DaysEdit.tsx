@@ -277,15 +277,15 @@ export const DaysEdit = (props: Props) => {
                                 onChange={e => (changingCombustion(e))}
                             />
                             </div>
-                            <br/>
-                            <div><DistanceInput
-                                lang={props.lang}
-                                value={formData.distance.toString()}
-                                onChange={e => changingDistance(e)}
-                            />
-                            </div>
                         </>
                     }
+                    <br/>
+                    <div><DistanceInput
+                        lang={props.lang}
+                        value={formData.distance.toString()}
+                        onChange={e => changingDistance(e)}
+                    />
+                    </div>
                     <br/>
                     <center>
                         {loading ?

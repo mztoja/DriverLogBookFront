@@ -140,7 +140,7 @@ export const DaysList = (props: Props) => {
                         />}
                         {
                             data?.map((day, index) => {
-                                const tourNr = tourNrs?.find(tour => tour.tourId === day.tourId)?.tourNr;
+                                const tourNr = Array.isArray(tourNrs) ? (tourNrs.find(tour => tour.tourId === day.tourId)?.tourNr ?? '') : '';
                                 const division = prevTourId.current !== day.tourId;
                                 prevTourId.current = day.tourId;
                                 return (

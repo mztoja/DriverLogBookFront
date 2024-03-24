@@ -57,10 +57,10 @@ export const FinancesList = (props: Props) => {
 
     useEffect(() => {
         if (props.tourId) {
-            fetchData<FinanceListResponse>(`${apiPaths.getFinancesByTourId}/${props.tourId}`).then((res) => {
+            fetchData<FinanceInterface[]>(`${apiPaths.getFinancesByTourId}/${props.tourId}`).then((res) => {
                 if (res.responseData) {
-                    setData(res.responseData.items);
-                    setTotalItems(res.responseData.totalItems);
+                    setData(res.responseData);
+                    setTotalItems(0);
                 } else {
                     setAlert(finances[props.lang].apiError, 'error');
                 }
@@ -141,7 +141,7 @@ export const FinancesList = (props: Props) => {
                         />}
                         {
                             data?.map((finance, index) => {
-                                const tourNr = tourNrs?.find(tour => tour.tourId === finance.tourId)?.tourNr;
+                                const tourNr = Array.isArray(tourNrs) ? (tourNrs.find(tour => tour.tourId === finance.tourId)?.tourNr ?? '') : '';
                                 const division = prevTourId.current !== finance.tourId;
                                 prevTourId.current = finance.tourId;
                                 return (

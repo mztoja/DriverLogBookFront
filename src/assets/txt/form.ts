@@ -36,6 +36,7 @@ interface Form {
     date: string;
     truck: string;
     trailer: string;
+    vehicleInput: string;
     vehicle: string;
     vehicleDetailsNotFound: string;
     fuelQuantity: string;
@@ -117,6 +118,7 @@ export const form: Form[] =
         date: 'Date',
         truck: 'Truck reg. plate',
         trailer: 'Trailer reg. plate',
+        vehicleInput: 'Vehicle',
         vehicle: 'Choose loaded vehicle',
         vehicleDetailsNotFound: 'vehicle details not found',
         fuelCombustion: 'Amount of fuel consumed',
@@ -195,6 +197,7 @@ export const form: Form[] =
             date: 'Data',
             truck: 'Nr. rej. ciężarówki',
             trailer: 'Nr. rej. naczepy/przyczepy',
+            vehicleInput: 'Pojazd',
             vehicle: 'Wybierz załadowany pojazd',
             vehicleDetailsNotFound: 'nie znaleziono danych pojazdu',
             fuelQuantity: 'Poziom paliwa',

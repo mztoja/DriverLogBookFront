@@ -241,7 +241,7 @@ export const LogsList = (props: Props) => {
                             setRefresh={setRefresh}
                         />}
                         {data?.map((log, index) => {
-                            const tourNr = tourNrs?.find(tour => tour.tourId === log.tourId)?.tourNr ?? '';
+                            const tourNr = Array.isArray(tourNrs) ? (tourNrs.find(tour => tour.tourId === log.tourId)?.tourNr ?? '') : '';
                             const division = prevTourId.current !== log.tourId;
                             prevTourId.current = log.tourId;
                             return (
