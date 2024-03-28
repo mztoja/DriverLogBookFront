@@ -1,4 +1,4 @@
-import {dayCardStateEnum, DayInterface, TourNumbersInterface, userLangEnum} from "types";
+import {dayCardStateEnum, DayInterface, TourNumbersInterface, userLangEnum, DayListResponse} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
@@ -29,7 +29,7 @@ interface Props {
 export const DaysList = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {loading, fetchDataOld} = useApi();
+    const {loading, fetchData} = useApi();
     const [data, setData] = useState<DayInterface[] | null>(null);
     const [totalItems, setTotalItems] = useState<number>(0);
     const [page, setPage] = useState<number>(1);
@@ -54,25 +54,23 @@ export const DaysList = (props: Props) => {
 
     useEffect(() => {
         if (props.tourId) {
-            (async () => {
-                const result = await fetchDataOld(apiPaths.getDaysByTourId + '/' + props.tourId, 'GET');
-                if ((result && result.responseData) && (!result.responseData.dtc)) {
-                    setData(result.responseData);
+            fetchData<DayInterface[]>(`${apiPaths.getDaysByTourId}/${props.tourId}`).then((res) => {
+                if (res.responseData) {
+                    setData(res.responseData);
                     setTotalItems(0);
                 } else {
                     setAlert(days[props.lang].apiError, 'error');
                 }
-            })();
+            });
         } else {
-            (async () => {
-                const result = await fetchDataOld(apiPaths.getDays + '/' + page + '/' + DAYS_PER_PAGE, 'GET');
-                if ((result && result.responseData) && (!result.responseData.dtc)) {
-                    setData(result.responseData.items);
-                    setTotalItems(Number(result.responseData.totalItems));
+            fetchData<DayListResponse>(`${apiPaths.getDays}/${page}/${DAYS_PER_PAGE}`).then((res) => {
+                if (res.responseData) {
+                    setData(res.responseData.items);
+                    setTotalItems(res.responseData.totalItems);
                 } else {
                     setAlert(days[props.lang].apiError, 'error');
                 }
-            })();
+            });
         }
         // eslint-disable-next-line
     }, [page, refresh]);
@@ -85,12 +83,11 @@ export const DaysList = (props: Props) => {
                 }
                 return uniqueTourIds;
             }, []);
-            (async () => {
-                const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
-                if ((result && result.responseData) && (!result.responseData.dtc)) {
-                    setTourNrs(result.responseData);
+            fetchData<TourNumbersInterface[]>(apiPaths.getRouteNumbers, {method: 'POST', sendData: {tourIds: uniqueTourIds}}).then((res) => {
+                if (res.responseData) {
+                    setTourNrs(res.responseData);
                 }
-            })();
+            });
         }
         // eslint-disable-next-line
     }, [data]);

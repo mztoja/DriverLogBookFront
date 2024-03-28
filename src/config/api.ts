@@ -62,6 +62,7 @@ export const apiPaths = {
     // services
     createService: '/services/create',
     getServiceByVehicleId: '/services/getByVehicleId',
+    editService: '/services/edit',
     // loadings
     createLoad: '/loads/create',
     unloadingLoad: '/loads/unload',
@@ -71,6 +72,7 @@ export const apiPaths = {
     getLoadings: '/loads/get',
     getLoadingsByTourId: '/loads/getByTourId',
     getNotUnloadedLoadsMass: '/loads/getNotUnloadedLoadsMass',
+    getLoadingByLogId: '/loads/getByLogId',
     editLoad: '/loads/edit',
     editSimpleLoad: '/loads/simpleEdit',
     // finances

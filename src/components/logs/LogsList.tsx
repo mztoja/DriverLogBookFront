@@ -2,6 +2,7 @@ import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "reac
 import {
     DayInterface,
     FinanceInterface,
+    LoadInterface,
     LogInterface,
     LogListResponse,
     logTypeEnum,
@@ -29,6 +30,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import {LogsEdit} from "./LogsEdit";
 import {DaysEdit} from "../days/DaysEdit";
 import {FinanceEdit} from "../finances/FinanceEdit";
+import {LoadingEdit} from "../loadings/LoadingEdit";
 
 interface Props {
     lang: userLangEnum;
@@ -53,6 +55,7 @@ export const LogsList = (props: Props) => {
     const [editLogData, setEditLogData] = useState<LogInterface | null>(null);
     const [editDayData, setEditDayData] = useState<DayInterface | null>(null);
     const [editFinanceData, setEditFinanceData] = useState<FinanceInterface | null>(null);
+    const [editLoadingData, setEditLoadingData] = useState<LoadInterface | null>(null);
     const [refresh, setRefresh] = useState<boolean>(false);
 
     const handleMouseEnter = () => {
@@ -88,6 +91,14 @@ export const LogsList = (props: Props) => {
                         }
                     });
                     break;
+                case logTypeEnum.finishLoading:
+                case logTypeEnum.finishUnloading:
+                    fetchData<LoadInterface>(`${apiPaths.getLoadingByLogId}/${log.id}`).then((res) => {
+                       if (res.responseData) {
+                           setEditLoadingData(res.responseData);
+                       }
+                    });
+                    break;
                 default:
                     setEditLogData(log);
                     break;
@@ -110,15 +121,6 @@ export const LogsList = (props: Props) => {
 
     useEffect(() => {
         if (props.tourId) {
-            // (async () => {
-            //     const result = await fetchDataOld(apiPaths.getLogsByTourId + '/' + props.tourId, 'GET');
-            //     if ((result && result.responseData) && (!result.responseData.dtc)) {
-            //         setData(result.responseData);
-            //         setTotalItems(0);
-            //     } else {
-            //         setAlert(logs[props.lang].apiError, 'error');
-            //     }
-            // })();
             fetchData<LogInterface[]>(`${apiPaths.getLogsByTourId}/${props.tourId}`).then((res) => {
                 if (res.responseData) {
                     setData(res.responseData);
@@ -128,16 +130,6 @@ export const LogsList = (props: Props) => {
                 }
             });
         } else {
-            // (async () => {
-            //     const search = filterSearch === '' ? '' : '/' + filterSearch;
-            //     const result = await fetchDataOld(apiPaths.getLogs + '/' + page + '/' + LOGS_PER_PAGE + search, 'GET');
-            //     if ((result && result.responseData) && (!result.responseData.dtc)) {
-            //         setData(result.responseData.items);
-            //         setTotalItems(Number(result.responseData.totalItems));
-            //     } else {
-            //         setAlert(logs[props.lang].apiError, 'error');
-            //     }
-            // })();
             const search = filterSearch === '' ? '' : '/' + filterSearch;
             fetchData<LogListResponse>(`${apiPaths.getLogs}/${page}/${LOGS_PER_PAGE + search}`).then((res) => {
                 if (res.responseData) {
@@ -160,12 +152,6 @@ export const LogsList = (props: Props) => {
                 }
                 return uniqueTourIds;
             }, []);
-            // (async () => {
-            //     const result = await fetchDataOld(apiPaths.getRouteNumbers, 'POST', {tourIds: uniqueTourIds});
-            //     if ((result && result.responseData) && (!result.responseData.dtc)) {
-            //         setTourNrs(result.responseData);
-            //     }
-            // })();
             fetchData<TourNumbersInterface[]>(apiPaths.getRouteNumbers, {
                 method: 'POST',
                 sendData: {tourIds: uniqueTourIds}
@@ -237,6 +223,12 @@ export const LogsList = (props: Props) => {
                         {editFinanceData && <FinanceEdit
                             finance={editFinanceData}
                             setFinance={setEditFinanceData}
+                            lang={props.lang}
+                            setRefresh={setRefresh}
+                        />}
+                        {editLoadingData && <LoadingEdit
+                            load={editLoadingData}
+                            setLoad={setEditLoadingData}
                             lang={props.lang}
                             setRefresh={setRefresh}
                         />}

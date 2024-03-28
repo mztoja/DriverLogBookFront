@@ -34,7 +34,7 @@ export const AddService = (props: Props) => {
             country: props.formData.country,
             place: props.formData.place,
             placeId: props.formData.placeId,
-            odometer: props.formData.odometer,
+            odometer: props.formData.serviceVehicleType === vehicleTypeEnum.truck.toString() ? props.formData.odometer : '0',
             notes: props.formData.notes,
             action: home[props.lang].addServiceAction,
             serviceVehicleId: props.formData.serviceVehicleId,

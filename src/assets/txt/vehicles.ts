@@ -27,6 +27,9 @@ interface Vehicles {
     collapse: string;
     edit: string;
     editSuccessInfo: string;
+    editServiceHeader: string;
+    editLogLegend: string;
+    editServiceSuccess: string;
     yes: string;
     no: string;
     serviceType: string;
@@ -76,6 +79,9 @@ export const vehicles: Vehicles[] = [
         collapse: 'Collapse',
         edit: 'Edit',
         editSuccessInfo: 'The vehicle has been successfully edited.',
+        editLogLegend: 'Activity',
+        editServiceHeader: 'Edit entry',
+        editServiceSuccess: 'The details of the selected entrance have been edited successfully.',
         yes: 'Yes',
         no: 'No',
         serviceType: 'Type of Service',
@@ -123,6 +129,9 @@ export const vehicles: Vehicles[] = [
         collapse: 'Zwiń',
         edit: 'Edytuj',
         editSuccessInfo: 'Pojazd został pomyślnie edytowany.',
+        editLogLegend: 'Czynność',
+        editServiceHeader: 'Edytuj wpis',
+        editServiceSuccess: 'Szczegóły wybranej pozycji zostały edytowane pomyślnie.',
         yes: 'Tak',
         no: 'Nie',
         serviceType: 'Rodzaj serwisu',

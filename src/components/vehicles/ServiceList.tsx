@@ -4,7 +4,7 @@ import {vehicles} from "../../assets/txt/vehicles";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import InputLabel from "@mui/material/InputLabel";
-import {MenuItem, Select, Tooltip} from "@mui/material";
+import {Fab, MenuItem, Select, Tooltip} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -14,6 +14,8 @@ import {formatOdometer} from "../../utils/formats/formatOdometer";
 import DetailsIcon from "@mui/icons-material/Details";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatPlace} from "../../utils/formats/formatPlace";
+import EditIcon from "@mui/icons-material/Edit";
+import {ServiceEdit} from "./ServiceEdit";
 
 interface Props {
     lang: userLangEnum;
@@ -36,6 +38,8 @@ export const ServiceList = (props: Props) => {
     const ref = useRef<HTMLTableRowElement | null>(null);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const [editServiceData, setEditServiceData] = useState<ServiceInterface | null>(null);
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -57,7 +61,7 @@ export const ServiceList = (props: Props) => {
             }
         });
         // eslint-disable-next-line
-    }, []);
+    }, [props.vehicleId, refresh]);
 
     useEffect(() => {
         if (serviceType === ServiceType.all) {
@@ -80,7 +84,7 @@ export const ServiceList = (props: Props) => {
     useLayoutEffect(() => {
         ref.current?.scrollIntoView({behavior: 'smooth', block: 'start'});
         // eslint-disable-next-line
-    }, [ref.current]);
+    }, [ref.current, props.vehicleId]);
 
     return (
         <>
@@ -128,6 +132,12 @@ export const ServiceList = (props: Props) => {
                         </tr>
                         </thead>
                         <tbody>
+                        {editServiceData && <ServiceEdit
+                        service={editServiceData}
+                        setService={setEditServiceData}
+                        lang={props.lang}
+                        setRefresh={setRefresh}
+                        />}
                         {showData.map((service, index) => {
                             index++;
                             return (
@@ -146,7 +156,7 @@ export const ServiceList = (props: Props) => {
                                                 {service.logData && formatSimplePlace(service.logData.place, service.logData.placeData)}
                                             </td>
                                             <td>{service.entry}</td>
-                                            <td>{service.logData && formatOdometer(service.logData.odometer)}</td>
+                                            <td>{service.logData && formatOdometer(service.logData.odometer, true)}</td>
                                             <td>{service.logData && service.logData.notes !== null &&
                                                 <DetailsIcon/>}</td>
                                         </tr>)
@@ -171,7 +181,7 @@ export const ServiceList = (props: Props) => {
                                                     {service.logData && formatPlace(service.logData.place, service.logData.placeData, props.lang)}
                                                 </td>
                                                 <td>{service.entry}</td>
-                                                <td>{service.logData && formatOdometer(service.logData.odometer)}</td>
+                                                <td>{service.logData && formatOdometer(service.logData.odometer, true)}</td>
                                                 <td></td>
                                             </tr>
                                             <tr></tr>
@@ -187,6 +197,18 @@ export const ServiceList = (props: Props) => {
                                                             {service.logData.notes}
                                                         </>
                                                     }
+                                                    <br/>
+                                                    <div>
+                                                        <Fab
+                                                            variant="extended"
+                                                            size="small"
+                                                            color="primary"
+                                                            onClick={() => setEditServiceData(service)}
+                                                        >
+                                                            <EditIcon sx={{mr: 1}}/>
+                                                            {vehicles[props.lang].edit}
+                                                        </Fab>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </>
