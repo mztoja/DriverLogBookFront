@@ -17,6 +17,8 @@ export const apiPaths = {
     getRouteSettlements: '/tours/getSettlements',
     getRouteById: '/tours/getRouteById',
     countDistanceOfActiveRoute: '/tours/countDistanceOfActiveRoute',
+    editTour: '/tours/edit',
+    editSimpleTour: '/tours/simpleEdit',
     // users
     register: '/users/register',
     login: '/auth/login',

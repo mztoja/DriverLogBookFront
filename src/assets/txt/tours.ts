@@ -52,6 +52,12 @@ interface Tours {
     showDays: string;
     showFinances: string;
     showLoads: string;
+    editHeader: string;
+    editStartLegend: string;
+    editStopLegend: string;
+    edit: string;
+    tourNumber: string;
+    editSuccess: string;
 }
 
 export const tours: Tours[] = [
@@ -109,6 +115,12 @@ export const tours: Tours[] = [
         showDays: 'Show days',
         showLoads: 'Show loadings',
         showFinances: 'Show finances',
+        editHeader: 'Edit your tour',
+        editStartLegend: 'Starting',
+        editStopLegend: 'Ending',
+        edit: 'Edit',
+        tourNumber: 'Tour Number',
+        editSuccess: 'The details of the selected route have been edited successfully.',
     },
     {//pl
         apiError: 'Twoja lista tras nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -164,5 +176,11 @@ export const tours: Tours[] = [
         showDays: 'Pokaż dni pracy',
         showFinances: 'Pokaż finanse',
         showLoads: 'Pokaż ładunki',
+        editHeader: 'Edytuj trasę',
+        editStartLegend: 'Rozpoczęcie',
+        editStopLegend: 'Zakończenie',
+        edit: 'Edytuj',
+        tourNumber: 'Numer trasy',
+        editSuccess: 'Szczegóły wybranej trasy zostały edytowane pomyślnie.',
     },
 ];

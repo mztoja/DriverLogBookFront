@@ -20,6 +20,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import ClearIcon from '@mui/icons-material/Clear';
 import {NavLink} from "react-router-dom";
 import {DeleteFromLocalStorage, DownloadFromLocalStorage, SaveToLocalStorage} from "../../hooks/LocalStorageHook";
+import EditIcon from "@mui/icons-material/Edit";
+import {TourEdit} from "./TourEdit";
 
 
 interface Props {
@@ -38,6 +40,7 @@ export const ToursList = (props: Props) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [showSettlementWindow, setShowSettlementWindow] = useState<boolean>(false);
+    const [editTourData, setEditTourData] = useState<TourInterface | null>(null);
 
     const handleMouseEnter = (): void => {
         setIsHovered(true);
@@ -179,6 +182,12 @@ export const ToursList = (props: Props) => {
                         </tr>
                         </thead>
                         <tbody>
+                        {editTourData && <TourEdit
+                            tour={editTourData}
+                            setTour={setEditTourData}
+                            lang={props.lang}
+                            setRefresh={props.setRefresh}
+                        />}
                         {showSettlementWindow && <ToursCreateSettlement
                             lang={props.lang}
                             tourList={data}
@@ -372,6 +381,17 @@ export const ToursList = (props: Props) => {
                                                         {tours[props.lang].details}
                                                     </Fab>
                                                     <br/><br/>
+                                                    <div>
+                                                        <Fab
+                                                            variant="extended"
+                                                            size="small"
+                                                            color="primary"
+                                                            onClick={() => setEditTourData(tour)}
+                                                        >
+                                                            <EditIcon sx={{mr: 1}}/>
+                                                            {tours[props.lang].edit}
+                                                        </Fab>
+                                                    </div><br/>
                                                 </td>
                                             </tr>
                                         </>
