@@ -6,6 +6,7 @@ import {
     LogInterface,
     LogListResponse,
     logTypeEnum,
+    TourInterface,
     TourNumbersInterface,
     userLangEnum
 } from "types";
@@ -31,6 +32,7 @@ import {LogsEdit} from "./LogsEdit";
 import {DaysEdit} from "../days/DaysEdit";
 import {FinanceEdit} from "../finances/FinanceEdit";
 import {LoadingEdit} from "../loadings/LoadingEdit";
+import {TourEdit} from "../tours/TourEdit";
 
 interface Props {
     lang: userLangEnum;
@@ -56,6 +58,7 @@ export const LogsList = (props: Props) => {
     const [editDayData, setEditDayData] = useState<DayInterface | null>(null);
     const [editFinanceData, setEditFinanceData] = useState<FinanceInterface | null>(null);
     const [editLoadingData, setEditLoadingData] = useState<LoadInterface | null>(null);
+    const [editTourData, setEditTourData] = useState<TourInterface | null>(null);
     const [refresh, setRefresh] = useState<boolean>(false);
 
     const handleMouseEnter = () => {
@@ -97,6 +100,13 @@ export const LogsList = (props: Props) => {
                        if (res.responseData) {
                            setEditLoadingData(res.responseData);
                        }
+                    });
+                    break;
+                case logTypeEnum.tours:
+                    fetchData<TourInterface>(`${apiPaths.getRouteByLogId}/${log.id}`).then((res) => {
+                        if (res.responseData) {
+                            setEditTourData(res.responseData);
+                        }
                     });
                     break;
                 default:
@@ -229,6 +239,12 @@ export const LogsList = (props: Props) => {
                         {editLoadingData && <LoadingEdit
                             load={editLoadingData}
                             setLoad={setEditLoadingData}
+                            lang={props.lang}
+                            setRefresh={setRefresh}
+                        />}
+                        {editTourData && <TourEdit
+                            tour={editTourData}
+                            setTour={setEditTourData}
                             lang={props.lang}
                             setRefresh={setRefresh}
                         />}

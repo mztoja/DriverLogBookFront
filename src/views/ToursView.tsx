@@ -27,7 +27,7 @@ export const ToursView = (props:Props) => {
                         ?
                         <>
                             <Link to="" className="Link" onClick={() => setTourId(null)}>{home[props.userData.lang].back}</Link><br/><br/>
-                            <TourDetails lang={props.userData.lang} tourId={tourId}/>
+                            <TourDetails lang={props.userData.lang} tourId={tourId} tourGenerator={props.userData.tourGenerator}/>
                             <Link to="" className="Link" onClick={() => setTourId(null)}>{home[props.userData.lang].back}</Link><br/><br/>
                         </>
                         :

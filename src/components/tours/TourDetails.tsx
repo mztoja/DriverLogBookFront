@@ -1,4 +1,4 @@
-import {TourInterface, userLangEnum} from "types";
+import {TourInterface, TourSettleGeneratorInterface, userLangEnum} from "types";
 import React, {useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {tours} from "../../assets/txt/tours";
@@ -20,16 +20,19 @@ import {LogsList} from "../logs/LogsList";
 import {DaysList} from "../days/DaysList";
 import {FinancesList} from "../finances/FinancesList";
 import {LoadingsList} from "../loadings/LoadingsList";
+import {generateTourSettlement} from "../../utils/generateTourSettlement";
 
 interface Props {
     lang: userLangEnum;
     tourId: number | null;
+    tourGenerator: string;
 }
 
 export const TourDetails = (props: Props) => {
     const {setAlert} = useAlert();
-    const {loading, fetchDataOld} = useApi();
+    const {loading, fetchDataOld, fetchData} = useApi();
     const [data, setData] = useState<TourInterface | null>(null);
+    const [generatorLoading, setGeneratorLoading] = useState<boolean>(false);
     const [showLogList, setShowLogList] = useState<boolean>(false);
     const [showDayList, setShowDayList] = useState<boolean>(false);
     const [showFinanceList, setShowFinanceList] = useState<boolean>(false);
@@ -58,26 +61,40 @@ export const TourDetails = (props: Props) => {
 
     const handleLogListButton = () => {
         setShowLogList(true);
-        logListRef.current?.scrollIntoView({ behavior: 'smooth' });
+        logListRef.current?.scrollIntoView({behavior: 'smooth'});
     }
 
     const handleDayListButton = () => {
         setShowDayList(true);
-        dayListRef.current?.scrollIntoView({ behavior: 'smooth' });
+        dayListRef.current?.scrollIntoView({behavior: 'smooth'});
     }
 
     const handleFinanceListButton = () => {
         setShowFinanceList(true);
-        financeListRef.current?.scrollIntoView({ behavior: 'smooth' });
+        financeListRef.current?.scrollIntoView({behavior: 'smooth'});
     }
 
     const handleLoadListButton = () => {
         setShowLoadList(true);
-        loadListRef.current?.scrollIntoView({ behavior: 'smooth' });
+        loadListRef.current?.scrollIntoView({behavior: 'smooth'});
     }
 
-    if (loading || !data) {
-        return <CircularProgress/>
+    const handleGeneratorButton = () => {
+        setGeneratorLoading(true);
+
+        fetchData<TourSettleGeneratorInterface>(`${apiPaths.generateSettlementRoute}/${props.tourId}`).then((res) => {
+            if (res.responseData) {
+                generateTourSettlement(Number(props.tourId), props.lang, res.responseData, props.tourGenerator, setAlert)
+                    .finally(() => setGeneratorLoading(false));
+            } else {
+                setGeneratorLoading(false);
+                setAlert(tours[props.lang].generateError, 'error');
+            }
+        });
+    }
+
+    if ((loading && !generatorLoading) || !data) {
+        return <><br/><CircularProgress/><br/></>
     }
 
     return (
@@ -197,22 +214,31 @@ export const TourDetails = (props: Props) => {
                         <td colSpan={2}>
                             <center>
                                 <br/>
-                            <Fab variant="extended" size="small" color="primary" onClick={() => handleLogListButton()}>
-                                <ListIcon sx={{mr: 1}}/>
-                                {tours[props.lang].showLogs}
-                            </Fab><br/><br/>
-                            <Fab variant="extended" size="small" color="primary" onClick={() => handleDayListButton()}>
-                                <FormatListNumberedIcon sx={{mr: 1}}/>
-                                {tours[props.lang].showDays}
-                            </Fab><br/><br/>
-                            <Fab variant="extended" size="small" color="primary" onClick={() => handleFinanceListButton()}>
-                                <PaymentIcon sx={{mr: 1}}/>
-                                {tours[props.lang].showFinances}
-                            </Fab><br/><br/>
-                            <Fab variant="extended" size="small" color="primary" onClick={() => handleLoadListButton()}>
-                                <LocalShippingIcon sx={{mr: 1}}/>
-                                {tours[props.lang].showLoads}
-                            </Fab><br/><br/>
+                                <Fab variant="extended" size="small" color="primary"
+                                     onClick={() => handleLogListButton()}>
+                                    <ListIcon sx={{mr: 1}}/>
+                                    {tours[props.lang].showLogs}
+                                </Fab><br/><br/>
+                                <Fab variant="extended" size="small" color="primary"
+                                     onClick={() => handleDayListButton()}>
+                                    <FormatListNumberedIcon sx={{mr: 1}}/>
+                                    {tours[props.lang].showDays}
+                                </Fab><br/><br/>
+                                <Fab variant="extended" size="small" color="primary"
+                                     onClick={() => handleFinanceListButton()}>
+                                    <PaymentIcon sx={{mr: 1}}/>
+                                    {tours[props.lang].showFinances}
+                                </Fab><br/><br/>
+                                <Fab variant="extended" size="small" color="primary"
+                                     onClick={() => handleLoadListButton()}>
+                                    <LocalShippingIcon sx={{mr: 1}}/>
+                                    {tours[props.lang].showLoads}
+                                </Fab><br/><br/>
+                                    <Fab variant="extended" size="small" color="primary" disabled={generatorLoading}
+                                         onClick={() => handleGeneratorButton()}>
+                                        {!generatorLoading ? tours[props.lang].generate : <CircularProgress/>}
+                                    </Fab>
+                                <br/><br/>
                             </center>
                         </td>
                     </tr>
@@ -222,19 +248,23 @@ export const TourDetails = (props: Props) => {
             <div className='DivClear'/>
             <br/>
             <div ref={logListRef}>
-                {props.tourId && showLogList && <LogsList lang={props.lang} tourId={props.tourId} setShowLogList={setShowLogList}/>}
+                {props.tourId && showLogList &&
+                    <LogsList lang={props.lang} tourId={props.tourId} setShowLogList={setShowLogList}/>}
             </div>
             <br/>
             <div ref={dayListRef}>
-                {props.tourId && showDayList && <DaysList lang={props.lang} tourId={props.tourId} setShowDayList={setShowDayList}/>}
+                {props.tourId && showDayList &&
+                    <DaysList lang={props.lang} tourId={props.tourId} setShowDayList={setShowDayList}/>}
             </div>
             <br/>
             <div ref={financeListRef}>
-                {props.tourId && showFinanceList && <FinancesList lang={props.lang} tourId={props.tourId} setShowFinancesList={setShowFinanceList}/>}
+                {props.tourId && showFinanceList &&
+                    <FinancesList lang={props.lang} tourId={props.tourId} setShowFinancesList={setShowFinanceList}/>}
             </div>
             <br/>
             <div ref={loadListRef}>
-                {props.tourId && showLoadList && <LoadingsList lang={props.lang} tourId={props.tourId} setShowLoadingsList={setShowLoadList}/>}
+                {props.tourId && showLoadList &&
+                    <LoadingsList lang={props.lang} tourId={props.tourId} setShowLoadingsList={setShowLoadList}/>}
             </div>
             <br/>
         </>

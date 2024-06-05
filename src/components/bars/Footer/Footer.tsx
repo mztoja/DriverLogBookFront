@@ -9,5 +9,5 @@ interface Props {
 
 export const Footer = (props:Props) => {
     const txt = commons[props.lang];
-    return <div id="Footer">{txt.footer}. Tu wstaw formularz kontaktowy! </div>
+    return <div id="Footer">{txt.footer}</div>
 }

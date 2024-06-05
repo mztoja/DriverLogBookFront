@@ -200,6 +200,7 @@ export const TourEdit = (props: Props) => {
                                 onChangeAmount={e => updateForm('expectedSalary', null, e)}
                                 onChangeCurrency={e => updateForm('currency', null, e)}
                                 nameId='expectedSalary'
+                                currencyDisable
                             />
                         </div>
                     <br/>

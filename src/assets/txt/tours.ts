@@ -58,6 +58,10 @@ interface Tours {
     edit: string;
     tourNumber: string;
     editSuccess: string;
+    generate: string;
+    generateError: string;
+    generateTitle: (x: string) => string;
+    generatorNotFound: string;
 }
 
 export const tours: Tours[] = [
@@ -121,6 +125,10 @@ export const tours: Tours[] = [
         edit: 'Edit',
         tourNumber: 'Tour Number',
         editSuccess: 'The details of the selected route have been edited successfully.',
+        generate: 'Generate route settlement',
+        generateError: 'There was a problem generating the settlement. Try again.',
+        generateTitle: (x) => `Settlement of route no ${x}`,
+        generatorNotFound: 'You don\'t have a template assigned. To be able to generate route settlements, you must contact the Administrator.',
     },
     {//pl
         apiError: 'Twoja lista tras nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -182,5 +190,9 @@ export const tours: Tours[] = [
         edit: 'Edytuj',
         tourNumber: 'Numer trasy',
         editSuccess: 'Szczegóły wybranej trasy zostały edytowane pomyślnie.',
+        generate: 'Generuj rozliczenie trasy',
+        generateError: 'Wystąpił problem z generowaniem rozliczenia. Spróbuj ponownie.',
+        generateTitle: (x) => `Rozliczenie trasy nr ${x}`,
+        generatorNotFound: 'Nie masz przydzielonego szablonu. Aby móc generować rozliczenia tras musisz skontaktować się z Administratorem.',
     },
 ];

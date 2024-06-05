@@ -26,7 +26,9 @@ export const App = () => {
     useEffect(() => {
         (async () => {
             const result = await fetchDataOld(apiPaths.get, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
+            if ((result && result.responseData) &&
+
+                (!result.responseData.dtc)) {
                 setUserData(result.responseData);
             } else {
                 const lang = DownloadFromLocalStorage('lang');
