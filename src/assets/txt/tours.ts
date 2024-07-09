@@ -62,6 +62,9 @@ interface Tours {
     generateError: string;
     generateTitle: (x: string) => string;
     generatorNotFound: string;
+    delete: string;
+    deleteConfirm: (x: string) => string;
+    deleteSuccess: string;
 }
 
 export const tours: Tours[] = [
@@ -129,6 +132,9 @@ export const tours: Tours[] = [
         generateError: 'There was a problem generating the settlement. Try again.',
         generateTitle: (x) => `Settlement of route no ${x}`,
         generatorNotFound: 'You don\'t have a template assigned. To be able to generate route settlements, you must contact the Administrator.',
+        delete: 'Delete',
+        deleteConfirm: (x) => `Are you sure you want to remove the settlement from ${x}? Routes covered by them will be marked as unsettled.`,
+        deleteSuccess: 'Monthly settlement was successfully deleted and all routes were marked as unbilled.',
     },
     {//pl
         apiError: 'Twoja lista tras nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -194,5 +200,8 @@ export const tours: Tours[] = [
         generateError: 'Wystąpił problem z generowaniem rozliczenia. Spróbuj ponownie.',
         generateTitle: (x) => `Rozliczenie trasy nr ${x}`,
         generatorNotFound: 'Nie masz przydzielonego szablonu. Aby móc generować rozliczenia tras musisz skontaktować się z Administratorem.',
+        delete: 'Usuń',
+        deleteConfirm: (x) => `Czy na pewno chcesz usunąć rozliczenie z ${x}? Trasy które pod nie podlegają będą oznaczone jako nie rozliczone.`,
+        deleteSuccess: 'Pomyślnie usunięto rozliczenie miesięczne a wszystkie trasy zostały oznaczone jako nierozliczone.',
     },
 ];

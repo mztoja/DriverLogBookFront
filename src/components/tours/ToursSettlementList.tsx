@@ -18,6 +18,8 @@ import {ToursList} from "./ToursList";
 import {MonthlySettlementTypes} from "../../types/MonthlySettlementTypes";
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import {DownloadFromLocalStorage, SaveToLocalStorage} from "../../hooks/LocalStorageHook";
+import ClearIcon from '@mui/icons-material/Clear';
+import { WindowConfirm } from "../common/WindowConfirm";
 
 interface Props {
     lang: userLangEnum;
@@ -44,7 +46,7 @@ const defaultMonthlySettlement = (): MonthlySettlementTypes | null => {
 }
 
 export const ToursSettlementList = (props: Props) => {
-    const {loading, fetchDataOld} = useApi();
+    const { loading, fetchDataOld, fetchData } = useApi();
     const {setAlert} = useAlert();
     const [data, setData] = useState<TourMInterface[]>([]);
     const [year, setYear] = useState<number>(defaultYear());
@@ -53,6 +55,9 @@ export const ToursSettlementList = (props: Props) => {
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [monthlySettlement, setMonthlySettlement] = useState<MonthlySettlementTypes | null>(defaultMonthlySettlement());
     const tourListRef = useRef<HTMLDivElement>(null);
+    const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
+    const [deleteId, setDeleteId] = useState<number>(0);
+    const [deleteMonth, setDeleteMonth] = useState<string>('');
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -69,6 +74,23 @@ export const ToursSettlementList = (props: Props) => {
         SaveToLocalStorage('toursSetMonth', month);
         tourListRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    const handleDeleteSettlement = (id: number, monthValue: string): void => {
+        setDeleteId(id);
+        setDeleteMonth(formatShortDate(monthValue).slice(3));
+        setDeleteConfirm(true);
+    }
+
+    const executeDelete = () => {
+        const sendData = { id: deleteId };
+        fetchData(apiPaths.deleteMonthlySettlement, { method: 'DELETE', sendData }, { setAlert, lang: props.lang })
+            .then((res) => {
+                if (res.success) {
+                    setAlert(tours[props.lang].deleteSuccess, 'success');
+                    props.setRefresh((prev => !prev));
+                }
+            });
+    }
 
     const changeYear = (value: number): void => {
         const newYear = year + value;
@@ -353,6 +375,11 @@ export const ToursSettlementList = (props: Props) => {
                                                         <FormatListNumberedIcon sx={{mr: 1}}/>
                                                         {tours[props.lang].viewRouteList}
                                                     </Fab>
+                                                    <br /><br />
+                                                    <Fab variant="extended" size="small" color="warning" onClick={() => handleDeleteSettlement(settlement.id, settlement.month)}>
+                                                        <ClearIcon sx={{ mr: 1 }} />
+                                                        {tours[props.lang].delete}
+                                                    </Fab>
                                                 </td>
                                             </tr>
                                         </>
@@ -366,6 +393,7 @@ export const ToursSettlementList = (props: Props) => {
             </main>
             <br/>
             <div ref={tourListRef}>{toursListComponent}</div>
+            <WindowConfirm lang={props.lang} text={tours[props.lang].deleteConfirm(deleteMonth)} show={deleteConfirm} setShow={setDeleteConfirm} execute={executeDelete} />
         </>
     );
 }
