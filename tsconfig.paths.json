@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "types": [
-        "../driver-log-book-back/src/types"
+        "./src/types/backend/types"
       ]
     }
   }
