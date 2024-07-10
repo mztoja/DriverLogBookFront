@@ -1,0 +1,22 @@
+#TopBar {
+    background-color: #052d25;
+    margin: 0.5rem auto;
+    width: 90vw;
+    color: #d87a19;
+    padding: 0.4rem;
+    border-radius: 0.7rem;
+}
+.TopBar_Left {
+    float: left;
+}
+.TopBar_Right {
+    float: right;
+}
+.TopBar__LangImg {
+    max-height: 1em;
+    margin-right: 0.2em;
+    margin-left: 0.2em;
+}
+.TopBar__LangImg:hover {
+    cursor: pointer;
+}
