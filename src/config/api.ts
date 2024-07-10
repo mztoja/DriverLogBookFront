@@ -1,4 +1,4 @@
-export const apiURL = process.env.REACT_APP_API_URL ?? 'http://localhost:3001/v3';
+export const apiURL = process.env.REACT_APP_API_URL ?? 'http://vps-88687f9b.vps.ovh.net/:3001/v3';
 
 export const apiPaths = {
     // places

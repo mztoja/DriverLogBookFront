@@ -33,7 +33,7 @@ const defaultYear = ():number => {
     if (year) {
         return Number(year);
     }
-    return new Date().getFullYear();
+    return new Date().getUTCFullYear();
 }
 
 const defaultMonthlySettlement = (): MonthlySettlementTypes | null => {

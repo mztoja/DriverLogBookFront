@@ -1,7 +1,7 @@
 export const getFirstDayOfPreviousMonth = () => {
     const today = new Date();
-    let year = today.getFullYear();
-    let month = today.getMonth();
+    let year = today.getUTCFullYear();
+    let month = today.getUTCMonth();
     if (month === 0) {
         year--;
         month = 11;
