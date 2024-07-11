@@ -52,6 +52,9 @@ export const DayStart = (props: ActionsPropsTypes) => {
             cardInserted: props.formData.cardInserted,
             doubleCrew: props.formData.doubleCrew,
             action: home[props.lang].startedDayAction + ' ' + (props.formData.cardInserted === 'true' ? home[props.lang].startedDayActionCardInsert : ''),
+        };
+        if ((lastDay) && (lastDay.cardState === dayCardStateEnum.inserted)) {
+            sendData.action = home[props.lang].startedDayAction;
         }
         fetchData<DayInterface>(apiPaths.createNewDay, {method: 'POST', sendData}, {setAlert, lang: props.lang})
             .then((res) => {

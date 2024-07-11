@@ -8,12 +8,18 @@ interface Props extends InputPropsTypes {
     valueAsDefault?: boolean;
 }
 
+const formatLocalDateTime = (date: any) => {
+    const offset = date.getTimezoneOffset();
+    const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+    return localDate.toISOString().slice(0, 16);
+};
+
 export const DateTimeInput = (props: Props) => {
 
     const [selectedDate, setSelectedDate] = useState(
         props.valueAsDefault
             ? new Date(new Date(props.value).getTime()).toISOString().slice(0, 16)
-            : new Date(new Date().getTime()).toISOString().slice(0, 16)
+            : formatLocalDateTime(new Date())
     );
 
     const handleDateChange = (e: any) => {
