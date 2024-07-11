@@ -46,7 +46,15 @@ export const InfoBar = (props: Props) => {
     const {setAlert} = useAlert();
     const {tourData, dayData, lastLogData} = props;
 
-    const [currentTime, setCurrentTime] = useState<Date>(new Date());
+    const [currentTime, setCurrentTime] = useState<Date>(new Date(Date.UTC(
+        new Date().getUTCFullYear(),
+        new Date().getUTCMonth(),
+        new Date().getUTCDate(),
+        new Date().getUTCHours(),
+        new Date().getUTCMinutes(),
+        new Date().getUTCSeconds(),
+        new Date().getUTCMilliseconds()
+    )));
     const [stopDate, setStopDate] = useState<Date | null>(null);
     const [tourDuration, setTourDuration] = useState<string>("");
     const [breakDuration, setBreakDuration] = useState<string>("");
