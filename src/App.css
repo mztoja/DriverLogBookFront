@@ -229,3 +229,44 @@ tbody tr:nth-child(even) {
 tbody tr:hover, .highlighted {
     background-color: #d8690f82 !important;
 }
+#Notes {
+    padding: 0.4rem;
+    margin: 0.5rem auto;
+    min-height: 10vh;
+    height: auto;
+    width: 65vw;
+    background-color: #595252;
+    border-radius: 0.7rem;
+    border: 0.5rem solid #1a59a757;
+    color: #b3b3b3;
+    text-align: left;
+}
+
+#NotesError {
+    padding: 0.4rem;
+    margin: 0.5rem auto;
+    min-height: 10vh;
+    width: 65vw;
+    background-color: #595252;
+    border-radius: 0.7rem;
+    border: 0.5rem solid #9b03036d;
+    color: #b3b3b3;
+    text-align: left;
+}
+
+.transparent-textarea {
+    flex: 1;
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    resize: none;
+    border: none;
+    background-color: transparent;
+    overflow: hidden;
+    outline: none;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+    line-height: inherit;
+    color: inherit;
+}

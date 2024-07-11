@@ -46,15 +46,7 @@ export const InfoBar = (props: Props) => {
     const {setAlert} = useAlert();
     const {tourData, dayData, lastLogData} = props;
 
-    const [currentTime, setCurrentTime] = useState<Date>(new Date(Date.UTC(
-        new Date().getUTCFullYear(),
-        new Date().getUTCMonth(),
-        new Date().getUTCDate(),
-        new Date().getUTCHours(),
-        new Date().getUTCMinutes(),
-        new Date().getUTCSeconds(),
-        new Date().getUTCMilliseconds()
-    )));
+    const [currentTime, setCurrentTime] = useState<Date>(new Date());
     const [stopDate, setStopDate] = useState<Date | null>(null);
     const [tourDuration, setTourDuration] = useState<string>("");
     const [breakDuration, setBreakDuration] = useState<string>("");
@@ -82,8 +74,8 @@ export const InfoBar = (props: Props) => {
         if (tourData && tourData.startLogData) {
             const now = currentTime;
             const startDate = new Date(tourData.startLogData.date);
+            startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
             const diff = Math.abs(now.getTime() - startDate.getTime());
-
             const hours = Math.floor(diff / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
 
@@ -106,13 +98,13 @@ export const InfoBar = (props: Props) => {
             const minutes = Math.floor((diff % 3600000) / 60000);
             const endTime = (addHours: number) => {
                 const newDate = new Date(stopDate);
-                newDate.setHours(stopDate.getUTCHours() + addHours);
-                return (`${newDate.getUTCHours().toString()}:${newDate.getUTCMinutes().toString().padStart(2, '0')}`);
+                newDate.setHours(stopDate.getHours() + addHours);
+                return (`${newDate.getHours().toString()}:${newDate.getMinutes().toString().padStart(2, '0')}`);
             }
             const timeLeft = (addHours: number) => {
                 const newDate = new Date(stopDate);
-                newDate.setHours(stopDate.getUTCHours() + addHours);
-                newDate.setMinutes(newDate.getUTCMinutes() + 1);
+                newDate.setHours(stopDate.getHours() + addHours);
+                newDate.setMinutes(newDate.getMinutes() + 1);
                 const diff = Math.abs(newDate.getTime() - currentTime.getTime());
                 return (`${Math.floor(diff / 3600000).toString()}:${Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0')}`);
             }

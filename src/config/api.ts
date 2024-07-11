@@ -29,6 +29,7 @@ export const apiPaths = {
     logout: '/auth/logout',
     markDepart: '/users/markDepart',
     userUpdate: '/users/userUpdate',
+    editNotes: '/users/editNotes',
     // days
     createNewDay: '/days/create',
     finishDay: '/days/finish',
