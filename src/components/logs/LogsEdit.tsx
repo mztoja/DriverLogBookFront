@@ -49,15 +49,17 @@ export const LogsEdit = (props: Props) => {
         }
     }
 
+    const handleClose = () => props.setLog(null);
+
     return (
         <Modal
             aria-labelledby="day-edit"
             open={props.log !== null}
-            onClose={() => props.setLog(null)}
+            onClose={handleClose}
             slots={{backdrop: StyledBackdrop}}
         >
             <ModalContent sx={{width: 400}}>
-                <h2>{logs[props.lang].logEditHeader}</h2>
+                <h2 onClick={handleClose}>{logs[props.lang].logEditHeader}</h2>
                 <form onSubmit={sendForm}>
                     <div><DateTimeInput
                         lang={props.lang}

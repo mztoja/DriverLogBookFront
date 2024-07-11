@@ -127,6 +127,8 @@ export const DaysEdit = (props: Props) => {
         });
     }
 
+    const handleClose = () => props.setDay(null);
+
     return (
         <Modal
             aria-labelledby="day-edit"
@@ -135,7 +137,7 @@ export const DaysEdit = (props: Props) => {
             slots={{backdrop: StyledBackdrop}}
         >
             <ModalContent sx={{width: 400}}>
-                <h2>{days[props.lang].dayEditHeader}</h2>
+                <h2 onClick={handleClose}>{days[props.lang].dayEditHeader}</h2>
                 <form onSubmit={sendForm}>
                     <fieldset>
                         <legend>{days[props.lang].editStartLegend}</legend>

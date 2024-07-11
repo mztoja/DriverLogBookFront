@@ -90,15 +90,17 @@ export const FinanceEdit = (props: Props) => {
         });
     }
 
+    const handleClose = () => props.setFinance(null);
+
     return (
         <Modal
             aria-labelledby="finance-edit"
             open={props.finance !== null}
-            onClose={() => props.setFinance(null)}
+            onClose={handleClose}
             slots={{backdrop: StyledBackdrop}}
         >
             <ModalContent sx={{width: 400}}>
-                <h2>{finances[props.lang].financeEditHeader}</h2>
+                <h2 onClick={handleClose}>{finances[props.lang].financeEditHeader}</h2>
                 <form onSubmit={sendForm}>
                     <fieldset>
                         <legend>{finances[props.lang].logLegend}</legend>

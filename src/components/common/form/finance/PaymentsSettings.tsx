@@ -89,7 +89,7 @@ export const PaymentsSettings = (props: Props) => {
                 <ModalContent sx={{width: 400}}>
                     {loading ? <CircularProgress/> :
                         <>
-                            <h2 className='center'>{form[props.lang].paymentSetTitle}</h2>
+                            <h2 className='center' onClick={handleClose}>{form[props.lang].paymentSetTitle}</h2>
                             <p>
                                 <IconButton color="error" aria-label="delete" disabled>
                                     <HighlightOffIcon/>

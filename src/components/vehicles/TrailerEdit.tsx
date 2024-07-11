@@ -83,7 +83,7 @@ export const TrailerEdit = (props: Props) => {
                 slots={{backdrop: StyledBackdrop}}
             >
                 <ModalContent sx={{width: 400}}>
-                        <h2>{vehicles[props.lang].edit} {editTrailerForm.registrationNr}</h2>
+                    <h2 onClick={handleClose}>{vehicles[props.lang].edit} {editTrailerForm.registrationNr}</h2>
                         <form onSubmit={sendForm}>
                             <div>
                                 <RegistrationNrInput vehicle={'trailer'} lang={props.lang} value={editTrailerForm.registrationNr} onChange={e => updateForm('registrationNr', e)}/>

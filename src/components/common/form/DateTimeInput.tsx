@@ -12,8 +12,8 @@ export const DateTimeInput = (props: Props) => {
 
     const [selectedDate, setSelectedDate] = useState(
         props.valueAsDefault
-            ? new Date(new Date(props.value).getTime() + 60*60*1000).toISOString().slice(0, 16)
-            : new Date(new Date().getTime() + 60*60*1000).toISOString().slice(0, 16)
+            ? new Date(new Date(props.value).getTime()).toISOString().slice(0, 16)
+            : new Date(new Date().getTime()).toISOString().slice(0, 16)
     );
 
     const handleDateChange = (e: any) => {

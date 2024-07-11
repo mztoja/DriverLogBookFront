@@ -65,18 +65,20 @@ export const AddPlace = (props: Props) => {
         props.setShow(false);
     };
 
+    const handleClose = () => props.setShow(false);
+
     return (
         <div>
             <Modal
                 aria-labelledby="unstyled-modal-title"
                 aria-describedby="unstyled-modal-description"
                 open={props.show}
-                onClose={() => props.setShow(false)}
+                onClose={handleClose}
                 slots={{backdrop: StyledBackdrop}}
             >
                 <ModalContent sx={{width: 400}}>
                     <center>
-                        <h2>{places[props.lang].addPlace}</h2>
+                        <h2 onClick={handleClose}>{places[props.lang].addPlace}</h2>
                         <form onSubmit={sendAddPlaceForm}>
 
                             <div><PlaceTypeSelect lang={props.lang} value={addPlaceForm.type}
