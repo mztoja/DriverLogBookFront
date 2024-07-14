@@ -63,7 +63,9 @@ export const InfoBar = (props: Props) => {
         if (!dayData) {
             fetchData<DayInterface>(apiPaths.getYourLastDay).then((res) => {
                 if (res.responseData && res.responseData.stopData) {
-                    setStopDate(new Date(res.responseData.stopData.date));
+                    const stopDate = new Date(res.responseData.stopData.date);
+                    stopDate.setMinutes(stopDate.getMinutes() + stopDate.getTimezoneOffset());
+                    setStopDate(stopDate);
                 }
             });
         }

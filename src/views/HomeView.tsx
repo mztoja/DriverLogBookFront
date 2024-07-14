@@ -9,6 +9,7 @@ import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import {UserInterface, TourInterface, DayInterface, LogInterface} from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import { NotesField } from "../components/main/NotesField";
+import { DivClear } from "../components/common/DivClear";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -84,6 +85,7 @@ export const HomeView = (props: Props) => {
                     setRefresh={setRefresh}
                     lastLogData={lastLogData}
                 />
+                <DivClear />
                 <NotesField
                     notes={props.userData.notes}
                     lang={props.userData.lang}

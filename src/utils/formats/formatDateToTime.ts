@@ -1,6 +1,7 @@
 export const formatDateToTime = (dateString: string, addHours?: number) => {
 
     const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
     if (addHours) {
         date.setHours(date.getHours() + addHours);
     }
