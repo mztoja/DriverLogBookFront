@@ -160,7 +160,9 @@ export const InfoBar = (props: Props) => {
 
             fetchData<number>(apiPaths.getNotUnloadedLoadsMass, {
                 setData: setGoodsWeight,
-            }).then();
+            }).then((res) => {
+                if (!res.success) setGoodsWeight(null);
+            });
 
             if (props.userData.markedDepart !== 0) {
                 fetchData<PlaceInterface>(`${apiPaths.getPlace}/${props.userData.markedDepart}`, {
