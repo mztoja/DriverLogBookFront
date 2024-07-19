@@ -16,6 +16,7 @@ import {formatCountry} from "../../utils/formats/formatCountry";
 import NavigationIcon from '@mui/icons-material/Navigation';
 import EditIcon from "@mui/icons-material/Edit";
 import {PlaceEdit} from "./PlaceEdit";
+import { formatText } from "../../utils/formats/formatText";
 
 interface Props {
     userData: UserInterface;
@@ -211,7 +212,7 @@ export const PlacesList = (props: Props) => {
                                                             {place.description !== null && (
                                                                 <div>
                                                                     <DetailsIcon/><br/>
-                                                                    {place.description}
+                                                                    <div dangerouslySetInnerHTML={{ __html: formatText(place.description) }} />
                                                                 </div>
                                                             )}
                                                             <br/>

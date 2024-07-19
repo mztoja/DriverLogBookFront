@@ -87,7 +87,8 @@ export const HomeView = (props: Props) => {
                 />
                 <DivClear />
                 <NotesField
-                    notes={props.userData.notes}
+                    userData={props.userData}
+                    setUserData={props.setUserData}
                     lang={props.userData.lang}
                 />
             </Content>

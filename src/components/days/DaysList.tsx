@@ -19,6 +19,7 @@ import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import {DaysEdit} from "./DaysEdit";
+import { formatText } from "../../utils/formats/formatText";
 
 interface Props {
     lang: userLangEnum;
@@ -261,14 +262,14 @@ export const DaysList = (props: Props) => {
                                                             <>
                                                                 <br/>
                                                                 <DetailsIcon/><br/>
-                                                                {days[props.lang].start}: {day.startData.notes}<br/>
+                                                            {days[props.lang].start}: <div dangerouslySetInnerHTML={{ __html: formatText(day.startData.notes) }} /><br />
                                                             </>
                                                         }
                                                         {day.stopData?.notes &&
                                                             <>
                                                                 <br/>
                                                                 <DetailsIcon/><br/>
-                                                                {days[props.lang].stop}: {day.stopData.notes}<br/>
+                                                            {days[props.lang].stop}: <div dangerouslySetInnerHTML={{ __html: formatText(day.stopData.notes) }} /><br />
                                                             </>
                                                         }
                                                         <br/>

@@ -18,6 +18,7 @@ import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import {LoadingEdit} from "./LoadingEdit";
+import { formatText } from "../../utils/formats/formatText";
 
 interface Props {
     lang: userLangEnum;
@@ -296,10 +297,10 @@ export const LoadingsList = (props: Props) => {
                                                     {(load.loadingLogData?.notes || load.unloadingLogData?.notes) && <DetailsIcon/>}
                                                     <br/>
                                                     {load.loadingLogData?.notes &&
-                                                        <>{loadings[props.lang].loading}: {load.loadingLogData.notes}<br/></>
+                                                        <>{loadings[props.lang].loading}: <div dangerouslySetInnerHTML={{ __html: formatText(load.loadingLogData.notes) }} /><br /></>
                                                     }
                                                     {load.unloadingLogData?.notes &&
-                                                        <>{loadings[props.lang].unloading}: {load.unloadingLogData.notes}<br/></>
+                                                        <>{loadings[props.lang].unloading}: <div dangerouslySetInnerHTML={{ __html: formatText(load.unloadingLogData.notes) }} /><br /></>
                                                     }
                                                     <br/>
                                                     <div>

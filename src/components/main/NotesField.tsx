@@ -1,20 +1,22 @@
-import React, { useState, useRef, useEffect } from 'react';
-import ReactDOMServer from 'react-dom/server';
+import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
+// import ReactDOMServer from 'react-dom/server';
 import { home } from "../../assets/txt/home";
-import { userLangEnum } from 'types';
+import { UserInterface, userLangEnum } from 'types';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import { Fab } from "@mui/material";
 import { useApi } from "../../hooks/useApi";
 import { apiPaths } from '../../config/api';
+import { formatText } from '../../utils/formats/formatText';
 
 interface Props {
-    notes: string | null;
+    userData: UserInterface;
+    setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     lang: userLangEnum;
 }
 
 export const NotesField = (props: Props) => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [text, setText] = useState<string | null>(props.notes);
+    const [text, setText] = useState<string | null>(props.userData.notes);
     const [formatedText, setFormatedText] = useState<string>('');
     const [synchronized, setSynchronized] = useState<boolean>(true);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -29,8 +31,11 @@ export const NotesField = (props: Props) => {
         setIsEditing(false);
         setSynchronized(false);
         const sendData = { notes: text };
-        fetchData(apiPaths.editNotes, { method: 'PATCH', sendData }).then((res) => {
-            if (res.success) setSynchronized(true);
+        fetchData<UserInterface>(apiPaths.editNotes, { method: 'PATCH', sendData }).then((res) => {
+            if (res.success && res.responseData) {
+                props.setUserData({ ...props.userData, notes: res.responseData.notes });
+                setSynchronized(true);
+            };
         });
     }
 
@@ -47,14 +52,9 @@ export const NotesField = (props: Props) => {
 
     useEffect(() => {
         if (text) {
-            const lines = text.split('\n').map((line, index) => (
-                <React.Fragment key={index}>
-                    {line}
-                    <br />
-                </React.Fragment>
-            ));
-            const formattedHtml = lines.map((line) => ReactDOMServer.renderToStaticMarkup(line)).join('');
-            setFormatedText(formattedHtml);
+            setFormatedText(formatText(text));
+        } else {
+            setFormatedText('');
         }
     }, [text]);
 

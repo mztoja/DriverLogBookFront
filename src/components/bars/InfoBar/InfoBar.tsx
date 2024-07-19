@@ -28,6 +28,7 @@ import {Link, NavLink} from "react-router-dom";
 import {AddVehicle} from "../../vehicles/AddVehicle";
 import ClearIcon from "@mui/icons-material/Clear";
 import {Tooltip} from "@mui/material";
+import { formatText } from '../../../utils/formats/formatText';
 
 interface Props {
     lang: userLangEnum;
@@ -453,7 +454,7 @@ export const InfoBar = (props: Props) => {
                                 <tr>
                                     <td colSpan={2}>
                                         {vehicles[props.lang].notes}:<br/><br/>
-                                        <center>{truckData.notes}</center>
+                                        <center dangerouslySetInnerHTML={{ __html: formatText(truckData.notes) }} />
                                     </td>
                                 </tr>
                             }
@@ -547,7 +548,7 @@ export const InfoBar = (props: Props) => {
                                 <tr>
                                     <td colSpan={2}>
                                         {vehicles[props.lang].notes}:<br/><br/>
-                                        <center>{trailerData.notes}</center>
+                                        <center dangerouslySetInnerHTML={{ __html: formatText(trailerData.notes) }} />
                                     </td>
                                 </tr>
                             }

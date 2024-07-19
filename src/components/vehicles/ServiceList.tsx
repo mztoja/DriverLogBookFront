@@ -16,6 +16,7 @@ import {formatDate} from "../../utils/formats/formatDate";
 import {formatPlace} from "../../utils/formats/formatPlace";
 import EditIcon from "@mui/icons-material/Edit";
 import {ServiceEdit} from "./ServiceEdit";
+import { formatText } from "../../utils/formats/formatText";
 
 interface Props {
     lang: userLangEnum;
@@ -194,7 +195,7 @@ export const ServiceList = (props: Props) => {
                                                     {service.logData && service.logData.notes !== null &&
                                                         <>
                                                             <DetailsIcon/><br/>
-                                                            {service.logData.notes}
+                                                        <div dangerouslySetInnerHTML={{ __html: formatText(service.logData.notes) }} />
                                                         </>
                                                     }
                                                     <br/>
