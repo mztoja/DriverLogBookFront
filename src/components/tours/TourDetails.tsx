@@ -85,6 +85,7 @@ export const TourDetails = (props: Props) => {
         setGeneratorLoading(true);
 
         fetchData<TourSettleGeneratorInterface>(`${apiPaths.generateSettlementRoute}/${props.tourId}`).then((res) => {
+            console.log(res);
             if (res.responseData) {
                 setGeneratorData(res.responseData);
                 setShowGeneratorSettings(true);
