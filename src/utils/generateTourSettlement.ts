@@ -13,7 +13,6 @@ function replaceDiacritics(str: string): string {
 }
 
 export const generateTourSettlement = async (
-    id: number,
     lang: userLangEnum,
     data: TourSettleGeneratorInterface,
     tourGenerator: string,
@@ -27,10 +26,7 @@ export const generateTourSettlement = async (
             // @ts-ignore
             const value = data[fieldName];
             const field = form.getTextField(fieldName);
-            // if (field) {
-            //     field.setText(value);
-            // }
-            const sanitizedValue = replaceDiacritics(value); // Sanitizacja wartości przed ustawieniem
+            const sanitizedValue = replaceDiacritics(value);
             field.setText(sanitizedValue);
         });
         const title = tours[lang].generateTitle(data.routeNr);

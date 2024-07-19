@@ -20,7 +20,7 @@ import {LogsList} from "../logs/LogsList";
 import {DaysList} from "../days/DaysList";
 import {FinancesList} from "../finances/FinancesList";
 import {LoadingsList} from "../loadings/LoadingsList";
-import {generateTourSettlement} from "../../utils/generateTourSettlement";
+import { TourGeneratorSettings } from "./TourGeneratorSettings";
 
 interface Props {
     lang: userLangEnum;
@@ -37,6 +37,8 @@ export const TourDetails = (props: Props) => {
     const [showDayList, setShowDayList] = useState<boolean>(false);
     const [showFinanceList, setShowFinanceList] = useState<boolean>(false);
     const [showLoadList, setShowLoadList] = useState<boolean>(false);
+    const [showGeneratorSettings, setShowGeneratorSettings] = useState<boolean>(false);
+    const [generatorData, setGeneratorData] = useState<TourSettleGeneratorInterface | null>(null);
     const logListRef = useRef<HTMLDivElement>(null);
     const dayListRef = useRef<HTMLDivElement>(null);
     const financeListRef = useRef<HTMLDivElement>(null);
@@ -83,14 +85,14 @@ export const TourDetails = (props: Props) => {
         setGeneratorLoading(true);
 
         fetchData<TourSettleGeneratorInterface>(`${apiPaths.generateSettlementRoute}/${props.tourId}`).then((res) => {
+            console.log(res);
             if (res.responseData) {
-                generateTourSettlement(Number(props.tourId), props.lang, res.responseData, props.tourGenerator, setAlert)
-                    .finally(() => setGeneratorLoading(false));
+                setGeneratorData(res.responseData);
+                setShowGeneratorSettings(true);
             } else {
-                setGeneratorLoading(false);
                 setAlert(tours[props.lang].generateError, 'error');
             }
-        });
+        }).finally(() => setGeneratorLoading(false));
     }
 
     if ((loading && !generatorLoading) || !data) {
@@ -245,6 +247,16 @@ export const TourDetails = (props: Props) => {
                     </tbody>
                 </table>
             </fieldset>
+            {showGeneratorSettings && generatorData &&
+                <TourGeneratorSettings
+                    data={generatorData}
+                    lang={props.lang}
+                    open={showGeneratorSettings}
+                    setOpen={setShowGeneratorSettings}
+                    setData={setGeneratorData}
+                    tourGenerator={props.tourGenerator}
+                />
+            }
             <div className='DivClear'/>
             <br/>
             <div ref={logListRef}>
