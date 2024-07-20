@@ -7,8 +7,13 @@ import {extractDigits} from "../../../utils/extractDigits";
 import InputAdornment from "@mui/material/InputAdornment";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
+import { FormHelperText } from "@mui/material";
 
-export const OdometerInput = (props:InputPropsTypes) => {
+interface Props extends InputPropsTypes {
+    lastOdometer?: number | null;
+}
+
+export const OdometerInput = (props: Props) => {
 
     const onChange = (v: string) => {
         const newValue = extractDigits(v);
@@ -19,6 +24,7 @@ export const OdometerInput = (props:InputPropsTypes) => {
     }
 
     return (
+        <>
         <TextField
             label={form[props.lang].odometer}
             id="odometer"
@@ -43,5 +49,12 @@ export const OdometerInput = (props:InputPropsTypes) => {
             autoComplete="off"
             size='small'
         />
+            {
+                props.lastOdometer &&
+                <FormHelperText className="TextInput__Label">
+                    {form[props.lang].odometerHelperDiff}: {Number(props.value) - props.lastOdometer} km
+                </FormHelperText>
+            }
+        </>
     );
 }

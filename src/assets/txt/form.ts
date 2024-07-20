@@ -76,6 +76,7 @@ interface Form {
     expenseItemDescription: string;
     expenseForeignCurrency: string;
     serviceEntry: string;
+    odometerHelperDiff: string;
 }
 
 
@@ -158,6 +159,7 @@ export const form: Form[] =
         expenseUnitPrice: 'Unit Price',
         expenseForeignCurrency: 'Foreign currency payment',
         serviceEntry: 'Description of repair/action',
+        odometerHelperDiff: 'Odometer from last activity',
     },
         {//pl
             email: 'E-mail',
@@ -237,4 +239,5 @@ export const form: Form[] =
             expenseItemDescription: 'Pozycja (opis wydatku)',
             expenseForeignCurrency: 'Płatność w obcej walucie',
             serviceEntry: 'Opis naprawy / czynności',
+            odometerHelperDiff: 'Przebieg od ostatniej czynności',
         }];

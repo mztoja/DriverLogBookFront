@@ -116,6 +116,7 @@ export const TourStop = (props: ActionsPropsTypes) => {
                         lang={props.lang}
                         value={props.formData.odometer}
                         onChange={e => props.updateFormData('odometer', e)}
+                        lastOdometer={props.lastOdometer}
                     />
                         <FormHelperText className="TextInput__Label">
                             {startOdometer !== -999 && home[props.lang].tourStopHelper2(Number(props.formData.odometer) - startOdometer, Number(props.tourData?.fuelStateBefore) - Number(props.formData.fuelQuantity) + addedFuel)}
