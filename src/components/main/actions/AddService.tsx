@@ -51,6 +51,7 @@ export const AddService = (props: Props) => {
                     setAlert(home[props.lang].addServiceSuccess, 'success');
                     props.setActivityForm(null);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

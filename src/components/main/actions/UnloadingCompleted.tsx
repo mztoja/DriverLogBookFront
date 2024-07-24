@@ -75,6 +75,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     setAlert(home[props.lang].unloadingSuccess, 'success');
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

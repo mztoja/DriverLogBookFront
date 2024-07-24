@@ -1,4 +1,4 @@
-import React, {FormEvent} from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import {home} from "../../../assets/txt/home";
 import {apiPaths} from "../../../config/api";
 import {DateTimeInput} from "../../common/form/DateTimeInput";
@@ -20,6 +20,19 @@ export const TourStart = (props:ActionsPropsTypes) => {
 
     const { loading, fetchData} = useApi();
     const {setAlert} = useAlert();
+    const [prevTour, setPrevTour] = useState<TourInterface | null>(null);
+
+    useEffect(() => {
+        if (prevTour) {
+            props.updateFormData('fuelQuantity', prevTour?.fuelStateAfter.toString());
+        } else {
+            fetchData<TourInterface>(apiPaths.getPreviousRoute, {
+                setData: setPrevTour,
+            }).then();
+        }
+    }, [prevTour]);
+
+    // Dopisz pobieranie danych paliwa początkowego (końcowego z poprzedniej trasy, endpoint gotowy!)
 
     const sendTourStart = async (e: FormEvent) => {
         e.preventDefault();
@@ -41,6 +54,7 @@ export const TourStart = (props:ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setTourData(res.responseData);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

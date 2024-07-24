@@ -101,6 +101,7 @@ export const AddExpense = (props: Props) => {
                     props.updateFormData('expenseAmount', '');
                     props.updateFormData('expenseUnitPrice', '');
                     props.updateFormData('expenseForeignAmount', '');
+                    props.updateFormData('notes', '');
                 }
             });
     }

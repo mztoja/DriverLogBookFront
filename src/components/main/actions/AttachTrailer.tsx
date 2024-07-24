@@ -42,6 +42,7 @@ export const AttachTrailer = (props: ActionsPropsTypes) => {
                         if (props.tourData) {props.setTourData({...props.tourData, trailer});}
                         props.setActivityForm(null);
                         props.setRefresh((prev => !prev));
+                        props.updateFormData('notes', '');
                     }
                 });
         }

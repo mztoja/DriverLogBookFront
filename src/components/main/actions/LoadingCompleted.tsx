@@ -73,6 +73,7 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setUserData({...props.userData, markedArrive: 0});
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

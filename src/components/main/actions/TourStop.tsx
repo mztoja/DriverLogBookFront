@@ -79,6 +79,7 @@ export const TourStop = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setTourData(null);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

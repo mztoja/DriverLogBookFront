@@ -9,6 +9,7 @@ export const apiPaths = {
     editPlace: '/places/edit',
     // routes
     getActiveRoute: '/tours/getActiveRoute',
+    getPreviousRoute: '/tours/getPreviousRoute',
     createNewRoute: '/tours/create',
     finishRoute: '/tours/finish',
     getRouteNumbers: '/tours/getRouteNumbers',

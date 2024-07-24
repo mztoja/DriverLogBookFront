@@ -68,6 +68,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                         setAlert(home[props.lang].unloadingArrivalSuccess, 'success');
                         props.setActivityForm(null);
                         props.setRefresh((prev => !prev));
+                        props.updateFormData('notes', '');
                     }
                 });
         } else {

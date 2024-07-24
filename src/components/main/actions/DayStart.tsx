@@ -63,6 +63,7 @@ export const DayStart = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setDayData(res.responseData);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

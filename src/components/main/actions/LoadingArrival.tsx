@@ -52,6 +52,7 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setUserData({...props.userData, markedDepart: 0, markedArrive: Number(sendData.placeId)});
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

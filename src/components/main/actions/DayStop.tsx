@@ -43,6 +43,7 @@ export const DayStop = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setDayData(null);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

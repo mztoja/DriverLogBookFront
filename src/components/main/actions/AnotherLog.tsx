@@ -37,6 +37,7 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
                     setAlert(home[props.lang].anotherActionSuccess, 'success');
                     props.setActivityForm(null);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

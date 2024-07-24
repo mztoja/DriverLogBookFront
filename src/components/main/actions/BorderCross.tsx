@@ -39,6 +39,7 @@ export const BorderCross = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setUserData({ ...props.userData, country: sendData.country });
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }

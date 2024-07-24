@@ -57,6 +57,7 @@ export const DetachTrailer = (props: ActionsPropsTypes) => {
                     }
                     props.setActivityForm(null);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }
