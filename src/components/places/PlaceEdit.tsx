@@ -93,7 +93,7 @@ export const PlaceEdit = (props: Props) => {
                 slots={{backdrop: StyledBackdrop}}
             >
                 <ModalContent sx={{width: 400}}>
-                    <h2>{places[props.lang].edit} {editPlaceForm.name} - {editPlaceForm.city}</h2>
+                    <h2 onClick={handleClose}>{places[props.lang].edit} {editPlaceForm.name} - {editPlaceForm.city}</h2>
                     <form onSubmit={sendForm}>
                         <div><PlaceTypeSelect lang={props.lang} value={editPlaceForm.type}
                                               onChange={e => updateForm('type', e)}/></div>

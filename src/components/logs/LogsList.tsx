@@ -33,6 +33,7 @@ import {DaysEdit} from "../days/DaysEdit";
 import {FinanceEdit} from "../finances/FinanceEdit";
 import {LoadingEdit} from "../loadings/LoadingEdit";
 import {TourEdit} from "../tours/TourEdit";
+import { formatText } from "../../utils/formats/formatText";
 
 interface Props {
     lang: userLangEnum;
@@ -302,7 +303,7 @@ export const LogsList = (props: Props) => {
                                                     {log.notes !== null && (
                                                         <div>
                                                             <br/><DetailsIcon/><br/>
-                                                            {log.notes}
+                                                            <div dangerouslySetInnerHTML={{ __html: formatText(log.notes) }} />
                                                         </div>)}
                                                     <br/>
                                                     <div>

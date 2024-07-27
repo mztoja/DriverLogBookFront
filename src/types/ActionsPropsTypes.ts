@@ -13,4 +13,5 @@ export interface ActionsPropsTypes {
     dayData: DayInterface | null;
     setDayData: Dispatch<SetStateAction<DayInterface | null>>;
     setRefresh: Dispatch<SetStateAction<boolean>>;
+    lastOdometer?: number | null;
 }

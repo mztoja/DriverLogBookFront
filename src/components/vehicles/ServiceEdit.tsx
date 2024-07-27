@@ -83,15 +83,17 @@ export const ServiceEdit = (props: Props) => {
         });
     }
 
+    const handleClose = () => props.setService(null);
+
     return (
         <Modal
             aria-labelledby="day-edit"
             open={props.service !== null}
-            onClose={() => props.setService(null)}
+            onClose={handleClose}
             slots={{backdrop: StyledBackdrop}}
         >
             <ModalContent sx={{width: 400}}>
-                <h2>{vehicles[props.lang].editServiceHeader}</h2>
+                <h2 onClick={handleClose}>{vehicles[props.lang].editServiceHeader}</h2>
                 <form onSubmit={sendForm}>
                     <fieldset>
                         <legend>{vehicles[props.lang].editLogLegend}</legend>

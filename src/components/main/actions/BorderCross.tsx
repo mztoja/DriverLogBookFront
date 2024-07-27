@@ -39,6 +39,7 @@ export const BorderCross = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setUserData({ ...props.userData, country: sendData.country });
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }
@@ -59,6 +60,7 @@ export const BorderCross = (props: ActionsPropsTypes) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

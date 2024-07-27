@@ -5,7 +5,7 @@ export const areFieldsEqual = (data: TourInterface, formData: TourEditData): boo
         return false;
     }
     const areStartDataEqual: boolean = (
-        new Date(data.startLogData.date).getTime() === new Date(formData.startData.date).getTime() &&
+        new Date(data.startLogData.date).getTime() + (new Date(data.startLogData.date).getTimezoneOffset() * 60 * 1000) === new Date(formData.startData.date).getTime() &&
         data.startLogData.action === formData.startData.action &&
         data.startLogData.country === formData.startData.country &&
         (data.startLogData.placeId === 0 ? data.startLogData.place === formData.startData.place : data.startLogData.placeId.toString() === formData.startData.placeId.toString()) &&
@@ -24,7 +24,7 @@ export const areFieldsEqual = (data: TourInterface, formData: TourEditData): boo
     }
     return (
         areStartDataEqual &&
-        new Date(data.stopLogData.date).getTime() === new Date(formData.stopData.date).getTime() &&
+        new Date(data.stopLogData.date).getTime() + (new Date(data.stopLogData.date).getTimezoneOffset() * 60 * 1000) === new Date(formData.stopData.date).getTime() &&
         data.stopLogData.action === formData.stopData.action &&
         data.stopLogData.country === formData.stopData.country &&
         (data.stopLogData.placeId === 0 ? data.stopLogData.place === formData.stopData.place : data.stopLogData.placeId.toString() === formData.stopData.placeId.toString()) &&

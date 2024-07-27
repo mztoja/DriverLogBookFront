@@ -52,6 +52,9 @@ export const DayStart = (props: ActionsPropsTypes) => {
             cardInserted: props.formData.cardInserted,
             doubleCrew: props.formData.doubleCrew,
             action: home[props.lang].startedDayAction + ' ' + (props.formData.cardInserted === 'true' ? home[props.lang].startedDayActionCardInsert : ''),
+        };
+        if ((lastDay) && (lastDay.cardState === dayCardStateEnum.inserted)) {
+            sendData.action = home[props.lang].startedDayAction;
         }
         fetchData<DayInterface>(apiPaths.createNewDay, {method: 'POST', sendData}, {setAlert, lang: props.lang})
             .then((res) => {
@@ -60,6 +63,7 @@ export const DayStart = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setDayData(res.responseData);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }
@@ -80,6 +84,7 @@ export const DayStart = (props: ActionsPropsTypes) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

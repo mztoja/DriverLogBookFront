@@ -37,6 +37,7 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
                     setAlert(home[props.lang].anotherActionSuccess, 'success');
                     props.setActivityForm(null);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }
@@ -57,6 +58,7 @@ export const AnotherLog = (props: ActionsPropsTypes) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

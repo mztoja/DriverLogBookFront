@@ -15,6 +15,7 @@ import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
 import {useParams} from "react-router-dom";
 import HandymanIcon from '@mui/icons-material/Handyman';
 import {ServiceList} from "./ServiceList";
+import { formatText } from "../../utils/formats/formatText";
 
 interface Props {
     userData: UserInterface;
@@ -229,12 +230,7 @@ export const TrucksList = (props: Props) => {
                                                         <td colSpan={7} className="extended">
                                                             {vehicle.notes !== null && <>
                                                                 <DetailsIcon/><br/>
-                                                                {vehicle.notes.split('\n').map((line, index) => (
-                                                                    <React.Fragment key={index}>
-                                                                        {line}
-                                                                        <br/>
-                                                                    </React.Fragment>
-                                                                ))}
+                                                                <div dangerouslySetInnerHTML={{ __html: formatText(vehicle.notes) }} />
                                                             </>}<br/>
                                                             <div>
                                                                 <Fab

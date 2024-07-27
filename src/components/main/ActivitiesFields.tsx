@@ -18,6 +18,7 @@ import { UnloadingCompleted } from "./actions/UnloadingCompleted";
 import {AddExpense} from "./actions/AddExpense";
 import {AddService} from "./actions/AddService";
 import {TourStop} from "./actions/TourStop";
+import { DeleteFromLocalStorage } from "../../hooks/LocalStorageHook";
 
 interface Props {
     lang: userLangEnum;
@@ -85,8 +86,14 @@ export const ActivitiesFields = (props: Props) => {
     useEffect(() => {
         if (props.lastLogData) {
             if (props.lastLogData.odometer) updateGeneralFormData('odometer', props.lastLogData.odometer.toString());
-            if (props.lastLogData.placeId) updateGeneralFormData('placeId', props.lastLogData.placeId.toString());
-            if (props.lastLogData.place) updateGeneralFormData('place', props.lastLogData.place.toString());
+            if (props.lastLogData.placeId) {
+                updateGeneralFormData('placeId', props.lastLogData.placeId.toString());
+                DeleteFromLocalStorage('place');
+            }
+            if (props.lastLogData.place) {
+                updateGeneralFormData('place', props.lastLogData.place.toString());
+                DeleteFromLocalStorage('placeId');
+            }
         }
     }, [props.lastLogData]);
 
@@ -103,6 +110,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -123,6 +131,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -143,6 +152,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -159,6 +169,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -175,6 +186,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -195,6 +207,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -215,6 +228,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -231,6 +245,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -247,6 +262,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -263,6 +279,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -279,6 +296,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -296,6 +314,7 @@ export const ActivitiesFields = (props: Props) => {
             setDayData={props.setDayData}
             expenseType={ExpenseEnum.standard}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -313,6 +332,7 @@ export const ActivitiesFields = (props: Props) => {
             setDayData={props.setDayData}
             expenseType={ExpenseEnum.fuel}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -330,6 +350,7 @@ export const ActivitiesFields = (props: Props) => {
             setDayData={props.setDayData}
             expenseType={ExpenseEnum.def}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -347,6 +368,7 @@ export const ActivitiesFields = (props: Props) => {
             setDayData={props.setDayData}
             serviceType={ServiceEnum.standard}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -364,6 +386,7 @@ export const ActivitiesFields = (props: Props) => {
             setDayData={props.setDayData}
             serviceType={ServiceEnum.fifthWheelLube}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 
@@ -384,6 +407,7 @@ export const ActivitiesFields = (props: Props) => {
             tourData={props.tourData}
             setDayData={props.setDayData}
             setRefresh={props.setRefresh}
+            lastOdometer={props.lastLogData?.odometer}
         />
     }
 

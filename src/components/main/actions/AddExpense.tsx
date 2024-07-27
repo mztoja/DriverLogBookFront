@@ -101,6 +101,7 @@ export const AddExpense = (props: Props) => {
                     props.updateFormData('expenseAmount', '');
                     props.updateFormData('expenseUnitPrice', '');
                     props.updateFormData('expenseForeignAmount', '');
+                    props.updateFormData('notes', '');
                 }
             });
     }
@@ -125,6 +126,7 @@ export const AddExpense = (props: Props) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

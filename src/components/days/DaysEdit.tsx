@@ -83,7 +83,7 @@ export const DaysEdit = (props: Props) => {
     },[formData.startData.odometer, formData.stopData.odometer]);
     useEffect(() => {
         if (!isNaN(Date.parse(formData.stopData.date)) && breakStopDate !== '') {
-            updateForm('breakTime', null, subtractDatesToTime(new Date(Number(breakStopDate)).toISOString(), formData.stopData.date));
+            updateForm('breakTime', null, subtractDatesToTime(new Date(Number(breakStopDate)).toISOString(), formData.stopData.date + ':00.000Z'));
         }
         // eslint-disable-next-line
     }, [formData.stopData.date]);
@@ -127,6 +127,8 @@ export const DaysEdit = (props: Props) => {
         });
     }
 
+    const handleClose = () => props.setDay(null);
+
     return (
         <Modal
             aria-labelledby="day-edit"
@@ -135,7 +137,7 @@ export const DaysEdit = (props: Props) => {
             slots={{backdrop: StyledBackdrop}}
         >
             <ModalContent sx={{width: 400}}>
-                <h2>{days[props.lang].dayEditHeader}</h2>
+                <h2 onClick={handleClose}>{days[props.lang].dayEditHeader}</h2>
                 <form onSubmit={sendForm}>
                     <fieldset>
                         <legend>{days[props.lang].editStartLegend}</legend>

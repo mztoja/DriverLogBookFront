@@ -52,6 +52,7 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setUserData({...props.userData, markedDepart: 0, markedArrive: Number(sendData.placeId)});
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }
@@ -72,6 +73,7 @@ export const LoadingArrival = (props: ActionsPropsTypes) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

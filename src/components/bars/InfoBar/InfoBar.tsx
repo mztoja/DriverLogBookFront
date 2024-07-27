@@ -28,6 +28,7 @@ import {Link, NavLink} from "react-router-dom";
 import {AddVehicle} from "../../vehicles/AddVehicle";
 import ClearIcon from "@mui/icons-material/Clear";
 import {Tooltip} from "@mui/material";
+import { formatText } from '../../../utils/formats/formatText';
 
 interface Props {
     lang: userLangEnum;
@@ -63,7 +64,9 @@ export const InfoBar = (props: Props) => {
         if (!dayData) {
             fetchData<DayInterface>(apiPaths.getYourLastDay).then((res) => {
                 if (res.responseData && res.responseData.stopData) {
-                    setStopDate(new Date(res.responseData.stopData.date));
+                    const stopDate = new Date(res.responseData.stopData.date);
+                    stopDate.setMinutes(stopDate.getMinutes() + stopDate.getTimezoneOffset());
+                    setStopDate(stopDate);
                 }
             });
         }
@@ -74,8 +77,8 @@ export const InfoBar = (props: Props) => {
         if (tourData && tourData.startLogData) {
             const now = currentTime;
             const startDate = new Date(tourData.startLogData.date);
+            startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
             const diff = Math.abs(now.getTime() - startDate.getTime());
-
             const hours = Math.floor(diff / 3600000);
             const minutes = Math.floor((diff % 3600000) / 60000);
 
@@ -98,13 +101,13 @@ export const InfoBar = (props: Props) => {
             const minutes = Math.floor((diff % 3600000) / 60000);
             const endTime = (addHours: number) => {
                 const newDate = new Date(stopDate);
-                newDate.setHours(stopDate.getUTCHours() + addHours);
-                return (`${newDate.getUTCHours().toString()}:${newDate.getUTCMinutes().toString().padStart(2, '0')}`);
+                newDate.setHours(stopDate.getHours() + addHours);
+                return (`${newDate.getHours().toString()}:${newDate.getMinutes().toString().padStart(2, '0')}`);
             }
             const timeLeft = (addHours: number) => {
                 const newDate = new Date(stopDate);
-                newDate.setHours(stopDate.getUTCHours() + addHours);
-                newDate.setMinutes(newDate.getUTCMinutes() + 1);
+                newDate.setHours(stopDate.getHours() + addHours);
+                newDate.setMinutes(newDate.getMinutes() + 1);
                 const diff = Math.abs(newDate.getTime() - currentTime.getTime());
                 return (`${Math.floor(diff / 3600000).toString()}:${Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0')}`);
             }
@@ -157,7 +160,9 @@ export const InfoBar = (props: Props) => {
 
             fetchData<number>(apiPaths.getNotUnloadedLoadsMass, {
                 setData: setGoodsWeight,
-            }).then();
+            }).then((res) => {
+                if (!res.success) setGoodsWeight(null);
+            });
 
             if (props.userData.markedDepart !== 0) {
                 fetchData<PlaceInterface>(`${apiPaths.getPlace}/${props.userData.markedDepart}`, {
@@ -451,7 +456,7 @@ export const InfoBar = (props: Props) => {
                                 <tr>
                                     <td colSpan={2}>
                                         {vehicles[props.lang].notes}:<br/><br/>
-                                        <center>{truckData.notes}</center>
+                                        <center dangerouslySetInnerHTML={{ __html: formatText(truckData.notes) }} />
                                     </td>
                                 </tr>
                             }
@@ -545,7 +550,7 @@ export const InfoBar = (props: Props) => {
                                 <tr>
                                     <td colSpan={2}>
                                         {vehicles[props.lang].notes}:<br/><br/>
-                                        <center>{trailerData.notes}</center>
+                                        <center dangerouslySetInnerHTML={{ __html: formatText(trailerData.notes) }} />
                                     </td>
                                 </tr>
                             }

@@ -11,9 +11,14 @@ export interface Props extends InputPropsTypes {
 export const LongTimeInput = (props: Props) => {
 
     useEffect(() => {
-        props.onChange(extractTime(props.value, true))
+        const startValue = extractTime(props.value, true);
+        if (startValue.indexOf(':') === 1) {
+            props.onChange('0' + startValue);
+        } else {
+            props.onChange(startValue);
+        }
         // eslint-disable-next-line
-    }, []);
+    }, [props.value]);
 
     const onChange = (v: string) => {
         const newValue = extractTime(v, true);

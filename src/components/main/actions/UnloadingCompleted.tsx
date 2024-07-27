@@ -75,6 +75,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     setAlert(home[props.lang].unloadingSuccess, 'success');
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }
@@ -95,6 +96,7 @@ export const UnloadingCompleted = (props: ActionsPropsTypes) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

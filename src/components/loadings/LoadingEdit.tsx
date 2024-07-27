@@ -75,15 +75,17 @@ export const LoadingEdit = (props: Props) => {
         })
     }
 
+    const handleClose = () => props.setLoad(null);
+
     return (
         <Modal
             aria-labelledby="loading-edit"
             open={props.load !== null}
-            onClose={() => props.setLoad(null)}
+            onClose={handleClose}
             slots={{backdrop: StyledBackdrop}}
         >
             <ModalContent sx={{width: 400}}>
-                <h2>{loadings[props.lang].loadingEditHeader}</h2>
+                <h2 onClick={handleClose}>{loadings[props.lang].loadingEditHeader}</h2>
                 <form onSubmit={sendForm}>
                     <fieldset>
                         <legend>{loadings[props.lang].loading}</legend>

@@ -18,6 +18,7 @@ import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import {FinanceEdit} from "./FinanceEdit";
+import { formatText } from "../../utils/formats/formatText";
 
 interface Props {
     lang: userLangEnum;
@@ -238,7 +239,7 @@ export const FinancesList = (props: Props) => {
                                                 className={isHovered ? 'highlighted' : ''}
                                             >
                                                 <td colSpan={9} className="extended">
-                                                    {(finance.logData?.notes) && <><br/><DetailsIcon/><br/>{finance.logData?.notes}</>}
+                                                        {(finance.logData?.notes) && <><br /><DetailsIcon /><br /><div dangerouslySetInnerHTML={{ __html: formatText(finance.logData.notes) }} /></>}
                                                     <br/>
                                                     <div>
                                                         <Fab

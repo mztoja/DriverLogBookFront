@@ -8,6 +8,8 @@ import {useApi} from "../hooks/useApi";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import {UserInterface, TourInterface, DayInterface, LogInterface} from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
+import { NotesField } from "../components/main/NotesField";
+import { DivClear } from "../components/common/DivClear";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -82,6 +84,12 @@ export const HomeView = (props: Props) => {
                     setDayData={setDayData}
                     setRefresh={setRefresh}
                     lastLogData={lastLogData}
+                />
+                <DivClear />
+                <NotesField
+                    userData={props.userData}
+                    setUserData={props.setUserData}
+                    lang={props.userData.lang}
                 />
             </Content>
         </>

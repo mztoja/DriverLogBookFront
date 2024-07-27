@@ -73,6 +73,11 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                     props.setActivityForm(null);
                     props.setUserData({...props.userData, markedArrive: 0});
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
+                    props.updateFormData('quantity', '');
+                    props.updateFormData('reference', '');
+                    props.updateFormData('description', '');
+                    props.updateFormData('weight', '');
                 }
             });
     }
@@ -93,6 +98,7 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

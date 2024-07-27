@@ -51,6 +51,7 @@ export const AddService = (props: Props) => {
                     setAlert(home[props.lang].addServiceSuccess, 'success');
                     props.setActivityForm(null);
                     props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
                 }
             });
     }
@@ -105,6 +106,7 @@ export const AddService = (props: Props) => {
                         lang={props.lang}
                         value={props.formData.odometer}
                         onChange={e => props.updateFormData('odometer', e)}
+                        lastOdometer={props.lastOdometer}
                     />
                     </div>
                     <br/>

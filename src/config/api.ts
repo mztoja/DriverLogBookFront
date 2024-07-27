@@ -1,4 +1,6 @@
-export const apiURL = process.env.REACT_APP_API_URL ?? 'http://vps-88687f9b.vps.ovh.net/:3001/v3';
+import { REACT_APP_API_URL } from './set';
+
+export const apiURL = REACT_APP_API_URL;
 
 export const apiPaths = {
     // places
@@ -9,6 +11,7 @@ export const apiPaths = {
     editPlace: '/places/edit',
     // routes
     getActiveRoute: '/tours/getActiveRoute',
+    getPreviousRoute: '/tours/getPreviousRoute',
     createNewRoute: '/tours/create',
     finishRoute: '/tours/finish',
     getRouteNumbers: '/tours/getRouteNumbers',
@@ -29,6 +32,7 @@ export const apiPaths = {
     logout: '/auth/logout',
     markDepart: '/users/markDepart',
     userUpdate: '/users/userUpdate',
+    editNotes: '/users/editNotes',
     // days
     createNewDay: '/days/create',
     finishDay: '/days/finish',

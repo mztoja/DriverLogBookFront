@@ -71,15 +71,17 @@ export const TourEdit = (props: Props) => {
         });
     }
 
+    const handleClose = () => props.setTour(null);
+
     return (
         <Modal
             aria-labelledby="tour-edit"
             open={props.tour !== null}
-            onClose={() => props.setTour(null)}
+            onClose={handleClose}
             slots={{backdrop: StyledBackdrop}}
         >
             <ModalContent sx={{width: 400}}>
-                <h2>{tours[props.lang].editHeader}</h2>
+                <h2 onClick={handleClose}>{tours[props.lang].editHeader}</h2>
                 <form onSubmit={sendForm}>
                     <fieldset>
                         <legend>{tours[props.lang].editStartLegend}</legend>

@@ -68,6 +68,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                         setAlert(home[props.lang].unloadingArrivalSuccess, 'success');
                         props.setActivityForm(null);
                         props.setRefresh((prev => !prev));
+                        props.updateFormData('notes', '');
                     }
                 });
         } else {
@@ -91,6 +92,7 @@ export const UnloadingArrival = (props: ActionsPropsTypes) => {
                     lang={props.lang}
                     value={props.formData.odometer}
                     onChange={e => props.updateFormData('odometer', e)}
+                    lastOdometer={props.lastOdometer}
                 />
                 </div>
                 <br/>

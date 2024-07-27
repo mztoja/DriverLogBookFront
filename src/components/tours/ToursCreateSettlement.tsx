@@ -62,17 +62,19 @@ export const ToursCreateSettlement = (props: Props) => {
         props.setShow(false);
     }
 
+    const handleClose = () => props.setShow(false);
+
     return (
         <>
             <Modal
                 aria-labelledby="unstyled-modal-title"
                 aria-describedby="unstyled-modal-description"
                 open={props.show}
-                onClose={() => props.setShow(false)}
+                onClose={handleClose}
                 slots={{backdrop: StyledBackdrop}}
             >
                 <ModalContent sx={{width: 1000}}>
-                    <center><h2>{tours[props.lang].createMonthlySettlement}</h2></center>
+                    <center><h2 onClick={handleClose}>{tours[props.lang].createMonthlySettlement}</h2></center>
                     {tours[props.lang].selectRoutes}:<br/>
                     <table>
                         <thead>
