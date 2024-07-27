@@ -1,4 +1,4 @@
-import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
+import React, { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react";
 import {LogEditData, LogInterface, userLangEnum} from "types";
 import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
 import {logs} from "../../assets/txt/logs";

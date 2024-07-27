@@ -6,7 +6,7 @@ export const areFieldsEqual = (data: LoadInterface, formData: LoadEditData): boo
     }
 
     const areLoadingDataEqual: boolean = (
-        new Date(data.loadingLogData.date).getTime() === new Date(formData.loadingLogData.date).getTime() &&
+        new Date(data.loadingLogData.date).getTime() + (new Date(data.loadingLogData.date).getTimezoneOffset() * 60 * 1000) === new Date(formData.loadingLogData.date).getTime() &&
         data.loadingLogData.action === formData.loadingLogData.action &&
         data.loadingLogData.country === formData.loadingLogData.country &&
         (data.loadingLogData.placeId === 0 ? data.loadingLogData.place === formData.loadingLogData.place : data.loadingLogData.placeId.toString() === formData.loadingLogData.placeId.toString()) &&
@@ -33,7 +33,7 @@ export const areFieldsEqual = (data: LoadInterface, formData: LoadEditData): boo
 
     return (
         areLoadingDataEqual &&
-        new Date(data.unloadingLogData.date).getTime() === new Date(formData.unloadingLogData.date).getTime() &&
+        new Date(data.unloadingLogData.date).getTime() + (new Date(data.unloadingLogData.date).getTimezoneOffset() * 60 * 1000) === new Date(formData.unloadingLogData.date).getTime() &&
         data.unloadingLogData.action === formData.unloadingLogData.action &&
         data.unloadingLogData.country === formData.unloadingLogData.country &&
         (data.unloadingLogData.placeId === 0 ? data.unloadingLogData.place === formData.unloadingLogData.place : data.unloadingLogData.placeId.toString() === formData.unloadingLogData.placeId.toString()) &&

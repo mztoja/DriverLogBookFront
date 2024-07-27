@@ -85,8 +85,6 @@ export const DaysEdit = (props: Props) => {
         if (!isNaN(Date.parse(formData.stopData.date)) && breakStopDate !== '') {
             updateForm('breakTime', null, subtractDatesToTime(new Date(Number(breakStopDate)).toISOString(), formData.stopData.date + ':00.000Z'));
         }
-        console.log('breake ', new Date(Number(breakStopDate)).toISOString());
-        console.log('stop ', formData.stopData.date);
         // eslint-disable-next-line
     }, [formData.stopData.date]);
 

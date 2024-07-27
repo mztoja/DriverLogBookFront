@@ -74,6 +74,10 @@ export const LoadingCompleted = (props: ActionsPropsTypes) => {
                     props.setUserData({...props.userData, markedArrive: 0});
                     props.setRefresh((prev => !prev));
                     props.updateFormData('notes', '');
+                    props.updateFormData('quantity', '');
+                    props.updateFormData('reference', '');
+                    props.updateFormData('description', '');
+                    props.updateFormData('weight', '');
                 }
             });
     }

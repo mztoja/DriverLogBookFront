@@ -6,7 +6,7 @@ export const areFieldsEqual = (data: FinanceInterface, formData: FinanceEditData
     }
 
     return (
-        new Date(data.logData.date).getTime() === new Date(formData.logData.date).getTime() &&
+        new Date(data.logData.date).getTime() + (new Date(data.logData.date).getTimezoneOffset() * 60 * 1000) === new Date(formData.logData.date).getTime() &&
         data.logData.action === formData.logData.action &&
         data.logData.country === formData.logData.country &&
         (data.logData.placeId === 0 ? data.logData.place === formData.logData.place : data.logData.placeId.toString() === formData.logData.placeId.toString()) &&
