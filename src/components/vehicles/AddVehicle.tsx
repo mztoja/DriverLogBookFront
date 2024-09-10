@@ -27,6 +27,8 @@ interface Props {
     registrationNr?: string;
 }
 
+const year = new Date().getFullYear();
+
 export const AddVehicle = (props: Props) => {
     const [addVehicleForm, setAddVehicleForm] = useState<AddVehicleFormInterface>({
         type: props.vehicleType !== undefined ? props.vehicleType : vehicleTypeEnum.trailer,
@@ -36,9 +38,9 @@ export const AddVehicle = (props: Props) => {
         weight: '',
         year: '',
         fuel: '',
-        techRev: '',
-        insurance: '',
-        tacho: '',
+        techRev: year + '-01-01',
+        insurance: year + '-01-01',
+        tacho: year + '-01-01',
         service: '',
         notes: '',
     });
