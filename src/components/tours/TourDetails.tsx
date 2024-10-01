@@ -123,6 +123,10 @@ export const TourDetails = (props: Props) => {
                         </td>
                     </tr>
                     <tr>
+                            <td>{tours[props.lang].truck}:</td>
+                            <td>{data.truck}</td>
+                        </tr>
+                        <tr>
                         <td>{tours[props.lang].driveTime}:</td>
                         <td>{formatTimeToTime(data.driveTime)}</td>
                     </tr>
