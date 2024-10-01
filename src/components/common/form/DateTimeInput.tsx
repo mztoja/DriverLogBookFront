@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {TextField} from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import {form} from "../../../assets/txt/form";
 import './Form.css';
 import {InputPropsTypes} from "../../../types/InputPropsTypes";
+import AddIcon from '@mui/icons-material/Add';
 
 interface Props extends InputPropsTypes {
     valueAsDefault?: boolean;
@@ -28,6 +29,12 @@ export const DateTimeInput = (props: Props) => {
         }
     };
 
+    const handleAdd = (): void => {
+        const currentDate = new Date(selectedDate);
+        currentDate.setMinutes(currentDate.getMinutes() + 1);
+        setSelectedDate(formatLocalDateTime(currentDate));
+    }
+
     useEffect(() => {
         props.onChange(selectedDate);
     },[selectedDate, props]);
@@ -37,7 +44,11 @@ export const DateTimeInput = (props: Props) => {
             label={form[props.lang].date}
             id="datetime"
             InputLabelProps={{className: 'TextInput__Label'}}
-            InputProps={{className: 'TextInput'}}
+            InputProps={{
+                className: 'TextInput', endAdornment: (
+                    <IconButton onClick={handleAdd} size="small"><AddIcon /></IconButton>
+                )
+            }}
             type="datetime-local"
             value={selectedDate}
             onChange={handleDateChange}
