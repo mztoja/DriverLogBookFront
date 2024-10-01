@@ -115,11 +115,11 @@ export const AddPlace = (props: Props) => {
                                               onChange={e => updateForm('isMarked', e)}/></div>
                             <br/>
                             <div className="DivInline"><PlaceGps label={places[props.lang].lat} value={addPlaceForm.lat}
-                                                                 onChange={e => updateForm('lat', e.target.value)}/>
+                                onChange={e => updateForm('lat', e)} />
                             </div>
 
                             <div className="DivInline"><PlaceGps label={places[props.lang].lon} value={addPlaceForm.lon}
-                                                                 onChange={e => updateForm('lon', e.target.value)}/>
+                                onChange={e => updateForm('lon', e)} />
                             </div>
                             <div className="DivClear"/>
                             <br/>

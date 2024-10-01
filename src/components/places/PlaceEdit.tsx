@@ -121,10 +121,10 @@ export const PlaceEdit = (props: Props) => {
                                           onChange={e => updateForm('isFavorite', e)}/></div>
                         <br/>
                         <div className="DivInline"><PlaceGps label={places[props.lang].lat} value={editPlaceForm.lat}
-                                                             onChange={e => updateForm('lat', e.target.value)}/></div>
+                            onChange={e => updateForm('lat', e)} /></div>
 
                         <div className="DivInline"><PlaceGps label={places[props.lang].lon} value={editPlaceForm.lon}
-                                                             onChange={e => updateForm('lon', e.target.value)}/></div>
+                            onChange={e => updateForm('lon', e)} /></div>
                         <div className="DivClear"/>
                         <br/>
                         <center>
