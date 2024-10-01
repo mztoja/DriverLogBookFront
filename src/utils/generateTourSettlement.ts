@@ -25,9 +25,12 @@ export const generateTourSettlement = async (
         Object.keys(data).forEach((fieldName) => {
             // @ts-ignore
             const value = data[fieldName];
-            const field = form.getTextField(fieldName);
-            const sanitizedValue = replaceDiacritics(value);
-            field.setText(sanitizedValue);
+            try {
+                const field = form.getTextField(fieldName);
+                const sanitizedValue = replaceDiacritics(value);
+                field.setText(sanitizedValue);
+            } catch {
+            }
         });
         const title = tours[lang].generateTitle(data.routeNr);
         pdfDoc.setTitle(title);

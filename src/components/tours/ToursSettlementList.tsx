@@ -221,7 +221,7 @@ export const ToursSettlementList = (props: Props) => {
                         </tr>
                         </thead>
                         <tbody>
-                        {data?.map((settlement) => {
+                            {data?.sort((a, b) => b.id - a.id).map((settlement) => {
                             return (
                                 <React.Fragment key={settlement.id}>
                                     {expandedRow !== settlement.id && (
