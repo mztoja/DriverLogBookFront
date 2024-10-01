@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect } from "react";
 import {home} from "../../../assets/txt/home";
 import {apiPaths} from "../../../config/api";
 import {DateTimeInput} from "../../common/form/DateTimeInput";
@@ -19,20 +19,19 @@ import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 export const TourStart = (props:ActionsPropsTypes) => {
 
     const { loading, fetchData} = useApi();
-    const {setAlert} = useAlert();
-    const [prevTour, setPrevTour] = useState<TourInterface | null>(null);
+    const { setAlert } = useAlert();
 
     useEffect(() => {
-        if (prevTour) {
-            props.updateFormData('fuelQuantity', prevTour?.fuelStateAfter.toString());
-        } else {
-            fetchData<TourInterface>(apiPaths.getPreviousRoute, {
-                setData: setPrevTour,
-            }).then();
+        if (props.formData.truck.length < 1 && props.formData.fuelQuantity.length < 1) {
+            fetchData<TourInterface>(apiPaths.getPreviousRoute).then((res) => {
+                if (res.responseData) {
+                    props.updateFormData('fuelQuantity', res.responseData.fuelStateAfter.toString());
+                    props.updateFormData('truck', res.responseData.truck.toString());
+                }
+            });
         }
-    }, [prevTour]);
-
-    // Dopisz pobieranie danych paliwa początkowego (końcowego z poprzedniej trasy, endpoint gotowy!)
+        // eslint-disable-next-line
+    }, []);
 
     const sendTourStart = async (e: FormEvent) => {
         e.preventDefault();
