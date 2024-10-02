@@ -17,6 +17,8 @@ import NavigationIcon from '@mui/icons-material/Navigation';
 import EditIcon from "@mui/icons-material/Edit";
 import {PlaceEdit} from "./PlaceEdit";
 import { formatText } from "../../utils/formats/formatText";
+import DirectionsIcon from '@mui/icons-material/Directions';
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 
 interface Props {
     userData: UserInterface;
@@ -59,7 +61,7 @@ export const PlacesList = (props: Props) => {
         // eslint-disable-next-line
     }, [props.refresh]);
 
-    const markPlace = async (id: number, info: string) => {
+    const markPlace = async (id: number, info: string): Promise<void> => {
         const result = await fetchDataOld(apiPaths.markDepart, 'PATCH', {placeId: id});
         if (result && !result.success) {
             setAlert(commons[props.userData.lang].apiConnectionError, 'error');
@@ -75,6 +77,10 @@ export const PlacesList = (props: Props) => {
                 }
             }
         }
+    }
+
+    const openGoogleMaps = (co: string): void => {
+        window.open(`https://www.google.com/maps/search/?api=1&query=${co}`, '_blank', 'noopener,noreferrer');
     }
 
     useEffect(() => {
@@ -217,16 +223,43 @@ export const PlacesList = (props: Props) => {
                                                             )}
                                                             <br/>
                                                             <div>
-                                                                <Fab variant="extended" size="small" color="primary"
-                                                                     onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => openGoogleMaps(place.street + ' ' + place.code + ' ' + place.city)}>
+                                                                    <DirectionsIcon sx={{ mr: 1 }} />
+                                                                    {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].directions})
+                                                                </Fab>
+                                                            </div>
+                                                            {Number(place.lat) > 0.001 && <div>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => openGoogleMaps(place.lat + ', ' + place.lon)}>
+                                                                    <LocationSearchingIcon sx={{ mr: 1 }} />
+                                                                    {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].gps})
+                                                                </Fab>
+                                                            </div>}
+                                                            <br />
+                                                            <div>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
                                                                     <NavigationIcon sx={{mr: 1}}/>
                                                                     {places[props.userData.lang].navigateSwitchLabel}
                                                                 </Fab>
                                                             </div>
                                                             <br/>
                                                             <div>
-                                                                <Fab variant="extended" size="small" color="primary"
-                                                                     onClick={() => setChosenPlace(place)}>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => setChosenPlace(place)}>
                                                                     <EditIcon sx={{mr: 1}}/>
                                                                     {places[props.userData.lang].edit}
                                                                 </Fab>

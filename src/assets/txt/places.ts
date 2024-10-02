@@ -22,6 +22,9 @@ interface Places {
     collapse: string;
     edit: string;
     editSuccessInfo: string;
+    googleMapsLabel: string;
+    directions: string;
+    gps: string;
 }
 
 
@@ -50,6 +53,9 @@ export const places: Places[] =
         collapse: 'Collapse',
         edit: 'Edit',
         editSuccessInfo: 'The chosen place has been successfully edited.',
+        googleMapsLabel: 'Open in Google Maps',
+        directions: 'Directions',
+        gps: 'GPS',
     },
         {//pl
             addPlace: `Dodaj nowy adres`,
@@ -75,4 +81,7 @@ export const places: Places[] =
             collapse: 'Zwiń',
             edit: 'Edytuj',
             editSuccessInfo: 'Wybrane miejsce zostało edytowane pomyślnie.',
+            googleMapsLabel: 'Otwórz w Google Maps',
+            directions: 'Adres',
+            gps: 'GPS',
         }];
