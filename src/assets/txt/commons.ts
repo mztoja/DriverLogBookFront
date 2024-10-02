@@ -31,7 +31,7 @@ export const commons:Commons[] = [{
 },{
     title: "D.K.",
     subTitle: "Dziennik Kierowcy",
-    footer: "v 3.1.2",
+    footer: "v 3.1.3",
     notFound: "Nie znaleziono zawartości lub strona nie jest jeszcze ukończona",
     pl: 'Polski',
     en: 'Angielski',
