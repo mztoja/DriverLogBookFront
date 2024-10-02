@@ -24,6 +24,22 @@ export const App = () => {
     const {loading, fetchDataOld} = useApi();
 
     useEffect(() => {
+        const updateFavicon = (online: boolean): void => {
+            const favicon = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;;
+            if (favicon) {
+                favicon.href = online ? '/icon-online.ico' : '/icon-offline.ico';
+            }
+        };
+        updateFavicon(navigator.onLine);
+        window.addEventListener('online', () => updateFavicon(true));
+        window.addEventListener('offline', () => updateFavicon(false));
+        return () => {
+            window.removeEventListener('online', () => updateFavicon(true));
+            window.removeEventListener('offline', () => updateFavicon(false));
+        };
+    }, []);
+
+    useEffect(() => {
         (async () => {
             const result = await fetchDataOld(apiPaths.get, 'GET');
             if ((result && result.responseData) &&
