@@ -3,6 +3,7 @@ import { PDFDocument } from "pdf-lib";
 import {saveAs} from 'file-saver';
 import {tours} from "../assets/txt/tours";
 import {SetAlertType} from "../context/AlertContext";
+import { REACT_APP_URL } from "../config/set";
 
 const diacriticsMap: { [key: string]: string } = {
     'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
@@ -19,7 +20,7 @@ export const generateTourSettlement = async (
     setAlert: (text: string, type: SetAlertType) => void
 ) => {
     try {
-        const existingPdfBytes = await fetch(`/tourSettlementTemplates/${tourGenerator}.pdf`).then(res => res.arrayBuffer());
+        const existingPdfBytes = await fetch(`${REACT_APP_URL}/tourSettlementTemplates/${tourGenerator}.pdf`).then(res => res.arrayBuffer());
         const pdfDoc = await PDFDocument.load(existingPdfBytes);
         const form = pdfDoc.getForm();
         Object.keys(data).forEach((fieldName) => {

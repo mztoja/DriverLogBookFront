@@ -1,15 +1,13 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {PlaceInterface, placeTypeEnum, userLangEnum} from "types";
 import {CountrySelect} from "./CountrySelect";
-import {CircularProgress, FormHelperText, TextField} from "@mui/material";
+import {TextField} from "@mui/material";
 import {form} from "../../../assets/txt/form";
-import {Link} from "react-router-dom";
-import {DownloadFromLocalStorage, SaveToLocalStorage} from "../../../hooks/LocalStorageHook";
 import Box from "@mui/material/Box";
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete, {createFilterOptions} from "@mui/material/Autocomplete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {apiPaths} from "../../../config/api";
 import {useApi} from '../../../hooks/useApi';
-import {PlaceField} from "./PlaceField";
 
 interface Props {
     lang: userLangEnum;
@@ -20,184 +18,256 @@ interface Props {
     placeOnChange: (e: any) => void;
     placeIdValue: string;
     placeIdOnChange: (e: any) => void;
-    disablePlaceText?: boolean;
+    disablePlaceText?: boolean; // tryb tylko-wybór z listy (brak wpisu ręcznego)
+    withoutPlaceId?: boolean;   // tryb tylko wpis ręczny (bez listy adresowej)
+    label?: string;
 }
+
+const formatPlace = (p: PlaceInterface): string =>
+    `${p.name} - ${p.street}, ${p.code} ${p.city}`;
+
+const placeFilter = createFilterOptions<PlaceInterface>({
+    stringify: (o) => `${o.name} ${o.code} ${o.city} ${o.street}`,
+});
+
+// wstrzykuje zielony ptaszek jako pierwsze dziecko wewnątrz kontenera .MuiAutocomplete-endAdornment,
+// dzięki czemu ikona ląduje po lewej stronie krzyżyka (a nie w normalnym flow pod polem)
+const injectPlaceIdMark = (
+    endAdornment: React.ReactElement<{ children?: React.ReactNode }> | undefined,
+    show: boolean,
+    title: string,
+): React.ReactNode => {
+    if (!show || !React.isValidElement(endAdornment)) return endAdornment;
+    const mark = (
+        <CheckCircleIcon
+            fontSize="small"
+            titleAccess={title}
+            sx={{color: 'success.main', mr: 0.5, verticalAlign: 'middle'}}
+        />
+    );
+    return React.cloneElement(
+        endAdornment,
+        undefined,
+        <React.Fragment key="place-id-mark">{mark}{endAdornment.props.children}</React.Fragment>,
+    );
+};
 
 export const PlaceInput = (props: Props) => {
 
-    const [country, setCountry] = useState<string>(props.countryValue ? props.countryValue : props.defaultCountry);
-    const [autoCompleteFormSwitch, setAutoCompleteFormSwitch] = useState<boolean>(props.disablePlaceText ? true : (props.placeValue === ''));
-    const [firstRender, setFirstRender] = useState<boolean>(true);
-    const [placeIdValue, setPlaceIdValue] = useState<string>(props.placeIdValue === '' ? '0' : props.placeIdValue);
-    const [placesList, setPlacesList] = useState<PlaceInterface[] | null>(null);
-    const [places, setPlaces] = useState<PlaceInterface[] | null>(null);
-    const [defaultPlaceValue, setDefaultPlaceValue] = useState<PlaceInterface | null>(null);
-    const [clear, setClear] = useState<number>(0);
     const {loading, fetchDataOld} = useApi();
+    const [placesList, setPlacesList] = useState<PlaceInterface[] | null>(null);
+    const [inputValue, setInputValue] = useState<string>('');
 
     useEffect(() => {
+        let ignore = false;
         (async () => {
             const result = await fetchDataOld(apiPaths.getPlaces, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
+            if (!ignore && result && result.responseData && !result.responseData.dtc) {
                 setPlacesList(result.responseData);
             }
         })();
+        return () => {
+            ignore = true;
+        };
         // eslint-disable-next-line
     }, []);
 
-    if (firstRender && placesList !== null) {
-        const placeId = Number(placeIdValue);
-        if (placeId !== 0) {
-            const defaultValue = placesList?.find(place => place.id === placeId);
-            if (defaultValue) {
-                setCountry(defaultValue.country);
-                setDefaultPlaceValue(defaultValue);
-            }
-        } else {
-            setDefaultPlaceValue(null);
-        }
-        setFirstRender(false);
-    }
-
     useEffect(() => {
-        const filteredData = placesList?.filter(place => place.country === country).sort((a, b) => {
-            if (a.isFavorite && !b.isFavorite) return -1;
-            if (!a.isFavorite && b.isFavorite) return 1;
-            return a.type - b.type;
-        });
-        if (filteredData) setPlaces(filteredData);
-    }, [placesList, places, country]);
+        if (!props.countryValue && props.defaultCountry) {
+            props.countryOnChange(props.defaultCountry);
+        }
+        // eslint-disable-next-line
+    }, []);
 
-    const changeInput = () => {
-        if (autoCompleteFormSwitch) {
-            if (placeIdValue) {
-                SaveToLocalStorage('placeId', placeIdValue);
-            }
-            setPlaceIdValue('0');
+    const country = props.countryValue || props.defaultCountry;
+
+    const selectedPlace = useMemo<PlaceInterface | null>(() => {
+        const id = Number(props.placeIdValue);
+        if (!id || id <= 0 || !placesList) return null;
+        return placesList.find((p) => p.id === id) ?? null;
+    }, [placesList, props.placeIdValue]);
+
+    const options = useMemo<PlaceInterface[]>(() => {
+        if (!placesList) return [];
+        return [...placesList]
+            .filter((p) => p.country === country)
+            .sort((a, b) => {
+                if (a.isFavorite !== b.isFavorite) return a.isFavorite ? -1 : 1;
+                if (a.type !== b.type) return a.type - b.type;
+                if (a.code !== b.code) return a.code < b.code ? -1 : 1;
+                if (a.name !== b.name) return a.name < b.name ? -1 : 1;
+                return 0;
+            });
+    }, [placesList, country]);
+
+    // widoczny tekst zawsze zgodny ze stanem zewnętrznym
+    useEffect(() => {
+        setInputValue(selectedPlace ? formatPlace(selectedPlace) : props.placeValue);
+    }, [selectedPlace, props.placeValue]);
+
+    // kraj podąża za wybranym miejscem
+    useEffect(() => {
+        if (selectedPlace && selectedPlace.country !== props.countryValue) {
+            props.countryOnChange(selectedPlace.country);
+        }
+        // eslint-disable-next-line
+    }, [selectedPlace]);
+
+    const groupBy = (o: PlaceInterface): string => {
+        if (o.isFavorite) return form[props.lang].favorite;
+        switch (o.type) {
+            case placeTypeEnum.other:
+                return form[props.lang].placeType0;
+            case placeTypeEnum.base:
+                return form[props.lang].placeType1;
+            case placeTypeEnum.loadingPlace:
+                return form[props.lang].placeType2;
+            case placeTypeEnum.unloadingPlace:
+                return form[props.lang].placeType3;
+            case placeTypeEnum.loadAndunloadPlace:
+                return form[props.lang].placeType4;
+            case placeTypeEnum.parking:
+                return form[props.lang].placeType5;
+            case placeTypeEnum.service:
+                return form[props.lang].placeType6;
+            case placeTypeEnum.customs:
+                return form[props.lang].placeType7;
+            default:
+                return '';
+        }
+    };
+
+    const handleInputChange = (
+        _e: React.SyntheticEvent,
+        newInput: string,
+        reason: string,
+    ): void => {
+        if (reason === 'reset') return; // wewnętrzne resety MUI — steruje efekt synchronizujący
+        setInputValue(newInput);
+        if (reason === 'clear') {
             props.placeIdOnChange('0');
-            const data = DownloadFromLocalStorage('place');
-            if (data) {
-                props.placeOnChange(data);
-            }
-
-        } else if (!autoCompleteFormSwitch) {
-            SaveToLocalStorage('place', props.placeValue);
             props.placeOnChange('');
-            const data = DownloadFromLocalStorage('placeId');
-            if (data) {
-                setPlaceIdValue(data);
-                props.placeIdOnChange(data);
-                setFirstRender(true);
-            }
+            return;
         }
-        setAutoCompleteFormSwitch(!autoCompleteFormSwitch);
-    }
-
-    const updateCountry = (e: string) => {
-        if (country !== e) {
-            setPlaceIdValue('0');
+        if (props.disablePlaceText) return; // tryb tylko-wybór: pisanie jedynie filtruje listę
+        if (reason === 'input') {
             props.placeIdOnChange('0');
-            setDefaultPlaceValue(null);
-            setClear(clear + 1);
+            props.placeOnChange(newInput);
         }
-        setCountry(e);
-        props.countryOnChange(e);
-    }
+    };
 
-    if (loading || !placesList) {
-        return <CircularProgress/>
+    const handleChange = (
+        _e: React.SyntheticEvent,
+        newValue: PlaceInterface | string | null,
+    ): void => {
+        if (newValue && typeof newValue !== 'string') {
+            props.placeOnChange('');
+            props.placeIdOnChange(newValue.id.toString());
+            if (newValue.country !== props.countryValue) {
+                props.countryOnChange(newValue.country);
+            }
+        } else if (typeof newValue === 'string') {
+            if (props.disablePlaceText) return;
+            props.placeIdOnChange('0');
+            props.placeOnChange(newValue);
+        } else {
+            props.placeIdOnChange('0');
+            props.placeOnChange('');
+        }
+    };
+
+    const updateCountry = (e: string): void => {
+        const next = e || '';
+        if (next && next !== props.countryValue && Number(props.placeIdValue) > 0) {
+            props.placeIdOnChange('0');
+            props.placeOnChange('');
+        }
+        props.countryOnChange(next);
+    };
+
+    const placeError = props.placeValue.length > 30;
+    const label = props.label ?? form[props.lang].place;
+    const hasPlaceId = Number(props.placeIdValue) > 0;
+
+    if (props.withoutPlaceId) {
+        return (
+            <>
+                <CountrySelect lang={props.lang} value={country} onChange={updateCountry}/>
+                <TextField
+                    id="place"
+                    label={label}
+                    InputLabelProps={{className: 'TextInput__Label'}}
+                    InputProps={{className: 'TextInput'}}
+                    type="text"
+                    value={props.placeValue}
+                    onChange={(e) => props.placeOnChange(e.target.value)}
+                    fullWidth
+                    size="small"
+                    error={placeError}
+                    helperText={placeError ? form[props.lang].placeHelper : undefined}
+                />
+            </>
+        );
     }
 
     return (
         <>
-            <CountrySelect lang={props.lang} value={country} onChange={e => updateCountry(e)}/>
-            {!autoCompleteFormSwitch
-                ?
-                (
-                    <>
-                        <PlaceField lang={props.lang} value={props.placeValue} onChange={e => props.placeOnChange(e)}/>
-                        <FormHelperText className='TextInput__Label'>
-                            <Link to="" className="Link"
-                                  onClick={() => changeInput()}>{form[props.lang].switchToPlaceId}</Link>
-                        </FormHelperText>
-                    </>
-                )
-                :
-                null}
-            {autoCompleteFormSwitch && places
-                ?
-                (
-                    <>
-                        <Autocomplete
-                            id="place"
-                            key={clear}
-                            options={places}
-                            groupBy={(option) => {
-                                if (option.isFavorite) {
-                                    return form[props.lang].favorite;
-                                } else {
-                                    if (option.type === placeTypeEnum.other) {
-                                        return form[props.lang].placeType0;
-                                    } else if (option.type === placeTypeEnum.base) {
-                                        return form[props.lang].placeType1;
-                                    } else if ((option.type === placeTypeEnum.loadingPlace) ||
-                                        (option.type === placeTypeEnum.unloadingPlace) ||
-                                        (option.type === placeTypeEnum.loadAndunloadPlace)) {
-                                        return form[props.lang].placeType4;
-                                    } else if (option.type === placeTypeEnum.parking) {
-                                        return form[props.lang].placeType5;
-                                    } else if (option.type === placeTypeEnum.service) {
-                                        return form[props.lang].placeType6;
-                                    } else if (option.type === placeTypeEnum.customs) {
-                                        return form[props.lang].placeType7;
-                                    } else {
-                                        return '';
-                                    }
-                                }
-                            }}
-                            autoHighlight
-                            size='small'
-                            defaultValue={defaultPlaceValue}
-                            getOptionLabel={(option) => option.name + '-' + option.code + ' ' + option.city}
-                            isOptionEqualToValue={(option, value) =>
-                                (option.id === value.id)}
-                            renderOption={(props, option) => (
-                                <Box component="li" {...props}>
-                                    {option.name} - {option.code} {option.city}, {option.street}
-                                </Box>
-                            )}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label={form[props.lang].place}
-                                    InputLabelProps={{className: 'TextInput__Label'}}
-                                    InputProps={{...params.InputProps}}
-                                    size='small'
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        autoComplete: 'off',// disable autocomplete and autofill
-                                        className: 'TextInput',
-                                    }}
-                                />
-                            )}
-                            onChange={(event: any, newValue: PlaceInterface | null) => {
-                                if (newValue) {
-                                    setPlaceIdValue(newValue.id.toString());
-                                    props.placeIdOnChange(newValue.id.toString());
-                                } else {
-                                    props.placeIdOnChange('0');
-                                }
-                            }}
-
-                        />
-                        {!props.disablePlaceText && <FormHelperText className='TextInput__Label'>
-                            <Link to="" className="Link"
-                                  onClick={() => changeInput()}>{form[props.lang].switchToPlace}</Link>
-                        </FormHelperText>}
-                    </>
-                )
-                :
-                null}
+            <CountrySelect lang={props.lang} value={country} onChange={updateCountry}/>
+            <Autocomplete
+                id="place"
+                freeSolo={!props.disablePlaceText}
+                options={options}
+                value={props.disablePlaceText ? selectedPlace : (selectedPlace ?? (props.placeValue || null))}
+                inputValue={inputValue}
+                onChange={handleChange}
+                onInputChange={handleInputChange}
+                onClose={() => {
+                    if (props.disablePlaceText) {
+                        setInputValue(selectedPlace ? formatPlace(selectedPlace) : '');
+                    }
+                }}
+                filterOptions={placeFilter}
+                groupBy={groupBy}
+                getOptionLabel={(option) =>
+                    typeof option === 'string' ? option : formatPlace(option)}
+                isOptionEqualToValue={(option, value) =>
+                    typeof option !== 'string' && typeof value !== 'string' && option.id === value.id}
+                loading={loading}
+                disabled={!placesList}
+                autoHighlight
+                size="small"
+                renderOption={(optionProps, option) => {
+                    const {key, ...rest} = optionProps as React.HTMLAttributes<HTMLLIElement> & { key?: string };
+                    return (
+                        <Box component="li" key={key} {...rest}>
+                            {formatPlace(option)}
+                        </Box>
+                    );
+                }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label={label}
+                        InputLabelProps={{className: 'TextInput__Label'}}
+                        InputProps={{
+                            ...params.InputProps,
+                            endAdornment: injectPlaceIdMark(
+                                params.InputProps.endAdornment as React.ReactElement<{ children?: React.ReactNode }> | undefined,
+                                hasPlaceId,
+                                form[props.lang].placeIdSelected,
+                            ),
+                        }}
+                        size="small"
+                        error={placeError}
+                        helperText={placeError ? form[props.lang].placeHelper : undefined}
+                        inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'off', // disable autocomplete and autofill
+                            className: 'TextInput',
+                        }}
+                    />
+                )}
+            />
         </>
     );
 }

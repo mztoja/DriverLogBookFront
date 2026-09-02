@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import {extractNumberWithDecimal} from "../../../../utils/extractNumberWithDecimal";
 import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
-export const ExpenseQuantityInput = (props: InputPropsTypes) => {
+export const ExpenseQuantityInput = (props: InputPropsTypes): JSX.Element => {
     const onChange = (v: string) => {
         const newValue = extractNumberWithDecimal(v);
         props.onChange(newValue);

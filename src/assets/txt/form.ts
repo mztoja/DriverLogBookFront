@@ -46,8 +46,10 @@ interface Form {
     odometer: string;
     distance: string;
     place: string;
+    placeHelper: string;
     switchToPlace: string;
     switchToPlaceId: string;
+    placeIdSelected: string;
     driveTime: string;
     driveTime2: string;
     driveTimeHelper: string;
@@ -129,8 +131,10 @@ export const form: Form[] =
         odometer: 'Odometer',
         distance: 'Distance',
         place: 'Place',
+        placeHelper: 'Max 30 characters',
         switchToPlace: 'Change to manual enter',
         switchToPlaceId: 'Switch to selection from the address list',
+        placeIdSelected: 'A place from the address list is selected',
         driveTime: 'Drive time',
         driveTime2: '2nd driver drive time',
         driveTimeHelper: 'Type your driving time from tacho throughout the day.',
@@ -209,8 +213,10 @@ export const form: Form[] =
             odometer: 'Stan licznika',
             distance: 'Odległość',
             place: 'Miejsce',
+            placeHelper: 'Maksymalnie 30 znaków',
             switchToPlace: 'Przełącz na wpis manualny',
             switchToPlaceId: 'Przełącz na wybór z listy adresowej',
+            placeIdSelected: 'Wybrano miejsce z listy adresowej',
             driveTime: 'Czas jazdy',
             driveTime2: 'Czas jazdy 2 kierowcy',
             driveTimeHelper: 'Spisz swój czas jazdy z tachografu z całego dnia.',
