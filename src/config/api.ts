@@ -53,6 +53,7 @@ export const apiPaths = {
     getLogs: '/logs/get',
     getLogById: '/logs/getById',
     getLogsByTourId: '/logs/getByTourId',
+    getLogsByPlaceId: '/logs/getByPlaceId',
     getLastLog: '/logs/getLastLog',
     attachTrailer: '/logs/attachTrailer',
     detachTrailer: '/logs/detachTrailer',

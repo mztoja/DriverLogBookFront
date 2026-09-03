@@ -37,6 +37,8 @@ import { formatText } from "../../utils/formats/formatText";
 interface Props {
     lang: userLangEnum;
     tourId?: number;
+    placeId?: number;
+    placeName?: string;
     setShowLogList?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -148,7 +150,10 @@ export const LogsList = (props: Props) => {
             const search = filterSearch === '' ? '' : '/' + filterSearch;
             const reqPage = page;
             if (reqPage > 1) setLoadingMore(true);
-            fetchData<LogListResponse>(`${apiPaths.getLogs}/${reqPage}/${LOGS_PER_PAGE + search}`).then((res) => {
+            const base = props.placeId
+                ? `${apiPaths.getLogsByPlaceId}/${props.placeId}`
+                : apiPaths.getLogs;
+            fetchData<LogListResponse>(`${base}/${reqPage}/${LOGS_PER_PAGE + search}`).then((res) => {
                 if (res.responseData) {
                     const items = res.responseData.items;
                     setData(prev => (reqPage === 1 || !prev) ? items : [...prev, ...items]);
@@ -216,7 +221,19 @@ export const LogsList = (props: Props) => {
                         </>
                         :
                         <div className="Table__HeaderRow">
-                            <span className="Table__Title">{logs[props.lang].tableHeader}</span>
+                            <span className="Table__Title">
+                                {props.placeId
+                                    ? <>
+                                        {logs[props.lang].placeLogsHeader(props.placeName ?? '')}
+                                        &nbsp;&nbsp;
+                                        <Tooltip title={tours[props.lang].close} arrow>
+                                            <NavLink to='/logs' className='CloseLink'>
+                                                <ClearIcon sx={{mr: 1}}/>
+                                            </NavLink>
+                                        </Tooltip>
+                                    </>
+                                    : logs[props.lang].tableHeader}
+                            </span>
                             <div className="Table__HeaderSearch">
                                 <SearchInput lang={props.lang} value={filterSearch}
                                              onChange={e => setFilterSearch(e)}/>

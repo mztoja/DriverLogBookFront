@@ -25,6 +25,7 @@ interface Places {
     markedPlaceError: string;
     collapse: string;
     edit: string;
+    showActivities: string;
     editSuccessInfo: string;
     googleMapsLabel: string;
     directions: string;
@@ -60,6 +61,7 @@ export const places: Places[] =
         markedPlaceError: 'Something went wrong with the place marking :( Check your connection or try again later.',
         collapse: 'Collapse',
         edit: 'Edit',
+        showActivities: 'Activities of this place',
         editSuccessInfo: 'The chosen place has been successfully edited.',
         googleMapsLabel: 'Open in Google Maps',
         directions: 'Directions',
@@ -92,6 +94,7 @@ export const places: Places[] =
             markedPlaceError: 'Coś poszło nie tak z oznaczeniem miejsca :( Problem z połączeniem.',
             collapse: 'Zwiń',
             edit: 'Edytuj',
+            showActivities: 'Czynności tego miejsca',
             editSuccessInfo: 'Wybrane miejsce zostało edytowane pomyślnie.',
             googleMapsLabel: 'Otwórz w Google Maps',
             directions: 'Adres',

@@ -1,4 +1,5 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {places} from "../../assets/txt/places";
 import {PlaceInterface, UserInterface} from "types";
 import {CircularProgress, Fab} from "@mui/material";
@@ -21,6 +22,7 @@ import {PlaceEdit} from "./PlaceEdit";
 import { formatText } from "../../utils/formats/formatText";
 import DirectionsIcon from '@mui/icons-material/Directions';
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 interface Props {
     userData: UserInterface;
@@ -34,6 +36,7 @@ export const PlacesList = (props: Props) => {
     const {setAlert} = useAlert();
     const {fetchDataOld} = useApi();
     const {places: data, loading, ensurePlaces} = usePlaces();
+    const navigate = useNavigate();
 
     const [showData, setShowData] = useState<PlaceInterface[] | null>(null);
     const [filterType, setFilterType] = useState<string>('999');
@@ -264,6 +267,17 @@ export const PlacesList = (props: Props) => {
                                                                     onClick={() => setChosenPlace(place)}>
                                                                     <EditIcon sx={{mr: 1}}/>
                                                                     {places[props.userData.lang].edit}
+                                                                </Fab>
+                                                            </div>
+                                                            <br/>
+                                                            <div>
+                                                                <Fab
+                                                                    variant="extended"
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    onClick={() => navigate('/logs/' + place.id)}>
+                                                                    <AssignmentIcon sx={{mr: 1}}/>
+                                                                    {places[props.userData.lang].showActivities}
                                                                 </Fab>
                                                             </div>
                                                         </td>

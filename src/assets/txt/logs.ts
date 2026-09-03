@@ -1,6 +1,7 @@
 interface Logs {
     apiError: string;
     tableHeader: string;
+    placeLogsHeader: (x: string) => string;
     thLp: string;
     thTourNr: string;
     thDate: string;
@@ -17,6 +18,7 @@ export const logs: Logs[] = [
     {//en
         apiError: 'Your activity list could not be downloaded due to a connection problem. Please try again later.',
         tableHeader: 'Activities List',
+        placeLogsHeader: (x) => `Activities of the place: ${x}`,
         thLp: 'No.',
         thTourNr: 'Tour',
         thDate: 'Date',
@@ -31,6 +33,7 @@ export const logs: Logs[] = [
     {//pl
         apiError: 'Twoja lista czynności nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
         tableHeader: 'Lista czynności',
+        placeLogsHeader: (x) => `Czynności miejsca: ${x}`,
         thLp: 'Lp.',
         thTourNr: 'Trasa',
         thDate: 'Data',

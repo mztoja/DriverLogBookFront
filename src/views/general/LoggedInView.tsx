@@ -63,7 +63,7 @@ export const LoggedInView = (props: Props) => {
                                               dayData={dayData} setDayData={setDayData} setDayLoaded={setDayLoaded}
                                               lastLogData={lastLogData} setLastLogData={setLastLogData}
                                               refresh={refresh} setRefresh={setRefresh}/>}/>
-                    <Route path="logs"
+                    <Route path="logs/:placeId?"
                            element={<LogsView page="logs" userData={userData} setUserData={setUserData}/>}/>
                     <Route path="days"
                            element={<DaysView page="days" userData={userData} setUserData={setUserData}/>}/>
