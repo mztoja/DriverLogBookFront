@@ -5,6 +5,7 @@ import {Header} from "./Header";
 import {Footer} from "../bars/Footer/Footer";
 import {AlertProvider} from "../../context/AlertContext";
 import {AlertPopup} from "../common/AlertPopup/AlertPopup";
+import {SessionExpiredBridge} from "./SessionExpiredBridge";
 
 interface Props {
     lang: userLangEnum;
@@ -35,6 +36,7 @@ export const AppLayout = (props: Props) => {
                 setUserData={props.setUserData}
             />
             <AlertProvider>
+                <SessionExpiredBridge lang={props.lang} setUserData={props.setUserData}/>
                 {props.infoBar && <div className="AppLayout__InfoBar">{props.infoBar}</div>}
                 <main id="AppMain">
                     <div className="AppMain__content">

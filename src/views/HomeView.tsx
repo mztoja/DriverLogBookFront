@@ -35,11 +35,7 @@ export const HomeView = (props: Props) => {
         }).then();
         fetchData<UserInterface>(apiPaths.get, {
             setData: props.setUserData,
-        }).then((res) => {
-            if (!res.success) {
-                props.setUserData(null);
-            }
-        });
+        }).then();
         fetchData<LogInterface>(apiPaths.getLastLog, {
             setData: setLastLogData,
         }).then();

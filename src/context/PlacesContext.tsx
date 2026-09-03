@@ -1,6 +1,7 @@
 import {createContext, ReactNode, useCallback, useMemo, useRef, useState} from 'react';
 import {PlaceInterface} from 'types';
-import {apiPaths, apiURL} from '../config/api';
+import {apiPaths} from '../config/api';
+import {apiFetch} from '../utils/apiFetch';
 
 interface PlacesCtx {
     places: PlaceInterface[] | null; // null = jeszcze nie pobrano / błąd
@@ -27,16 +28,16 @@ export const PlacesProvider = ({children}: Props) => {
     const [loading, setLoading] = useState<boolean>(false);
     const inFlight = useRef<boolean>(false);
 
-    // Surowy fetch (bez useApi – żeby jego wewnętrzny `loading` nie re-renderował providera).
+    // apiFetch (nie useApi) – żeby wewnętrzny `loading` useApi nie re-renderował providera,
+    // ale wciąż z obsługą 401 → odnowienie sesji → retry.
     const load = useCallback(async (): Promise<PlaceInterface[] | null> => {
         if (inFlight.current) return null;
         inFlight.current = true;
         setLoading(true);
         try {
-            const r = await fetch(apiURL + apiPaths.getPlaces, {
+            const r = await apiFetch(apiPaths.getPlaces, {
                 method: 'GET',
                 headers: {Accept: 'application/json'},
-                credentials: 'include',
             });
             if (!r.ok) return null;
             const d = await r.json();

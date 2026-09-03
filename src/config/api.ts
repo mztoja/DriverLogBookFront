@@ -28,6 +28,7 @@ export const apiPaths = {
     // users
     register: '/users/register',
     login: '/auth/login',
+    refresh: '/auth/refresh',
     get: '/auth/user',
     logout: '/auth/logout',
     markDepart: '/users/markDepart',
