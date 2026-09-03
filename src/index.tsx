@@ -4,13 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { App } from './App';
 import { theme } from './theme';
+import { REACT_APP_PREFIX } from './config/set';
 import './index.css';
 
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-    <BrowserRouter>
+    <BrowserRouter basename={REACT_APP_PREFIX}>
         <React.StrictMode>
             <ThemeProvider theme={theme}>
                 <App />

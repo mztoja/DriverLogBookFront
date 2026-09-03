@@ -8,6 +8,7 @@ import {LoggedOutView} from "./views/general/LoggedOutView";
 import {LoggedInView} from "./views/general/LoggedInView";
 import {useApi} from './hooks/useApi';
 import {apiPaths} from "./config/api";
+import {REACT_APP_PREFIX} from "./config/set";
 
 enum AppView {
     loggedOut,
@@ -27,7 +28,7 @@ export const App = () => {
         const updateFavicon = (online: boolean): void => {
             const favicon = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;;
             if (favicon) {
-                favicon.href = online ? '/icon-online.ico' : '/icon-offline.ico';
+                favicon.href = online ? `${REACT_APP_PREFIX}/icon-online.ico` : `${REACT_APP_PREFIX}/icon-offline.ico`;
             }
         };
         updateFavicon(navigator.onLine);
