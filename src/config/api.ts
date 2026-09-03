@@ -33,7 +33,8 @@ export const apiPaths = {
     logout: '/auth/logout',
     markDepart: '/users/markDepart',
     userUpdate: '/users/userUpdate',
-    editNotes: '/users/editNotes',
+    getUserNotes: '/user-notes',
+    saveUserNote: '/user-notes/save',
     // days
     createNewDay: '/days/create',
     finishDay: '/days/finish',

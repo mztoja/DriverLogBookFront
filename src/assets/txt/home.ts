@@ -91,6 +91,8 @@ interface Home {
     finishTourUnloadNote: string;
     cannotEditSettledTourData: string;
     notes: string;
+    notesHistory: string;
+    notesHistoryTitle: string;
 }
 
 export const home:Home[] = [{
@@ -184,6 +186,8 @@ export const home:Home[] = [{
     finishTourUnloadNote: 'Marked as unloaded due to end of tour',
     cannotEditSettledTourData: 'You cannot edit data assigned to a route that has already been settled.',
     notes: 'Notes',
+    notesHistory: 'Notes history',
+    notesHistoryTitle: 'Notes history',
 },{//pl
     welcome: 'Wybierz czynność z listy poniżej',
     subTitle: 'Dziennik Kierowcy',
@@ -274,4 +278,6 @@ export const home:Home[] = [{
     finishTourUnloadNote: 'Oznaczony jako rozładowany z powodu zakończenia trasy',
     cannotEditSettledTourData: 'Nie możesz edytować danych przypisanych do rozliczonej już trasy.',
     notes: 'Notatki',
+    notesHistory: 'Historia notatek',
+    notesHistoryTitle: 'Historia notatek',
 }];

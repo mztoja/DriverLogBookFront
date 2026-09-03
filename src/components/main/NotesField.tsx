@@ -1,48 +1,27 @@
-import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
-// import ReactDOMServer from 'react-dom/server';
-import { home } from "../../assets/txt/home";
-import { UserInterface, userLangEnum } from 'types';
-// import SaveAsIcon from '@mui/icons-material/SaveAs';
-// import { Fab } from "@mui/material";
-import { useApi } from "../../hooks/useApi";
-import { apiPaths } from '../../config/api';
-// import { formatText } from '../../utils/formats/formatText';
+import React, {useState, useRef, useEffect} from 'react';
+import {Link} from "react-router-dom";
+import {home} from "../../assets/txt/home";
+import {UserNoteInterface, userLangEnum} from 'types';
+import {useApi} from "../../hooks/useApi";
+import {apiPaths} from '../../config/api';
+import {NotesHistory} from './NotesHistory';
 
 interface Props {
-    userData: UserInterface;
-    setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     lang: userLangEnum;
 }
 
 export const NotesField = (props: Props) => {
-    // const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [text, setText] = useState<string | null>(props.userData.notes);
-    // const [formatedText, setFormatedText] = useState<string>('');
-    const [synchronized, setSynchronized] = useState<boolean>(true);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const { fetchData } = useApi();
-    const intervalRef = useRef<number | null>(null);
+    const {fetchData} = useApi();
 
-    // const handleClick = (): void => {
-    //     if (!isEditing) {
-    //         setIsEditing(true);
-    //     }
-    // }
-    const handleSave = (): void => {
-        // setIsEditing(false);
-        setSynchronized(false);
-        const sendData = { notes: text };
-        fetchData<UserInterface>(apiPaths.editNotes, { method: 'PATCH', sendData }).then((res) => {
-            if (res.success && res.responseData) {
-                props.setUserData({ ...props.userData, notes: res.responseData.notes });
-                setSynchronized(true);
-            };
-        });
-    }
+    const [text, setText] = useState<string>('');
+    const [history, setHistory] = useState<UserNoteInterface[]>([]);
+    const [synchronized, setSynchronized] = useState<boolean>(true);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const savedTextRef = useRef<string>('');
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     // Autopowiększanie textarea. Reset height:'auto' potrafi na chwilę skrócić stronę,
-    // przez co kontener treści (.AppMain__content) przewija się przy każdym znaku –
-    // dlatego zapamiętujemy i przywracamy jego scrollTop.
+    // przez co kontener treści (.AppMain__content) przewija się – zapamiętujemy i przywracamy scrollTop.
     const autoGrow = () => {
         const el = textareaRef.current;
         if (!el) return;
@@ -55,32 +34,36 @@ export const NotesField = (props: Props) => {
         }
     };
 
-    const handleTextareaChange = () => {
-        autoGrow();
+    const handleSave = (): void => {
+        setSynchronized(false);
+        const value = text;
+        fetchData<UserNoteInterface[]>(apiPaths.saveUserNote, {method: 'POST', sendData: {notes: value}}).then((res) => {
+            if (res.success && Array.isArray(res.responseData)) {
+                setHistory(res.responseData);
+                savedTextRef.current = value;
+                setSynchronized(true);
+            }
+        });
+    };
+
+    const handleBlur = (): void => {
+        if (text !== savedTextRef.current) {
+            handleSave();
+        }
     };
 
     useEffect(() => {
-        if (!synchronized) {
-            intervalRef.current = window.setInterval(() => {
-                handleSave();
-            }, 3000);
-        } else {
-            if (props.userData.notes !== text) handleSave();
-        }
-        return () => {
-            if (intervalRef.current !== null) {
-                clearInterval(intervalRef.current);
-                intervalRef.current = null;
+        fetchData<UserNoteInterface[]>(apiPaths.getUserNotes).then((res) => {
+            if (Array.isArray(res.responseData)) {
+                setHistory(res.responseData);
+                const current = res.responseData[0]?.notes ?? '';
+                setText(current);
+                savedTextRef.current = current;
+                autoGrow();
             }
-        };
-        // eslint-disable-next-line
-    }, [text, synchronized]);
-
-    useEffect(() => {
-        autoGrow();
+        });
         // eslint-disable-next-line
     }, []);
-
 
     return (
         <fieldset id={synchronized ? 'Notes' : 'NotesError'}>
@@ -89,34 +72,28 @@ export const NotesField = (props: Props) => {
             </legend>
             <textarea
                 className='transparent-textarea'
-                value={text ? text : ''}
+                value={text}
                 onChange={(e) => {
                     setText(e.target.value);
-                    handleTextareaChange();
+                    autoGrow();
                     setSynchronized(false);
                 }}
+                onBlur={handleBlur}
                 autoFocus
                 ref={textareaRef}
             />
-            {
-            // isEditing
-            //     ?
-            //     <>
-            //         <textarea
-            //             className='transparent-textarea'
-            //             value={text ? text : ''}
-            //             onChange={(e) => {
-            //                 setText(e.target.value);
-            //                 handleTextareaChange();
-            //                 setSynchronized(false);
-            //             }}
-            //             autoFocus
-            //             ref={textareaRef}
-            //         />
-            //         {/* <center><Fab onClick={handleSave} color="primary" aria-label="save"><SaveAsIcon /></Fab></center> */}
-            //     </>
-            //     :
-            //     <div dangerouslySetInnerHTML={{ __html: formatedText }} />
+            <div className="center">
+                <Link to="" className="Link" onClick={() => setShowHistory(true)}>
+                    {home[props.lang].notesHistory}
+                </Link>
+            </div>
+            {showHistory &&
+                <NotesHistory
+                    lang={props.lang}
+                    history={history}
+                    open={showHistory}
+                    setOpen={setShowHistory}
+                />
             }
         </fieldset>
     );
