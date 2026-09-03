@@ -4,9 +4,7 @@ import { UserInterface } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {AddPlace} from "../components/places/AddPlace";
 import {PlacesList} from "../components/places/PlacesList";
-import {usePlaces} from "../hooks/usePlaces";
-import {Fab} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { usePlaces } from "../hooks/usePlaces";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -26,13 +24,8 @@ export const PlacesView = (props: Props) => {
 
     return (
         <>
-            <div className="TableView__toolbar">
-                {!showAddPlace &&
-                    <Fab onClick={() => setShowAddPlace(true)} color="primary" aria-label="add" size="medium"><AddIcon /></Fab>
-                }
-            </div>
             <AddPlace lang={props.userData.lang} show={showAddPlace} setShow={setShowAddPlace}/>
-            <PlacesList userData={props.userData} setUserData={props.setUserData}/>
+            <PlacesList userData={props.userData} setUserData={props.setUserData} showAddButton={showAddPlace} setShowAddPlace={setShowAddPlace} />
         </>
     );
 };

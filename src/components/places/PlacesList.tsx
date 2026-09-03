@@ -2,6 +2,7 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {places} from "../../assets/txt/places";
 import {PlaceInterface, UserInterface} from "types";
 import {CircularProgress, Fab} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import {form} from "../../assets/txt/form";
 import DetailsIcon from '@mui/icons-material/Details';
 import RoomIcon from '@mui/icons-material/Room';
@@ -24,6 +25,8 @@ import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 interface Props {
     userData: UserInterface;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
+    showAddButton: boolean;
+    setShowAddPlace: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PlacesList = (props: Props) => {
@@ -142,6 +145,11 @@ export const PlacesList = (props: Props) => {
                                 <div className="DivInline">
                                     <SearchInput lang={props.userData.lang} value={filterSearch}
                                                  onChange={e => setFilterSearch(e)}/>
+                                </div>
+                                <div className="DivInline">
+                                    <Fab onClick={() => props.setShowAddPlace(true)} color="primary" aria-label="add" size="medium">
+                                        <AddIcon />
+                                    </Fab>
                                 </div>
                             </div>
                         </div>
