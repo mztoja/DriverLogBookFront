@@ -91,21 +91,26 @@ a {
 
 /*Fieldset&legend set:*/
 fieldset {
-    border: 0.5rem solid #1a59a757;
-    background: #0000001a;
-    border-radius: 0.6rem;
-    padding: 0.5rem 1rem;
+    border: 1px solid #2f6bb3;
+    background: linear-gradient(180deg, #ffffff12, #ffffff05);
+    border-radius: 0.85rem;
+    padding: 1rem 1.25rem 1.25rem;
+    margin: 0.6rem 0;
     display: inline-block;
+    min-width: 0;
     max-width: 500px;
+    box-shadow: 0 0.15rem 0.7rem #00000047;
 }
 
 fieldset legend {
-    background: #1f497d99;
-    color: #e29800;
-    padding: 0.1rem 0.5rem;
-    border-radius: 0.6rem;
-    box-shadow: 0 0 0 0.15rem #1f497d40;
-    font-weight: bold;
+    padding: 0.2rem 0.8rem;
+    color: #f0a91e;
+    background: #16324f;
+    border: 1px solid #2f6bb3;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
 }
 
 /*Turn off the background color change on auto complete in input forms:*/
@@ -126,8 +131,9 @@ input:-webkit-autofill:active {
 /*App Tables set:*/
 main.Table {
     color: whitesmoke;
-    width: 90vw;
-    height: 90vh;
+    width: 100%;
+    max-width: 100%;
+    height: 82vh;
     background-color: #88888888;
     backdrop-filter: blur(7px);
     box-shadow: 0 .4rem .8rem #0005;
@@ -229,6 +235,149 @@ tbody tr:nth-child(even) {
 tbody tr:hover, .highlighted {
     background-color: #d8690f82 !important;
 }
+
+/* --- Listy tabelaryczne: jeden scroll, tylko na wierszach danych ---
+   Wspólny wzorzec dla /logs, /days, /finances, /loadings, /places. */
+
+/* Panel treści → kolumna flex + bez własnego scrolla, ale tylko gdy zawiera .TableView.
+   :has() zawęża zmianę; Home/Profile/pozostałe widoki nietknięte.
+   Prefiks "#AppMain >" musi zostać – inaczej przegra swoistością z regułą bazową w AppLayout.css. */
+#AppMain > .AppMain__content:has(> .TableView) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+}
+
+.TableView {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%; /* fallback dla silników bez :has() – wysokość panelu jest definitywna */
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* pasek przypięty nad tabelą (np. Fab „dodaj" w /places) – rodzeństwo .TableView w panelu flex */
+.TableView__toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    padding: 0.3rem 0 0.1rem;
+}
+
+/* zakładki nad tabelą (/vehicles, /tours) */
+.TableTabs {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 0.25rem;
+}
+.TableTabs__tab {
+    flex: 1 1 auto;
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 0.6rem 0.6rem 0 0;
+    background: #ffffff10;
+    color: #ffffffa0;
+    font: inherit;
+    cursor: pointer;
+    transition: background 0.05s;
+}
+.TableTabs__tab:hover {
+    background: #ffffff1f;
+    color: #ffffffd0;
+}
+.TableTabs__tab--active {
+    background: #3f3d3d;
+    color: whitesmoke;
+    font-weight: bold;
+}
+
+/* wariant „przepływowy" – kilka tabel jedna pod drugą, przewija się panel
+   (bez scrolla w scrollu, bez wypełniania na siłę). Używany w zakładce Rozliczenia. */
+#AppMain > .AppMain__content:has(> .TableView--flow) {
+    display: block;
+    overflow-y: auto;
+}
+.TableView--flow {
+    display: block;
+    height: auto;
+}
+.TableView--flow main.Table {
+    height: auto;
+    overflow: visible;
+    display: block;
+}
+.TableView--flow main.Table > .Table__Body {
+    max-height: none;
+    height: auto;
+    overflow: visible;
+}
+.TableView--flow .Table__Header,
+.TableView--flow thead th {
+    position: static; /* wszystko płynie – przewija się panel, brak lepkich nagłówków */
+}
+
+/* pasek tytułu (+ opcjonalne pole szukania / filtry) – wyśrodkowane */
+.Table__HeaderRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+.Table__HeaderRow .Table__Title {
+    font-weight: bold;
+}
+.Table__HeaderRow .Table__HeaderSearch {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+.Table__HeaderRow .Table__HeaderSearch .DivInline {
+    padding: 0;
+}
+
+/* wskaźnik doładowywania / koniec listy – na dole przewijanych wierszy */
+.TableView__more {
+    text-align: center;
+    padding: 0.75rem;
+}
+.TableView__more--end {
+    color: whitesmoke;
+    opacity: 0.5;
+    letter-spacing: 0.2em;
+}
+
+.TableView > main.Table {
+    height: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    /* overflow: hidden dziedziczone z bazowej reguły main.Table – zostaje */
+}
+
+.TableView > main.Table > .Table__Header {
+    flex: 0 0 auto;
+    position: static; /* sticky zbędne – pierwszy element nieprzewijanego boksu */
+    padding: 0.4rem 0.6rem;
+}
+
+/* JEDYNY kontener przewijany */
+.TableView > main.Table > .Table__Body {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    max-height: none; /* było 88% – usuwamy zagnieżdżony limit */
+    margin: 0.4rem auto;
+}
+
 #Notes {
     padding: 0.4rem;
     margin: 0.5rem auto;

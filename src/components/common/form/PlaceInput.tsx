@@ -6,8 +6,7 @@ import {form} from "../../../assets/txt/form";
 import Box from "@mui/material/Box";
 import Autocomplete, {createFilterOptions} from "@mui/material/Autocomplete";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import {apiPaths} from "../../../config/api";
-import {useApi} from '../../../hooks/useApi';
+import {usePlaces} from '../../../hooks/usePlaces';
 
 interface Props {
     lang: userLangEnum;
@@ -54,23 +53,12 @@ const injectPlaceIdMark = (
 
 export const PlaceInput = (props: Props) => {
 
-    const {loading, fetchDataOld} = useApi();
-    const [placesList, setPlacesList] = useState<PlaceInterface[] | null>(null);
+    const {places: placesList, loading, ensurePlaces} = usePlaces();
     const [inputValue, setInputValue] = useState<string>('');
 
     useEffect(() => {
-        let ignore = false;
-        (async () => {
-            const result = await fetchDataOld(apiPaths.getPlaces, 'GET');
-            if (!ignore && result && result.responseData && !result.responseData.dtc) {
-                setPlacesList(result.responseData);
-            }
-        })();
-        return () => {
-            ignore = true;
-        };
-        // eslint-disable-next-line
-    }, []);
+        ensurePlaces();
+    }, [ensurePlaces]);
 
     useEffect(() => {
         if (!props.countryValue && props.defaultCountry) {

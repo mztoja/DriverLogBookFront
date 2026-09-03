@@ -1,6 +1,7 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {
     DayInterface,
+    LoadInterface,
     LogInterface,
     PlaceInterface,
     TourInterface,
@@ -9,7 +10,6 @@ import {
     VehicleInterface,
     vehicleTypeEnum
 } from "types";
-import {DivClear} from "../../common/DivClear";
 import './InfoBar.css';
 import {info} from "../../../assets/txt/info";
 import {formatOdometer} from "../../../utils/formats/formatOdometer";
@@ -34,6 +34,7 @@ interface Props {
     lang: userLangEnum;
     tourData: TourInterface | null;
     dayData: DayInterface | null;
+    dayLoaded: boolean;
     lastLogData: LogInterface | null;
     userData: UserInterface;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>
@@ -144,34 +145,43 @@ export const InfoBar = (props: Props) => {
         {type: vehicleTypeEnum.trailer, registration: ''});
     const [goodsWeight, setGoodsWeight] = useState<number | null>(null);
     const [totalWeight, setTotalWeight] = useState<number>(0);
+    const [vehicleLoaded, setVehicleLoaded] = useState<boolean>(false);
+    const [carriedLoads, setCarriedLoads] = useState<LoadInterface[] | null>(null);
 
     useEffect(() => {
         if (tourData) {
+            const jobs: Promise<unknown>[] = [];
 
-            fetchData<VehicleInterface>(`${apiPaths.getVehicleByRegistration}/${tourData.truck}`, {
+            jobs.push(fetchData<VehicleInterface>(`${apiPaths.getVehicleByRegistration}/${tourData.truck}`, {
                 setData: setTruckData,
-            }).then();
+            }));
 
             if (tourData.trailer) {
-                fetchData<VehicleInterface>(`${apiPaths.getVehicleByRegistration}/${tourData.trailer}`, {
+                jobs.push(fetchData<VehicleInterface>(`${apiPaths.getVehicleByRegistration}/${tourData.trailer}`, {
                     setData: setTrailerData,
-                }).then();
+                }));
             }
 
-            fetchData<number>(apiPaths.getNotUnloadedLoadsMass, {
+            jobs.push(fetchData<number>(apiPaths.getNotUnloadedLoadsMass, {
                 setData: setGoodsWeight,
             }).then((res) => {
                 if (!res.success) setGoodsWeight(null);
-            });
+            }));
+
+            jobs.push(fetchData<LoadInterface[]>(apiPaths.getNotUnloadedLoads).then((res) => {
+                setCarriedLoads(res.responseData ?? []);
+            }));
 
             if (props.userData.markedDepart !== 0) {
-                fetchData<PlaceInterface>(`${apiPaths.getPlace}/${props.userData.markedDepart}`, {
+                jobs.push(fetchData<PlaceInterface>(`${apiPaths.getPlace}/${props.userData.markedDepart}`, {
                     setData: setDestinationData,
-                }).then();
+                }));
             } else {
                 setDestinationData(null);
             }
 
+            // sekcja pojazdu pojawia się dopiero po pobraniu wszystkich danych (raz – potem zostaje)
+            Promise.all(jobs).then(() => setVehicleLoaded(true));
         }
         // eslint-disable-next-line
     }, [props.refresh, props.userData.markedDepart]);
@@ -216,63 +226,27 @@ export const InfoBar = (props: Props) => {
         })
     }
 
+    // Gdy otwarty jest fieldset ze szczegółami pojazdu – powiększamy panel Info (o 200%)
+    // przez klasę na jego wrapperze (.AppLayout__InfoBar w shellu).
+    const infoBarRef = useRef<HTMLDivElement>(null);
+    const detailsOpen = (showTruckDetails && !!truckData) || (showTrailerDetails && !!trailerData);
+    useEffect(() => {
+        const wrapper = infoBarRef.current?.parentElement;
+        if (!wrapper) return;
+        wrapper.classList.toggle('AppLayout__InfoBar--expanded', detailsOpen);
+        return () => {
+            wrapper.classList.remove('AppLayout__InfoBar--expanded');
+        };
+    }, [detailsOpen]);
+
     return (
-        <div id="InfoBar">
+        <div id="InfoBar" ref={infoBarRef}>
             {showAddVehicle && <AddVehicle userData={props.userData} setRefresh={props.setRefresh} show={showAddVehicle}
                                            setShow={setShowAddVehicle} vehicleType={addVehicleData.type}
                                            registrationNr={addVehicleData.registration}/>}
             <div className="InfoBar_Left">
-                {txt.routeNo} {tourData?.tourNr}
-                &nbsp;|&nbsp;
-                {txt.distance}: {formatOdometer(tourData ? tourData.distance : 0)}
-                &nbsp;|&nbsp;
-                {tourData && tourData.startLogData &&
-                    <>
-                        {txt.lasts}: {tourDuration}
-                    </>
-                }
-                <br/>
-                {dayData
-                    ?
-                    <>
-                        {dayData.startData &&
-                            <>
-                                {txt.youStartedDayAt} {formatDateToTime(dayData.startData.date)}
-                                &nbsp;
-                                {txt.in} {formatSimplePlace(dayData.startData.place, dayData.startData.placeData)}<br/>
-                            </>
-                        }
-                        {txt.traveledToday}: {formatOdometer(dayData.distance)}
-                        {dayData.startData &&
-                            <>
-                                &nbsp;|&nbsp;
-                                {txt.workingTimeUntil}:
-                                {dayData.doubleCrew
-                                    ?
-                                    <>
-                                        &nbsp;
-                                        {formatDateToTime(dayData.startData.date, 21)}
-                                    </>
-                                    :
-                                    <>
-                                        &nbsp;
-                                        {formatDateToTime(dayData.startData.date, 13)}
-                                        &nbsp;
-                                        ({formatDateToTime(dayData.startData.date, 15)})
-                                    </>
-                                }
-                            </>
-                        }
-                    </>
-                    :
-                    <>
-                        {txt.noActiveDay}<br/>
-                        {breakDuration}
-                    </>
-                }
                 {destinationData &&
                     <>
-                        <br/>
                         <span>
                         {txt.destination}: {destinationData.name}, {destinationData.street}, {destinationData.country}-{destinationData.code} {destinationData.city} (GPS: {destinationData.lat}, {destinationData.lon})
                         </span>
@@ -283,10 +257,80 @@ export const InfoBar = (props: Props) => {
                         >
                         {txt.delete}
                     </span>
+                        <br/>
+                    </>
+                }
+                {txt.routeNo} {tourData?.tourNr}
+                &nbsp;|&nbsp;
+                {txt.distance}: {formatOdometer(tourData ? tourData.distance : 0)}
+                {tourData && tourData.startLogData && tourDuration &&
+                    <>
+                        &nbsp;|&nbsp;
+                        {txt.lasts}: {tourDuration}
+                    </>
+                }
+                {props.dayLoaded &&
+                    <>
+                        <br/>
+                        {dayData
+                            ?
+                            <>
+                                {dayData.startData &&
+                                    <>
+                                        {txt.youStartedDayAt} {formatDateToTime(dayData.startData.date)}
+                                        &nbsp;
+                                        {txt.in} {formatSimplePlace(dayData.startData.place, dayData.startData.placeData)}<br/>
+                                    </>
+                                }
+                                {txt.traveledToday}: {formatOdometer(dayData.distance)}
+                                {dayData.startData &&
+                                    <>
+                                        &nbsp;|&nbsp;
+                                        {txt.workingTimeUntil}:
+                                        {dayData.doubleCrew
+                                            ?
+                                            <>
+                                                &nbsp;
+                                                {formatDateToTime(dayData.startData.date, 21)}
+                                            </>
+                                            :
+                                            <>
+                                                &nbsp;
+                                                {formatDateToTime(dayData.startData.date, 13)}
+                                                &nbsp;
+                                                ({formatDateToTime(dayData.startData.date, 15)})
+                                            </>
+                                        }
+                                    </>
+                                }
+                            </>
+                            :
+                            <>
+                                {txt.noActiveDay}
+                                {breakDuration && <><br/>{breakDuration}</>}
+                            </>
+                        }
                     </>
                 }
             </div>
+            {carriedLoads && carriedLoads.length > 0 &&
+                <div className="InfoBar_Loads">
+                    {txt.carriedLoads}:
+                    {carriedLoads.map((load) => (
+                        <div key={load.id}>
+                            {load.description || '—'} · {load.quantity || '—'} · {formatWeight(load.weight)} → {
+                            load.receiverData
+                                ? `${load.receiverData.name}, ${load.receiverData.street}, ${load.receiverData.country}-${load.receiverData.code} ${load.receiverData.city} (GPS: ${load.receiverData.lat}, ${load.receiverData.lon})`
+                                : '—'
+                        }
+                        </div>
+                    ))}
+                </div>
+            }
             <div className="InfoBar_Right">
+                <div className="InfoBar_Right__inner">
+                {vehicleLoaded &&
+                <>
                 {txt.truck}:
                 &nbsp;
                 {truckData
@@ -339,8 +383,11 @@ export const InfoBar = (props: Props) => {
                                            value={Number(tourData.fuelStateBefore) + Number(tourData.totalRefuel) - Number(tourData.burnedFuelComp)}></meter> {formatFuelQuantity(Number(tourData.fuelStateBefore) + Number(tourData.totalRefuel) - Number(tourData.burnedFuelComp), 'integer')}
                     </>
                 )}
+                </>
+                }
+                </div>
             </div>
-            <DivClear/>
+            <div className="InfoBar__details">
             {showTruckDetails && truckData &&
                 <>
                     <fieldset>
@@ -569,6 +616,7 @@ export const InfoBar = (props: Props) => {
                     <br/>
                 </>
             }
+            </div>
         </div>
     );
 }

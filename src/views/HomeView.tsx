@@ -1,15 +1,12 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect} from "react";
 import {apiPaths} from "../config/api";
-import {TopBar} from "../components/bars/TopBar/TopBar";
-import {Content} from "../components/bars/Content/Content";
 import {ActivitiesFields} from "../components/main/ActivitiesFields";
-import {InfoBar} from "../components/bars/InfoBar/InfoBar";
 import {useApi} from "../hooks/useApi";
 import {AppMainElementsTypes} from "../types/AppMainElementsTypes";
 import {UserInterface, TourInterface, DayInterface, LogInterface} from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
-import { NotesField } from "../components/main/NotesField";
-import { DivClear } from "../components/common/DivClear";
+import {NotesField} from "../components/main/NotesField";
+import {DivClear} from "../components/common/DivClear";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -17,14 +14,20 @@ interface Props extends AppMainElementsTypes {
     page: keyof MenuLabelTypes;
     tourData: TourInterface | null,
     setTourData: Dispatch<SetStateAction<TourInterface | null>>,
+    // Stan współdzielony z InfoBarem – trzymany w LoggedInView.
+    dayData: DayInterface | null,
+    setDayData: Dispatch<SetStateAction<DayInterface | null>>,
+    setDayLoaded: Dispatch<SetStateAction<boolean>>,
+    lastLogData: LogInterface | null,
+    setLastLogData: Dispatch<SetStateAction<LogInterface | null>>,
+    refresh: boolean,
+    setRefresh: Dispatch<SetStateAction<boolean>>,
 }
 
 export const HomeView = (props: Props) => {
 
     const {fetchData} = useApi();
-    const [refresh, setRefresh] = useState<boolean>(false);
-    const [lastLogData, setLastLogData] = useState<LogInterface | null>(null);
-    const [dayData, setDayData] = useState<DayInterface | null>(null);
+    const {refresh, setDayData, setLastLogData} = props;
 
     useEffect(() => {
         fetchData<TourInterface>(apiPaths.getActiveRoute, {
@@ -46,52 +49,29 @@ export const HomeView = (props: Props) => {
     useEffect(() => {
         fetchData<DayInterface>(apiPaths.getActiveDay, {
             setData: setDayData,
-        }).then();
+        }).then(() => props.setDayLoaded(true));
         // eslint-disable-next-line
     }, [props.tourData]);
 
     return (
         <>
-            <TopBar
-                page={props.page}
+            <ActivitiesFields
                 lang={props.userData.lang}
+                tourData={props.tourData}
                 userData={props.userData}
                 setUserData={props.setUserData}
+                setTourData={props.setTourData}
+                dayData={props.dayData}
+                setDayData={props.setDayData}
+                setRefresh={props.setRefresh}
+                lastLogData={props.lastLogData}
             />
-            <Content>
-                {props.tourData &&
-                    <>
-                        <InfoBar
-                            lang={props.userData.lang}
-                            tourData={props.tourData}
-                            dayData={dayData}
-                            lastLogData={lastLogData}
-                            userData={props.userData}
-                            setUserData={props.setUserData}
-                            refresh={refresh}
-                            setRefresh={setRefresh}
-                        />
-                        <br/>
-                    </>
-                }
-                <ActivitiesFields
-                    lang={props.userData.lang}
-                    tourData={props.tourData}
-                    userData={props.userData}
-                    setUserData={props.setUserData}
-                    setTourData={props.setTourData}
-                    dayData={dayData}
-                    setDayData={setDayData}
-                    setRefresh={setRefresh}
-                    lastLogData={lastLogData}
-                />
-                <DivClear />
-                <NotesField
-                    userData={props.userData}
-                    setUserData={props.setUserData}
-                    lang={props.userData.lang}
-                />
-            </Content>
+            <DivClear/>
+            <NotesField
+                userData={props.userData}
+                setUserData={props.setUserData}
+                lang={props.userData.lang}
+            />
         </>
-    )
+    );
 };

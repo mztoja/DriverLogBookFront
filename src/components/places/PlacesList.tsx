@@ -10,6 +10,7 @@ import {CountrySelect} from "../common/form/CountrySelect";
 import {SearchInput} from "../common/form/SearchInput";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
+import {usePlaces} from "../../hooks/usePlaces";
 import {apiPaths} from "../../config/api";
 import {commons} from "../../assets/txt/commons";
 import {formatCountry} from "../../utils/formats/formatCountry";
@@ -22,17 +23,15 @@ import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 
 interface Props {
     userData: UserInterface;
-    refresh: boolean;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
-    setRefresh: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PlacesList = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {loading, fetchDataOld} = useApi();
+    const {fetchDataOld} = useApi();
+    const {places: data, loading, ensurePlaces} = usePlaces();
 
-    const [data, setData] = useState<PlaceInterface[] | null>(null);
     const [showData, setShowData] = useState<PlaceInterface[] | null>(null);
     const [filterType, setFilterType] = useState<string>('999');
     const [filterCountry, setFilterCountry] = useState<string>(props.userData.country);
@@ -50,16 +49,8 @@ export const PlacesList = (props: Props) => {
     };
 
     useEffect(() => {
-        (async () => {
-            const result = await fetchDataOld(apiPaths.getPlaces, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData);
-            } else {
-                setAlert(places[props.userData.lang].apiError, 'error');
-            }
-        })();
-        // eslint-disable-next-line
-    }, [props.refresh]);
+        ensurePlaces();
+    }, [ensurePlaces]);
 
     const markPlace = async (id: number, info: string): Promise<void> => {
         const result = await fetchDataOld(apiPaths.markDepart, 'PATCH', {placeId: id});
@@ -123,33 +114,37 @@ export const PlacesList = (props: Props) => {
                 }
             }
         }
-    }, [props.refresh, filterType, data, filterCountry, filterSearch]);
+    }, [filterType, data, filterCountry, filterSearch]);
 
-    if (loading) {
+    if (!data && loading) {
         return <CircularProgress/>
+    }
+    if (!data) {
+        return <>{places[props.userData.lang].apiError}</>
     }
 
     if (data) {
         return (
-            <>
-                <div className="Table__Filter">
-                    <div className="DivInline">
-                        <PlaceTypeSelect lang={props.userData.lang} value={filterType}
-                                         onChange={e => setFilterType(e)} displayAll={true}/>
-                    </div>
-                    <div className="DivInline">
-                        <CountrySelect lang={props.userData.lang} value={filterCountry}
-                                       onChange={e => setFilterCountry(e)}/>
-                    </div>
-                    <div className="DivInline">
-                        <SearchInput lang={props.userData.lang} value={filterSearch}
-                                     onChange={e => setFilterSearch(e)}/>
-                    </div>
-                    <div className="DivClear"/>
-                </div>
+            <div className="TableView">
                 <main className="Table">
                     <section className="Table__Header">
-                        {places[props.userData.lang].tableHeader}
+                        <div className="Table__HeaderRow">
+                            <span className="Table__Title">{places[props.userData.lang].tableHeader}</span>
+                            <div className="Table__HeaderSearch">
+                                <div className="DivInline">
+                                    <PlaceTypeSelect lang={props.userData.lang} value={filterType}
+                                                     onChange={e => setFilterType(e)} displayAll={true}/>
+                                </div>
+                                <div className="DivInline">
+                                    <CountrySelect lang={props.userData.lang} value={filterCountry}
+                                                   onChange={e => setFilterCountry(e)}/>
+                                </div>
+                                <div className="DivInline">
+                                    <SearchInput lang={props.userData.lang} value={filterSearch}
+                                                 onChange={e => setFilterSearch(e)}/>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                     <section className="Table__Body">
                         <table>
@@ -167,7 +162,6 @@ export const PlacesList = (props: Props) => {
                             {chosenPlace && <PlaceEdit
                                 lang={props.userData.lang}
                                 place={chosenPlace}
-                                setRefresh={props.setRefresh}
                                 setPlace={setChosenPlace}
                                 setAlert={setAlert}
                             />}
@@ -276,7 +270,7 @@ export const PlacesList = (props: Props) => {
                         </table>
                     </section>
                 </main>
-            </>
+            </div>
         )
     }
 

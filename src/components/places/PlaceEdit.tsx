@@ -2,6 +2,7 @@ import React, {Dispatch, FormEvent, SetStateAction, useState} from "react";
 import {EditPlaceFormInterface, userLangEnum, PlaceInterface, placeTypeEnum } from "types";
 import {SetAlertType} from "../../context/AlertContext";
 import {useApi} from "../../hooks/useApi";
+import {usePlaces} from "../../hooks/usePlaces";
 import {apiPaths} from "../../config/api";
 import {handleApiResult} from "../../utils/handleApiResult";
 import {TextArea} from "../common/form/TextArea";
@@ -20,7 +21,6 @@ import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
 
 interface Props {
     lang: userLangEnum;
-    setRefresh: Dispatch<SetStateAction<boolean>>;
     place: PlaceInterface | null;
     setPlace: Dispatch<SetStateAction<PlaceInterface | null>>;
     setAlert: (text: string, type: SetAlertType) => void;
@@ -43,6 +43,7 @@ export const PlaceEdit = (props: Props) => {
 
     const [editPlaceForm, setEditPlaceForm] = useState<EditPlaceFormInterface>(defaultValues);
     const {loading, fetchDataOld} = useApi();
+    const {refreshPlaces} = usePlaces();
 
     const updateForm = (key: keyof EditPlaceFormInterface, value: string) => {
         setEditPlaceForm((editPlaceForm: EditPlaceFormInterface) => ({
@@ -60,7 +61,7 @@ export const PlaceEdit = (props: Props) => {
             handleApiResult(result, props.lang, props.setAlert, () => {
                 props.setAlert(places[props.lang].editSuccessInfo, 'success');
                 props.setPlace(null);
-                props.setRefresh((prev) => !prev);
+                refreshPlaces();
             });
         }
     }

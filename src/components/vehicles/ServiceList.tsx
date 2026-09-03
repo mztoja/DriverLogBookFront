@@ -88,36 +88,40 @@ export const ServiceList = (props: Props) => {
     }, [ref.current, props.vehicleId]);
 
     return (
-        <>
-            <FormControl>
-                <InputLabel id="serviceType"
-                            className="TextInput__Label">{vehicles[props.lang].serviceType}</InputLabel>
-                <Select
-                    label={vehicles[props.lang].serviceType}
-                    id="serviceType"
-                    value={serviceType}
-                    onChange={(e) => {
-                        setServiceType(Number(e.target.value));
-                    }}
-                    inputProps={{className: 'TextInput'}}
-                    size='small'
-                >
-                    <MenuItem value={ServiceType.all}>{vehicles[props.lang].serviceAll}</MenuItem>
-                    <MenuItem value={ServiceType.maintenance}>{vehicles[props.lang].serviceMaintenance}</MenuItem>
-                    <MenuItem value={ServiceType.service}>{vehicles[props.lang].serviceService}</MenuItem>
-                </Select>
-            </FormControl>
+        <div className="TableView">
             <main className="Table" ref={ref}>
                 <section className="Table__Header">
-                    <>
-                        {vehicles[props.lang].serviceHeader(vehicleReg)}
-                        &nbsp;&nbsp;
-                        <Tooltip title={vehicles[props.lang].close} arrow>
-                            <NavLink to='' className='CloseLink' onClick={() => handleClose()}>
-                                <ClearIcon sx={{mr: 1}}/>
-                            </NavLink>
-                        </Tooltip>
-                    </>
+                    <div className="Table__HeaderRow">
+                        <span className="Table__Title">
+                            {vehicles[props.lang].serviceHeader(vehicleReg)}
+                            &nbsp;&nbsp;
+                            <Tooltip title={vehicles[props.lang].close} arrow>
+                                <NavLink to='' className='CloseLink' onClick={() => handleClose()}>
+                                    <ClearIcon sx={{mr: 1}}/>
+                                </NavLink>
+                            </Tooltip>
+                        </span>
+                        <div className="Table__HeaderSearch">
+                            <FormControl>
+                                <InputLabel id="serviceType"
+                                            className="TextInput__Label">{vehicles[props.lang].serviceType}</InputLabel>
+                                <Select
+                                    label={vehicles[props.lang].serviceType}
+                                    id="serviceType"
+                                    value={serviceType}
+                                    onChange={(e) => {
+                                        setServiceType(Number(e.target.value));
+                                    }}
+                                    inputProps={{className: 'TextInput'}}
+                                    size='small'
+                                >
+                                    <MenuItem value={ServiceType.all}>{vehicles[props.lang].serviceAll}</MenuItem>
+                                    <MenuItem value={ServiceType.maintenance}>{vehicles[props.lang].serviceMaintenance}</MenuItem>
+                                    <MenuItem value={ServiceType.service}>{vehicles[props.lang].serviceService}</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                    </div>
                 </section>
                 <section className="Table__Body">
                     <table>
@@ -222,6 +226,6 @@ export const ServiceList = (props: Props) => {
                     </table>
                 </section>
             </main>
-        </>
+        </div>
     );
 }

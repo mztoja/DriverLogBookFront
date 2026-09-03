@@ -27,6 +27,7 @@ interface Info {
     break11HourEnd: string;
     breakOver: string;
     breakIn: string;
+    carriedLoads: string;
 }
 
 export const info: Info[] = [
@@ -59,6 +60,7 @@ export const info: Info[] = [
         break11HourEnd: 'The 11-hour break will end at',
         breakOver: 'The required daily break has been completed',
         breakIn: 'in',
+        carriedLoads: 'Carried loads',
     },
     {//pl
         routeNo: 'Trasa nr.',
@@ -89,5 +91,6 @@ export const info: Info[] = [
         break11HourEnd: '11h przerwy upłynie o',
         breakOver: 'Wymagany odpoczynek dobowy został już odebrany',
         breakIn: 'za',
+        carriedLoads: 'Przewożone ładunki',
     },
 ];

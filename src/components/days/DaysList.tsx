@@ -9,7 +9,6 @@ import {days} from "../../assets/txt/days";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatOdometer} from "../../utils/formats/formatOdometer";
 import DetailsIcon from "@mui/icons-material/Details";
-import {TablePagination} from "../common/TablePagination";
 import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
 import {formatFuelQuantity} from "../../utils/formats/formatFuelQuantity";
 import {formatFuelCombustion} from "../../utils/formats/formatFuelCombustion";
@@ -40,6 +39,8 @@ export const DaysList = (props: Props) => {
     const [isHovered, setIsHovered] = useState(false);
     const [editDayData, setEditDayData] = useState<DayInterface | null>(null);
     const [refresh, setRefresh] = useState<boolean>(false);
+    const [loadingMore, setLoadingMore] = useState<boolean>(false);
+    const loadingMoreRef = useRef<boolean>(false);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -64,17 +65,34 @@ export const DaysList = (props: Props) => {
                 }
             });
         } else {
-            fetchData<DayListResponse>(`${apiPaths.getDays}/${page}/${DAYS_PER_PAGE}`).then((res) => {
+            const reqPage = page;
+            if (reqPage > 1) setLoadingMore(true);
+            fetchData<DayListResponse>(`${apiPaths.getDays}/${reqPage}/${DAYS_PER_PAGE}`).then((res) => {
                 if (res.responseData) {
-                    setData(res.responseData.items);
-                    setTotalItems(res.responseData.totalItems);
+                    const items = res.responseData.items;
+                    setData(prev => (reqPage === 1 || !prev) ? items : [...prev, ...items]);
+                    setTotalItems(Number(res.responseData.totalItems));
                 } else {
                     setAlert(days[props.lang].apiError, 'error');
                 }
+                setLoadingMore(false);
+                loadingMoreRef.current = false;
             });
         }
         // eslint-disable-next-line
     }, [page, refresh]);
+
+    // doładowywanie kolejnych porcji po dojechaniu do końca listy
+    const handleBodyScroll = (e: React.UIEvent<HTMLElement>): void => {
+        if (props.tourId || loadingMoreRef.current || !data) return;
+        if (data.length >= totalItems) return;
+        const el = e.currentTarget;
+        if (el.scrollHeight - el.scrollTop - el.clientHeight < 200) {
+            loadingMoreRef.current = true;
+            setLoadingMore(true);
+            setPage(p => p + 1);
+        }
+    };
 
     useEffect(() => {
         if (data) {
@@ -93,12 +111,11 @@ export const DaysList = (props: Props) => {
         // eslint-disable-next-line
     }, [data]);
 
-    if (loading) {
+    if (loading && !data) {
         return <CircularProgress/>
     }
 
-    return (
-        <>
+    const tableContent = (
             <main className="Table">
                 <section className="Table__Header">
                     {props.tourId
@@ -115,7 +132,7 @@ export const DaysList = (props: Props) => {
                         :days[props.lang].tableHeader
                     }
                 </section>
-                <section className="Table__Body">
+                <section className="Table__Body" onScroll={handleBodyScroll}>
                     <table>
                         <thead>
                         <tr>
@@ -293,9 +310,21 @@ export const DaysList = (props: Props) => {
                             })}
                         </tbody>
                     </table>
+                    {!props.tourId && loadingMore &&
+                        <div className="TableView__more"><CircularProgress size={24}/></div>}
+                    {!props.tourId && !loadingMore && data && totalItems > 0 && data.length >= totalItems &&
+                        <div className="TableView__more TableView__more--end">— {totalItems} —</div>}
                 </section>
             </main>
-            {!props.tourId && <TablePagination totalItems={totalItems} page={page} rowsPerPage={DAYS_PER_PAGE} setPage={setPage}/>}
-        </>
+    );
+
+    if (props.tourId) {
+        return tableContent;
+    }
+
+    return (
+        <div className="TableView">
+            {tableContent}
+        </div>
     );
 }

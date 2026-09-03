@@ -144,12 +144,12 @@ export const ToursSettlementList = (props: Props) => {
         // eslint-disable-next-line
     }, [monthlySettlement, props.lang, props.refresh, props.setRefresh]);
 
-    if (loading) {
+    if (loading && data.length === 0) {
         return <CircularProgress/>
     }
 
     return (
-        <>
+        <div className="TableView--flow">
             <main className="Table">
                 <section className="Table__Header">
                     {tours[props.lang].settlementsHeader}<br/>
@@ -391,9 +391,8 @@ export const ToursSettlementList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            <br/>
             <div ref={tourListRef}>{toursListComponent}</div>
             <WindowConfirm lang={props.lang} text={tours[props.lang].deleteConfirm(deleteMonth)} show={deleteConfirm} setShow={setDeleteConfirm} execute={executeDelete} />
-        </>
+        </div>
     );
 }

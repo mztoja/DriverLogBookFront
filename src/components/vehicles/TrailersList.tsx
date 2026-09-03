@@ -22,6 +22,7 @@ interface Props {
     setRefresh: Dispatch<SetStateAction<boolean>>;
     tourData: TourInterface | null,
     companyId: number | null;
+    onWrongType?: () => void;
 }
 
 export const TrailersList = (props: Props) => {
@@ -65,19 +66,27 @@ export const TrailersList = (props: Props) => {
     useEffect(() => {
         if (showVehicleId) {
             setExpandedRow(Number(showVehicleId));
+            if (data && !data.some(v => v.id === Number(showVehicleId))) {
+                props.onWrongType && props.onWrongType();
+            }
         }
-    }, [showVehicleId]);
+        // eslint-disable-next-line
+    }, [showVehicleId, data]);
 
     useLayoutEffect(() => {
             trRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         // eslint-disable-next-line
     }, [trRef.current, showVehicleId]);
 
-    if (loading) return <CircularProgress/>;
+    if (loading && !data) return <CircularProgress/>;
 
     if (data) {
+        if (vehicleIdService) {
+            return <ServiceList lang={props.userData.lang} vehicleId={vehicleIdService}
+                                setVehicleId={setVehicleIdService}/>;
+        }
         return (
-            <>
+            <div className="TableView">
                 <main className="Table">
                     <section className="Table__Header">
                         {vehicles[props.userData.lang].trailersTableHeader}
@@ -193,14 +202,7 @@ export const TrailersList = (props: Props) => {
                         </table>
                     </section>
                 </main>
-                {
-                    vehicleIdService &&
-                    <>
-                        <br/>
-                        <ServiceList lang={props.userData.lang} vehicleId={vehicleIdService} setVehicleId={setVehicleIdService}/>
-                    </>
-                }
-            </>
+            </div>
         );
     }
     return <>{vehicles[props.userData.lang].apiTrailersError}</>

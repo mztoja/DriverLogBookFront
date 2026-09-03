@@ -81,7 +81,8 @@ export const App = () => {
         <>
             {appView === AppView.blocked && userData ? BlockedUserView(userData, setUserData) : null}
             {appView === AppView.loggedIn && userData
-                ? LoggedInView(userData, setUserData, tourData, setTourData)
+                ? <LoggedInView userData={userData} setUserData={setUserData}
+                                tourData={tourData} setTourData={setTourData}/>
                 : null
             }
             {appView === AppView.loggedOut ? LoggedOutView(lang, setLang, setUserData) : null}

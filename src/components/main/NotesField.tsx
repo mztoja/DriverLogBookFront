@@ -40,6 +40,25 @@ export const NotesField = (props: Props) => {
         });
     }
 
+    // Autopowiększanie textarea. Reset height:'auto' potrafi na chwilę skrócić stronę,
+    // przez co kontener treści (.AppMain__content) przewija się przy każdym znaku –
+    // dlatego zapamiętujemy i przywracamy jego scrollTop.
+    const autoGrow = () => {
+        const el = textareaRef.current;
+        if (!el) return;
+        const scroller = el.closest<HTMLElement>('.AppMain__content, #AppMain');
+        const savedScroll = scroller ? scroller.scrollTop : null;
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+        if (scroller && savedScroll !== null) {
+            scroller.scrollTop = savedScroll;
+        }
+    };
+
+    const handleTextareaChange = () => {
+        autoGrow();
+    };
+
     useEffect(() => {
         if (!synchronized) {
             intervalRef.current = window.setInterval(() => {
@@ -57,32 +76,10 @@ export const NotesField = (props: Props) => {
         // eslint-disable-next-line
     }, [text, synchronized]);
 
-    // useEffect(() => {
-    //     handleTextareaChange();
-    // }, [isEditing]);
-
     useEffect(() => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-        }
-        //es-lint-disable-next-line
-    }, [textareaRef]);
-
-    // useEffect(() => {
-    //     if (text) {
-    //         setFormatedText(formatText(text));
-    //     } else {
-    //         setFormatedText('');
-    //     }
-    // }, [text]);
-
-    const handleTextareaChange = () => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-        }
-    };
+        autoGrow();
+        // eslint-disable-next-line
+    }, []);
 
 
     return (

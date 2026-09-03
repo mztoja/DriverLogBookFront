@@ -6,7 +6,6 @@ import {apiPaths} from "../../config/api";
 import {LOADINGS_PER_PAGE} from "../../config/set";
 import {loadings} from "../../assets/txt/loadings";
 import {CircularProgress, Fab, Tooltip} from "@mui/material";
-import {TablePagination} from "../common/TablePagination";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatSimplePlace} from "../../utils/formats/formatSimplePlace";
 import {formatWeight} from "../../utils/formats/formatWeight";
@@ -38,6 +37,8 @@ export const LoadingsList = (props: Props) => {
     const [isHovered, setIsHovered] = useState(false);
     const [refresh, setRefresh] = useState<boolean>(false);
     const [editLoadData, setEditLoadData] = useState<LoadInterface | null>(null);
+    const [loadingMore, setLoadingMore] = useState<boolean>(false);
+    const loadingMoreRef = useRef<boolean>(false);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -66,17 +67,34 @@ export const LoadingsList = (props: Props) => {
                }
             });
         } else {
-            fetchData<LoadListResponse>(`${apiPaths.getLoadings}/${page}/${LOADINGS_PER_PAGE}`).then((res) => {
+            const reqPage = page;
+            if (reqPage > 1) setLoadingMore(true);
+            fetchData<LoadListResponse>(`${apiPaths.getLoadings}/${reqPage}/${LOADINGS_PER_PAGE}`).then((res) => {
                 if (res.responseData) {
-                    setData(res.responseData.items);
-                    setTotalItems(res.responseData.totalItems);
+                    const items = res.responseData.items;
+                    setData(prev => (reqPage === 1 || !prev) ? items : [...prev, ...items]);
+                    setTotalItems(Number(res.responseData.totalItems));
                 } else {
                     setAlert(loadings[props.lang].apiError, 'error');
                 }
+                setLoadingMore(false);
+                loadingMoreRef.current = false;
             });
         }
         // eslint-disable-next-line
     }, [page, refresh]);
+
+    // doładowywanie kolejnych porcji po dojechaniu do końca listy
+    const handleBodyScroll = (e: React.UIEvent<HTMLElement>): void => {
+        if (props.tourId || loadingMoreRef.current || !data) return;
+        if (data.length >= totalItems) return;
+        const el = e.currentTarget;
+        if (el.scrollHeight - el.scrollTop - el.clientHeight < 200) {
+            loadingMoreRef.current = true;
+            setLoadingMore(true);
+            setPage(p => p + 1);
+        }
+    };
 
     useEffect(() => {
         if (data) {
@@ -95,12 +113,11 @@ export const LoadingsList = (props: Props) => {
         // eslint-disable-next-line
     }, [data]);
 
-    if (loading) {
+    if (loading && !data) {
         return <CircularProgress/>
     }
 
-    return (
-        <>
+    const tableContent = (
             <main className="Table">
                 <section className="Table__Header">
                     {props.tourId
@@ -117,7 +134,7 @@ export const LoadingsList = (props: Props) => {
                         :loadings[props.lang].tableHeader
                     }
                 </section>
-                <section className="Table__Body">
+                <section className="Table__Body" onScroll={handleBodyScroll}>
                     <table>
                         <thead>
                         <tr>
@@ -323,9 +340,21 @@ export const LoadingsList = (props: Props) => {
                         })}
                         </tbody>
                     </table>
+                    {!props.tourId && loadingMore &&
+                        <div className="TableView__more"><CircularProgress size={24}/></div>}
+                    {!props.tourId && !loadingMore && data && totalItems > 0 && data.length >= totalItems &&
+                        <div className="TableView__more TableView__more--end">— {totalItems} —</div>}
                 </section>
             </main>
-            {!props.tourId && <TablePagination totalItems={totalItems} page={page} rowsPerPage={LOADINGS_PER_PAGE} setPage={setPage}/>}
-        </>
+    );
+
+    if (props.tourId) {
+        return tableContent;
+    }
+
+    return (
+        <div className="TableView">
+            {tableContent}
+        </div>
     );
 }

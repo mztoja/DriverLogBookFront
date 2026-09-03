@@ -90,12 +90,11 @@ export const ToursList = (props: Props) => {
         // eslint-disable-next-line
     }, [props.refresh, props.monthlySettlement]);
 
-    if (loading) {
+    if (loading && data.length === 0) {
         return <CircularProgress/>
     }
 
-    return (
-        <>
+    const tableContent = (
             <main className="Table">
                 <section className="Table__Header">
                     {props.monthlySettlement
@@ -403,15 +402,21 @@ export const ToursList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            {!props.monthlySettlement &&
-                <div>
-                    <br/>
-                    <Fab variant="extended" size="small" color="primary" onClick={() => setShowSettlementWindow(true)}>
-                        <AssignmentIcon sx={{mr: 1}}/>
-                        {tours[props.lang].settle}
-                    </Fab>
-                </div>
-            }
-        </>
+    );
+
+    if (props.monthlySettlement) {
+        return tableContent;
+    }
+
+    return (
+        <div className="TableView">
+            {tableContent}
+            <div className="TableView__toolbar">
+                <Fab variant="extended" size="small" color="primary" onClick={() => setShowSettlementWindow(true)}>
+                    <AssignmentIcon sx={{mr: 1}}/>
+                    {tours[props.lang].settle}
+                </Fab>
+            </div>
+        </div>
     );
 }
