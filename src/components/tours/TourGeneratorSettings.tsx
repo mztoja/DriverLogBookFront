@@ -1,13 +1,13 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
-import { userLangEnum, TourSettleGeneratorInterface } from 'types';
-import { Modal, ModalContent, StyledBackdrop } from "../common/Modal";
-import { CircularProgress, Fab } from "@mui/material";
-import { tours } from "../../assets/txt/tours";
+import React, {Dispatch, SetStateAction, useState} from 'react';
+import {userLangEnum, TourSettleGeneratorInterface, TourSettleGeneratorLeg} from 'types';
+import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
+import {CircularProgress, Fab} from "@mui/material";
+import {tours} from "../../assets/txt/tours";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { useAlert } from "../../hooks/useAlert";
-import { generateTourSettlement } from "../../utils/generateTourSettlement";
+import {useAlert} from "../../hooks/useAlert";
+import {generateTourSettlement} from "../../utils/generateTourSettlement";
 
 interface Props {
     open: boolean;
@@ -18,91 +18,55 @@ interface Props {
     tourGenerator: string;
 }
 
+const MAX_ROWS = 20;
+
+const EMPTY_LEG: TourSettleGeneratorLeg = {
+    startCity: '', startData: '', startOdometer: '',
+    borderDate: '', borderPlace: '',
+    stopCity: '', stopData: '', stopOdometer: '',
+    distance: '', customer: '',
+};
+
 export const TourGeneratorSettings = (props: Props) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const {data, setData} = props;
+    const {setAlert} = useAlert();
+
     const handleClose = () => props.setOpen(false);
-    const { data, setData } = props;
-    const { setAlert } = useAlert();
 
-    const handleDelete = (v: number): void => {
-        const value = v.toString();
-        setData({
-            ...data,
-            [`startCity${value}`]: '',
-            [`startData${value}`]: '',
-            [`startOdometer${value}`]: '',
-            [`borderDate${value}`]: '',
-            [`borderPlace${value}`]: '',
-            [`stopCity${value}`]: '',
-            [`stopData${value}`]: '',
-            [`stopOdometer${value}`]: '',
-            [`distance${value}`]: '',
-            [`customer${value}`]: '',
-        });
-    }
+    const legs = data.routes;
+    // Gdy generator nie wykrył żadnego odcinka – pokaż jeden pusty wiersz, żeby dało się dopisać kolejne.
+    const rows: TourSettleGeneratorLeg[] = legs.length > 0 ? legs : [EMPTY_LEG];
 
-    const handleUp = (v: number): void => {
-        const value = v.toString();
-        const prev = (v - 1).toString();
-        const dataAny = data as any;
-        setData({
-            ...data,
-            [`startCity${value}`]: dataAny[`startCity${prev}`],
-            [`startData${value}`]: dataAny[`startData${prev}`],
-            [`startOdometer${value}`]: dataAny[`startOdometer${prev}`],
-            [`borderDate${value}`]: dataAny[`borderDate${prev}`],
-            [`borderPlace${value}`]: dataAny[`borderPlace${prev}`],
-            [`stopCity${value}`]: dataAny[`stopCity${prev}`],
-            [`stopData${value}`]: dataAny[`stopData${prev}`],
-            [`stopOdometer${value}`]: dataAny[`stopOdometer${prev}`],
-            [`distance${value}`]: dataAny[`distance${prev}`],
-            [`customer${value}`]: dataAny[`customer${prev}`],
-            [`startCity${prev}`]: dataAny[`startCity${value}`],
-            [`startData${prev}`]: dataAny[`startData${value}`],
-            [`startOdometer${prev}`]: dataAny[`startOdometer${value}`],
-            [`borderDate${prev}`]: dataAny[`borderDate${value}`],
-            [`borderPlace${prev}`]: dataAny[`borderPlace${value}`],
-            [`stopCity${prev}`]: dataAny[`stopCity${value}`],
-            [`stopData${prev}`]: dataAny[`stopData${value}`],
-            [`stopOdometer${prev}`]: dataAny[`stopOdometer${value}`],
-            [`distance${prev}`]: dataAny[`distance${value}`],
-            [`customer${prev}`]: dataAny[`customer${value}`],
-        });
-    }
+    const handleUp = (i: number): void => {
+        if (i <= 0 || i >= legs.length) return;
+        const next = [...legs];
+        [next[i - 1], next[i]] = [next[i], next[i - 1]];
+        setData({...data, routes: next});
+    };
 
-    const handleDown = (v: number): void => {
-        const value = v.toString();
-        const next = (v + 1).toString();
-        const dataAny = data as any;
-        setData({
-            ...data,
-            [`startCity${value}`]: dataAny[`startCity${next}`],
-            [`startData${value}`]: dataAny[`startData${next}`],
-            [`startOdometer${value}`]: dataAny[`startOdometer${next}`],
-            [`borderDate${value}`]: dataAny[`borderDate${next}`],
-            [`borderPlace${value}`]: dataAny[`borderPlace${next}`],
-            [`stopCity${value}`]: dataAny[`stopCity${next}`],
-            [`stopData${value}`]: dataAny[`stopData${next}`],
-            [`stopOdometer${value}`]: dataAny[`stopOdometer${next}`],
-            [`distance${value}`]: dataAny[`distance${next}`],
-            [`customer${value}`]: dataAny[`customer${next}`],
-            [`startCity${next}`]: dataAny[`startCity${value}`],
-            [`startData${next}`]: dataAny[`startData${value}`],
-            [`startOdometer${next}`]: dataAny[`startOdometer${value}`],
-            [`borderDate${next}`]: dataAny[`borderDate${value}`],
-            [`borderPlace${next}`]: dataAny[`borderPlace${value}`],
-            [`stopCity${next}`]: dataAny[`stopCity${value}`],
-            [`stopData${next}`]: dataAny[`stopData${value}`],
-            [`stopOdometer${next}`]: dataAny[`stopOdometer${value}`],
-            [`distance${next}`]: dataAny[`distance${value}`],
-            [`customer${next}`]: dataAny[`customer${value}`],
-        });
-    }
+    const handleDown = (i: number): void => {
+        if (i < legs.length - 1) {
+            const next = [...legs];
+            [next[i], next[i + 1]] = [next[i + 1], next[i]];
+            setData({...data, routes: next});
+            return;
+        }
+        // ostatni wiersz „w dół" → nowy pusty wiersz nad przesuwanym
+        if (legs.length >= MAX_ROWS) return;
+        const base = [...legs];
+        const moved = base.length ? base.pop() as TourSettleGeneratorLeg : {...EMPTY_LEG};
+        setData({...data, routes: [...base, {...EMPTY_LEG}, moved]});
+    };
+
+    const handleDelete = (i: number): void => {
+        setData({...data, routes: legs.filter((_, idx) => idx !== i)});
+    };
 
     const handleGeneratorButton = (): void => {
         setLoading(true);
         generateTourSettlement(props.lang, data, props.tourGenerator, setAlert).finally(() => setLoading(false));
-    }
+    };
 
     return (
         <div>
@@ -111,769 +75,40 @@ export const TourGeneratorSettings = (props: Props) => {
                 aria-describedby="unstyled-modal-description"
                 open={props.open}
                 onClose={handleClose}
-                slots={{ backdrop: StyledBackdrop }}
+                slots={{backdrop: StyledBackdrop}}
             >
-                <ModalContent sx={{ width: 650 }}>
+                <ModalContent sx={{width: 650}}>
                     <h2 className='center' onClick={handleClose}>{tours[props.lang].generate}</h2>
                     <p>{tours[props.lang].generatorTourEdit}</p>
                     <table>
                         <tbody>
-                            <tr>
+                        {rows.map((leg, i) => (
+                            <tr key={i}>
                                 <td>
-                                    <ArrowDropUpIcon fontSize='small' color='disabled' />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(1)} />
+                                    {i === 0
+                                        ? <ArrowDropUpIcon fontSize='small' color='disabled'/>
+                                        : <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(i)}/>}
+                                    <br/>
+                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(i)}/>
                                 </td>
+                                <td>{leg.startCity}</td>
+                                <td>{leg.startData}<br/>{leg.startOdometer}</td>
+                                <td>{leg.borderDate}<br/>{leg.borderPlace}</td>
+                                <td>{leg.stopCity}</td>
+                                <td>{leg.stopData}<br/>{leg.stopOdometer}</td>
+                                <td>{leg.distance}</td>
+                                <td>{leg.customer}</td>
                                 <td>
-                                    {data.startCity1}
-                                </td>
-                                <td>
-                                    {data.startData1}
-                                    <br />
-                                    {data.startOdometer1}
-                                </td>
-                                <td>
-                                    {data.borderDate1}
-                                    <br />
-                                    {data.borderPlace1}
-                                </td>
-                                <td>
-                                    {data.stopCity1}
-                                </td>
-                                <td>
-                                    {data.stopData1}
-                                    <br />
-                                    {data.stopOdometer1}
-                                </td>
-                                <td>
-                                    {data.distance1}
-                                </td>
-                                <td>
-                                    {data.customer1}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(1)} />
+                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(i)}/>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(2)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(2)} />
-                                </td>
-                                <td>
-                                    {data.startCity2}
-                                </td>
-                                <td>
-                                    {data.startData2}
-                                    <br />
-                                    {data.startOdometer2}
-                                </td>
-                                <td>
-                                    {data.borderDate2}
-                                    <br />
-                                    {data.borderPlace2}
-                                </td>
-                                <td>
-                                    {data.stopCity2}
-                                </td>
-                                <td>
-                                    {data.stopData2}
-                                    <br />
-                                    {data.stopOdometer2}
-                                </td>
-                                <td>
-                                    {data.distance2}
-                                </td>
-                                <td>
-                                    {data.customer2}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(2)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(3)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(3)} />
-                                </td>
-                                <td>
-                                    {data.startCity3}
-                                </td>
-                                <td>
-                                    {data.startData3}
-                                    <br />
-                                    {data.startOdometer3}
-                                </td>
-                                <td>
-                                    {data.borderDate3}
-                                    <br />
-                                    {data.borderPlace3}
-                                </td>
-                                <td>
-                                    {data.stopCity3}
-                                </td>
-                                <td>
-                                    {data.stopData3}
-                                    <br />
-                                    {data.stopOdometer3}
-                                </td>
-                                <td>
-                                    {data.distance3}
-                                </td>
-                                <td>
-                                    {data.customer3}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(3)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(4)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(4)} />
-                                </td>
-                                <td>
-                                    {data.startCity4}
-                                </td>
-                                <td>
-                                    {data.startData4}
-                                    <br />
-                                    {data.startOdometer4}
-                                </td>
-                                <td>
-                                    {data.borderDate4}
-                                    <br />
-                                    {data.borderPlace4}
-                                </td>
-                                <td>
-                                    {data.stopCity4}
-                                </td>
-                                <td>
-                                    {data.stopData4}
-                                    <br />
-                                    {data.stopOdometer4}
-                                </td>
-                                <td>
-                                    {data.distance4}
-                                </td>
-                                <td>
-                                    {data.customer4}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(4)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(5)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(5)} />
-                                </td>
-                                <td>
-                                    {data.startCity5}
-                                </td>
-                                <td>
-                                    {data.startData5}
-                                    <br />
-                                    {data.startOdometer5}
-                                </td>
-                                <td>
-                                    {data.borderDate5}
-                                    <br />
-                                    {data.borderPlace5}
-                                </td>
-                                <td>
-                                    {data.stopCity5}
-                                </td>
-                                <td>
-                                    {data.stopData5}
-                                    <br />
-                                    {data.stopOdometer5}
-                                </td>
-                                <td>
-                                    {data.distance5}
-                                </td>
-                                <td>
-                                    {data.customer5}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(5)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(6)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(6)} />
-                                </td>
-                                <td>
-                                    {data.startCity6}
-                                </td>
-                                <td>
-                                    {data.startData6}
-                                    <br />
-                                    {data.startOdometer6}
-                                </td>
-                                <td>
-                                    {data.borderDate6}
-                                    <br />
-                                    {data.borderPlace6}
-                                </td>
-                                <td>
-                                    {data.stopCity6}
-                                </td>
-                                <td>
-                                    {data.stopData6}
-                                    <br />
-                                    {data.stopOdometer6}
-                                </td>
-                                <td>
-                                    {data.distance6}
-                                </td>
-                                <td>
-                                    {data.customer6}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(6)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(7)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(7)} />
-                                </td>
-                                <td>
-                                    {data.startCity7}
-                                </td>
-                                <td>
-                                    {data.startData7}
-                                    <br />
-                                    {data.startOdometer7}
-                                </td>
-                                <td>
-                                    {data.borderDate7}
-                                    <br />
-                                    {data.borderPlace7}
-                                </td>
-                                <td>
-                                    {data.stopCity7}
-                                </td>
-                                <td>
-                                    {data.stopData7}
-                                    <br />
-                                    {data.stopOdometer7}
-                                </td>
-                                <td>
-                                    {data.distance7}
-                                </td>
-                                <td>
-                                    {data.customer7}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(7)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(8)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(8)} />
-                                </td>
-                                <td>
-                                    {data.startCity8}
-                                </td>
-                                <td>
-                                    {data.startData8}
-                                    <br />
-                                    {data.startOdometer8}
-                                </td>
-                                <td>
-                                    {data.borderDate8}
-                                    <br />
-                                    {data.borderPlace8}
-                                </td>
-                                <td>
-                                    {data.stopCity8}
-                                </td>
-                                <td>
-                                    {data.stopData8}
-                                    <br />
-                                    {data.stopOdometer8}
-                                </td>
-                                <td>
-                                    {data.distance8}
-                                </td>
-                                <td>
-                                    {data.customer8}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(8)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(9)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(9)} />
-                                </td>
-                                <td>
-                                    {data.startCity9}
-                                </td>
-                                <td>
-                                    {data.startData9}
-                                    <br />
-                                    {data.startOdometer9}
-                                </td>
-                                <td>
-                                    {data.borderDate9}
-                                    <br />
-                                    {data.borderPlace9}
-                                </td>
-                                <td>
-                                    {data.stopCity9}
-                                </td>
-                                <td>
-                                    {data.stopData9}
-                                    <br />
-                                    {data.stopOdometer9}
-                                </td>
-                                <td>
-                                    {data.distance9}
-                                </td>
-                                <td>
-                                    {data.customer9}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(9)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(10)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(10)} />
-                                </td>
-                                <td>
-                                    {data.startCity10}
-                                </td>
-                                <td>
-                                    {data.startData10}
-                                    <br />
-                                    {data.startOdometer10}
-                                </td>
-                                <td>
-                                    {data.borderDate10}
-                                    <br />
-                                    {data.borderPlace10}
-                                </td>
-                                <td>
-                                    {data.stopCity10}
-                                </td>
-                                <td>
-                                    {data.stopData10}
-                                    <br />
-                                    {data.stopOdometer10}
-                                </td>
-                                <td>
-                                    {data.distance10}
-                                </td>
-                                <td>
-                                    {data.customer10}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(10)} />
-                                </td>
-                            </tr>
-
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(11)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(11)} />
-                                </td>
-                                <td>
-                                    {data.startCity11}
-                                </td>
-                                <td>
-                                    {data.startData11}
-                                    <br />
-                                    {data.startOdometer11}
-                                </td>
-                                <td>
-                                    {data.borderDate11}
-                                    <br />
-                                    {data.borderPlace11}
-                                </td>
-                                <td>
-                                    {data.stopCity11}
-                                </td>
-                                <td>
-                                    {data.stopData11}
-                                    <br />
-                                    {data.stopOdometer11}
-                                </td>
-                                <td>
-                                    {data.distance11}
-                                </td>
-                                <td>
-                                    {data.customer11}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(11)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(12)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(12)} />
-                                </td>
-                                <td>
-                                    {data.startCity12}
-                                </td>
-                                <td>
-                                    {data.startData12}
-                                    <br />
-                                    {data.startOdometer12}
-                                </td>
-                                <td>
-                                    {data.borderDate12}
-                                    <br />
-                                    {data.borderPlace12}
-                                </td>
-                                <td>
-                                    {data.stopCity12}
-                                </td>
-                                <td>
-                                    {data.stopData12}
-                                    <br />
-                                    {data.stopOdometer12}
-                                </td>
-                                <td>
-                                    {data.distance12}
-                                </td>
-                                <td>
-                                    {data.customer12}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(12)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(13)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(13)} />
-                                </td>
-                                <td>
-                                    {data.startCity13}
-                                </td>
-                                <td>
-                                    {data.startData13}
-                                    <br />
-                                    {data.startOdometer13}
-                                </td>
-                                <td>
-                                    {data.borderDate13}
-                                    <br />
-                                    {data.borderPlace13}
-                                </td>
-                                <td>
-                                    {data.stopCity13}
-                                </td>
-                                <td>
-                                    {data.stopData13}
-                                    <br />
-                                    {data.stopOdometer13}
-                                </td>
-                                <td>
-                                    {data.distance13}
-                                </td>
-                                <td>
-                                    {data.customer13}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(13)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(14)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(14)} />
-                                </td>
-                                <td>
-                                    {data.startCity14}
-                                </td>
-                                <td>
-                                    {data.startData14}
-                                    <br />
-                                    {data.startOdometer14}
-                                </td>
-                                <td>
-                                    {data.borderDate14}
-                                    <br />
-                                    {data.borderPlace14}
-                                </td>
-                                <td>
-                                    {data.stopCity14}
-                                </td>
-                                <td>
-                                    {data.stopData14}
-                                    <br />
-                                    {data.stopOdometer14}
-                                </td>
-                                <td>
-                                    {data.distance14}
-                                </td>
-                                <td>
-                                    {data.customer14}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(14)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(15)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(15)} />
-                                </td>
-                                <td>
-                                    {data.startCity15}
-                                </td>
-                                <td>
-                                    {data.startData15}
-                                    <br />
-                                    {data.startOdometer15}
-                                </td>
-                                <td>
-                                    {data.borderDate15}
-                                    <br />
-                                    {data.borderPlace15}
-                                </td>
-                                <td>
-                                    {data.stopCity15}
-                                </td>
-                                <td>
-                                    {data.stopData15}
-                                    <br />
-                                    {data.stopOdometer15}
-                                </td>
-                                <td>
-                                    {data.distance15}
-                                </td>
-                                <td>
-                                    {data.customer15}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(15)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(16)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(16)} />
-                                </td>
-                                <td>
-                                    {data.startCity16}
-                                </td>
-                                <td>
-                                    {data.startData16}
-                                    <br />
-                                    {data.startOdometer16}
-                                </td>
-                                <td>
-                                    {data.borderDate16}
-                                    <br />
-                                    {data.borderPlace16}
-                                </td>
-                                <td>
-                                    {data.stopCity16}
-                                </td>
-                                <td>
-                                    {data.stopData16}
-                                    <br />
-                                    {data.stopOdometer16}
-                                </td>
-                                <td>
-                                    {data.distance16}
-                                </td>
-                                <td>
-                                    {data.customer16}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(16)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(17)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(17)} />
-                                </td>
-                                <td>
-                                    {data.startCity17}
-                                </td>
-                                <td>
-                                    {data.startData17}
-                                    <br />
-                                    {data.startOdometer17}
-                                </td>
-                                <td>
-                                    {data.borderDate17}
-                                    <br />
-                                    {data.borderPlace17}
-                                </td>
-                                <td>
-                                    {data.stopCity17}
-                                </td>
-                                <td>
-                                    {data.stopData17}
-                                    <br />
-                                    {data.stopOdometer17}
-                                </td>
-                                <td>
-                                    {data.distance17}
-                                </td>
-                                <td>
-                                    {data.customer17}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(17)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(18)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(18)} />
-                                </td>
-                                <td>
-                                    {data.startCity18}
-                                </td>
-                                <td>
-                                    {data.startData18}
-                                    <br />
-                                    {data.startOdometer18}
-                                </td>
-                                <td>
-                                    {data.borderDate18}
-                                    <br />
-                                    {data.borderPlace18}
-                                </td>
-                                <td>
-                                    {data.stopCity18}
-                                </td>
-                                <td>
-                                    {data.stopData18}
-                                    <br />
-                                    {data.stopOdometer18}
-                                </td>
-                                <td>
-                                    {data.distance18}
-                                </td>
-                                <td>
-                                    {data.customer18}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(18)} />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(19)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' onClick={() => handleDown(19)} />
-                                </td>
-                                <td>
-                                    {data.startCity19}
-                                </td>
-                                <td>
-                                    {data.startData19}
-                                    <br />
-                                    {data.startOdometer19}
-                                </td>
-                                <td>
-                                    {data.borderDate19}
-                                    <br />
-                                    {data.borderPlace19}
-                                </td>
-                                <td>
-                                    {data.stopCity19}
-                                </td>
-                                <td>
-                                    {data.stopData19}
-                                    <br />
-                                    {data.stopOdometer19}
-                                </td>
-                                <td>
-                                    {data.distance19}
-                                </td>
-                                <td>
-                                    {data.customer19}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(19)} />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <ArrowDropUpIcon fontSize='small' onClick={() => handleUp(20)} />
-                                    <br />
-                                    <ArrowDropDownIcon fontSize='small' color='disabled' />
-                                </td>
-                                <td>
-                                    {data.startCity20}
-                                </td>
-                                <td>
-                                    {data.startData20}
-                                    <br />
-                                    {data.startOdometer20}
-                                </td>
-                                <td>
-                                    {data.borderDate20}
-                                    <br />
-                                    {data.borderPlace20}
-                                </td>
-                                <td>
-                                    {data.stopCity20}
-                                </td>
-                                <td>
-                                    {data.stopData20}
-                                    <br />
-                                    {data.stopOdometer20}
-                                </td>
-                                <td>
-                                    {data.distance20}
-                                </td>
-                                <td>
-                                    {data.customer20}
-                                </td>
-                                <td>
-                                    <DeleteIcon fontSize='small' color='error' onClick={() => handleDelete(20)} />
-                                </td>
-                            </tr>
+                        ))}
                         </tbody>
                     </table>
-                    <br /><br />
+                    <br/><br/>
                     <Fab variant="extended" size="small" color="primary" disabled={loading}
-                        onClick={() => handleGeneratorButton()}>
-                        {!loading ? tours[props.lang].generate : <CircularProgress />}
+                         onClick={() => handleGeneratorButton()}>
+                        {!loading ? tours[props.lang].generate : <CircularProgress/>}
                     </Fab>
                 </ModalContent>
             </Modal>
