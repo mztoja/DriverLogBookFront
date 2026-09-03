@@ -4,7 +4,6 @@ import {login} from "../../assets/txt/login";
 import {LanguageSelect} from "./form/profile/LanguageSelect";
 import {FirstNameInput} from "./form/profile/FirstNameInput";
 import {LastNameInput} from "./form/profile/LastNameInput";
-import {DefaultCustomerInput} from "./form/profile/DefaultCustomerInput";
 import {BidTypeSelect} from "./form/profile/BidTypeSelect";
 import {AmountInput} from "./form/finance/AmountInput";
 import {FuelConsuptionTypeSelect} from "./form/profile/FuelConsuptionTypeSelect";
@@ -33,7 +32,6 @@ export const ProfileSet = (props: Props) => {
         lastName: props.userData.lastName,
         lang: props.userData.lang.toString(),
         companyId: props.userData.companyId.toString(),
-        customer: props.userData.customer,
         bidType: props.userData.bidType.toString(),
         bid: props.userData.bid.toString(),
         currency: props.userData.currency,
@@ -63,7 +61,6 @@ export const ProfileSet = (props: Props) => {
             data.lastName === userData.lastName &&
             data.lang.toString() === userData.lang.toString() &&
             data.companyId.toString() === userData.companyId.toString() &&
-            data.customer === userData.customer &&
             data.bidType.toString() === userData.bidType.toString() &&
             data.bid.toString() === userData.bid.toString() &&
             data.currency === userData.currency &&
@@ -98,11 +95,6 @@ export const ProfileSet = (props: Props) => {
                     <div>
                         <CompanySelect lang={props.userData.lang} value={data.companyId}
                                        onChange={e => updateData('companyId', e)} fullWidth/>
-                    </div>
-                    <br/>
-                    <div>
-                        <DefaultCustomerInput lang={props.userData.lang} value={data.customer}
-                                              onChange={e => updateData('customer', e.target.value)}/>
                     </div>
                     <br/>
                     <div>

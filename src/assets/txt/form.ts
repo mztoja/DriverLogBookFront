@@ -21,7 +21,6 @@ interface Form {
     placeTypeAll: string;
     favorite: string;
     country: string;
-    defaultCustomer: string;
     bidType: string;
     bidType0: string;
     bidType1: string;
@@ -111,7 +110,6 @@ export const form: Form[] =
         placeTypeAll: 'All',
         favorite: 'Favourite',
         country: 'Country',
-        defaultCustomer: 'Default Customer',
         bidType: 'type of remuneration',
         bidType0: 'not specified',
         bidType1: 'per day',
@@ -198,7 +196,6 @@ export const form: Form[] =
             placeTypeAll: 'Wszystkie',
             favorite: 'Ulubione',
             country: 'Kraj',
-            defaultCustomer: 'Domyślny zleceniodawca',
             bidType: 'Rodzaj wynagrodzenia',
             bidType0: 'nie wybrano',
             bidType1: 'dniówka',
