@@ -96,13 +96,13 @@ export const PaymentsSettings = (props: Props) => {
                                 </IconButton>
                                 {form[props.lang].cash}
                                 {isDefault ?
-                                    <Tooltip className='TopBar_Right' title={form[props.lang].paymentSetDefault} arrow>
+                                    <Tooltip className='FloatRight' title={form[props.lang].paymentSetDefault} arrow>
                                         <IconButton color="info" aria-label="setDefault" onClick={() => select(0)}>
                                             <CheckBoxOutlineBlankIcon/>
                                         </IconButton>
                                     </Tooltip>
                                     :
-                                    <IconButton className='TopBar_Right' color="info" aria-label="default">
+                                    <IconButton className='FloatRight' color="info" aria-label="default">
                                         <CheckBoxIcon/>
                                     </IconButton>
                                 }
@@ -116,11 +116,11 @@ export const PaymentsSettings = (props: Props) => {
                                     </Tooltip>
                                     {payment.method}
                                     {payment.default === true ?
-                                        <IconButton className='TopBar_Right' color="info" aria-label="default">
+                                        <IconButton className='FloatRight' color="info" aria-label="default">
                                             <CheckBoxIcon/>
                                         </IconButton>
                                         :
-                                        <Tooltip className='TopBar_Right' title={form[props.lang].paymentSetDefault} arrow>
+                                        <Tooltip className='FloatRight' title={form[props.lang].paymentSetDefault} arrow>
                                             <IconButton color="info" aria-label="setDefault" onClick={() => select(payment.id)}>
                                                 <CheckBoxOutlineBlankIcon/>
                                             </IconButton>

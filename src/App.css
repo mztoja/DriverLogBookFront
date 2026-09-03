@@ -72,6 +72,10 @@ a {
     clear: both;
 }
 
+.FloatRight {
+    float: right;
+}
+
 /*ScrollBar set:*/
 ::-webkit-scrollbar {
     width: 1vw;

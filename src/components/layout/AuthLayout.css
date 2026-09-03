@@ -1,0 +1,51 @@
+/* Shell dla ekranów wylogowanych (logowanie / rejestracja).
+   Ten sam szkielet co #AppLayout (import AppLayout.css) – czarny pasek u góry,
+   treść rozciągnięta na całą wysokość, stopka na dole.
+   Pasek bez menu: po lewej marka + nazwa widoku, po prawej flagi języka. */
+
+#AppLayout .AuthHeader__toolbar {
+    min-height: 48px !important;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-left: 0.6rem;
+    padding-right: 0.35rem;
+}
+
+.AuthHeader__brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.AuthHeader__brandTitle {
+    font-weight: bold;
+    color: #d87a19;
+    flex: 0 0 auto;
+}
+
+.AuthHeader__brandPage {
+    color: #ffffffb0;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.AuthHeader__flags {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.AuthHeader__flags img {
+    max-height: 1.15rem;
+    margin: 0 0.15rem;
+    border-radius: 2px;
+    cursor: pointer;
+    display: block;
+}

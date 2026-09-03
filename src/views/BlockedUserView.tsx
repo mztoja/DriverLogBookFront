@@ -1,8 +1,7 @@
-import {TopBar} from "../components/bars/TopBar/TopBar";
+import React, {Dispatch, SetStateAction} from "react";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
-import { UserInterface } from "types";
-import {Dispatch, SetStateAction} from "react";
-import {Content} from "../components/bars/Content/Content";
+import {UserInterface} from "types";
+import {AuthLayout} from "../components/layout/AuthLayout";
 import {commons} from "../assets/txt/commons";
 
 interface Props {
@@ -11,9 +10,8 @@ interface Props {
     setUserData?: Dispatch<SetStateAction<UserInterface | null>>;
 }
 
-export const BlockedUserView = (props:Props) => (
-    <>
-        <TopBar page={props.page} lang={props.userData.lang} userData={props.userData} setUserData={props.setUserData}/>
-        <Content>{commons[props.userData.lang].userBlockedSite}</Content>
-    </>
+export const BlockedUserView = (props: Props) => (
+    <AuthLayout lang={props.userData.lang} page={props.page} setUserData={props.setUserData}>
+        <p>{commons[props.userData.lang].userBlockedSite}</p>
+    </AuthLayout>
 );

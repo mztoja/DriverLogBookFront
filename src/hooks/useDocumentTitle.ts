@@ -5,9 +5,8 @@ import {labels} from "../assets/txt/menuLabels";
 import {commons} from "../assets/txt/commons";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 
-// Ustawia document.title na podstawie aktywnej trasy.
-// Wcześniej robił to TopBar; po przebudowie layoutu TopBar znika, więc tytuł
-// ustawiamy centralnie w shellu zalogowanego użytkownika.
+// Ustawia document.title na podstawie aktywnej trasy (shell zalogowanego użytkownika).
+// Ekrany wylogowane / zablokowane robią to same w AuthLayout.
 const ROUTE_TO_LABEL: Record<string, keyof MenuLabelTypes> = {
     "/": "home",
     "/logs": "logs",
