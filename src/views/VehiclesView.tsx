@@ -33,11 +33,11 @@ export const VehiclesView = (props: Props) => {
         return (
             <>
                 <div className="TableView__toolbar">
+                    <CompanySelect lang={props.userData.lang} value={companyId ? companyId.toString() : '0'}
+                        onChange={e => setCompanyId(e)} />
                     {!showAddVehicle &&
                         <Fab onClick={() => setShowAddVehicle(true)} color="primary" aria-label="add" size="medium"><AddIcon/></Fab>
                     }
-                    <CompanySelect lang={props.userData.lang} value={companyId ? companyId.toString() : '0'}
-                                   onChange={e => setCompanyId(e)}/>
                 </div>
 
                 <AddVehicle userData={props.userData} setRefresh={setRefresh} show={showAddVehicle} setShow={setShowAddVehicle}/>

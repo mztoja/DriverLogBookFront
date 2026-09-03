@@ -62,8 +62,8 @@ export const AddPlace = (props: Props) => {
             setAddPlaceForm(defaultValues);
             refreshPlaces();
             setAlert(places[props.lang].addSuccess, 'success');
+            props.setShow(false);
         });
-        props.setShow(false);
     };
 
     const handleClose = () => props.setShow(false);
