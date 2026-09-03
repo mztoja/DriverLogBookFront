@@ -18,6 +18,7 @@ interface Form {
     placeType5: string;
     placeType6: string;
     placeType7: string;
+    placeType8: string;
     placeTypeAll: string;
     favorite: string;
     country: string;
@@ -107,6 +108,7 @@ export const form: Form[] =
         placeType5: 'Parking',
         placeType6: 'Workshop/Dealer',
         placeType7: 'Customs',
+        placeType8: 'Fuel stations',
         placeTypeAll: 'All',
         favorite: 'Favourite',
         country: 'Country',
@@ -193,6 +195,7 @@ export const form: Form[] =
             placeType5: 'Parking',
             placeType6: 'Warsztat/Serwis',
             placeType7: 'Urząd/Agencja celna',
+            placeType8: 'Stacje paliw',
             placeTypeAll: 'Wszystkie',
             favorite: 'Ulubione',
             country: 'Kraj',

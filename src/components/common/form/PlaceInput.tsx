@@ -120,6 +120,8 @@ export const PlaceInput = (props: Props) => {
                 return form[props.lang].placeType6;
             case placeTypeEnum.customs:
                 return form[props.lang].placeType7;
+            case placeTypeEnum.fuelStation:
+                return form[props.lang].placeType8;
             default:
                 return '';
         }
