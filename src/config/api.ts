@@ -96,4 +96,7 @@ export const apiPaths = {
     getFinancesByTourId: '/finances/getByTourId',
     getFinanceByLogId: '/finances/getByLogId',
     editFinance: '/finances/edit',
+    getExpenseFavorites: '/expense-favorites',
+    addExpenseFavorite: '/expense-favorites/add',
+    deleteExpenseFavorite: '/expense-favorites/delete',
 }

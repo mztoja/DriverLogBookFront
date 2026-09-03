@@ -1,5 +1,5 @@
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
-import {AddExpenseData, ExpenseEnum} from "types";
+import {AddExpenseData, AddExpenseFavoriteData, ExpenseEnum, ExpenseFavoriteInterface} from "types";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
 import React, {FormEvent, useEffect, useRef, useState} from "react";
@@ -22,6 +22,7 @@ import {form} from "../../../assets/txt/form";
 import {ExpanseChangeType} from "../../../hooks/useExpenseMath";
 import {useAddExpenseMath} from "../../../hooks/useExpenseMath";
 import {ItemDescriptionInput} from "../../common/form/finance/ItemDescriptionInput";
+import {ExpenseFavorites} from "../../common/form/finance/ExpenseFavorites";
 import {countries} from "../../../data/countries";
 
 interface Props extends ActionsPropsTypes {
@@ -33,6 +34,17 @@ export const AddExpense = (props: Props) => {
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
     const [foreignCurrency, setForeignCurrency] = useState<string>('');
+    const [favoriteSwitch, setFavoriteSwitch] = useState<'false' | 'true'>('false');
+    const [showFavorites, setShowFavorites] = useState<boolean>(false);
+
+    const applyFavorite = (fav: ExpenseFavoriteInterface) => {
+        props.updateFormData('country', fav.country);
+        props.updateFormData('place', fav.place);
+        props.updateFormData('placeId', fav.placeId ? String(fav.placeId) : '0');
+        props.updateFormData('expenseItemDescription', fav.itemDescription);
+        props.updateFormData('payment', fav.payment);
+        props.updateFormData('expenseUnitPrice', fav.unitPrice != null ? String(fav.unitPrice) : '');
+    };
 
     useEffect(() => {
         const find = countries.find((country) => country.code === props.userData.country);
@@ -64,6 +76,14 @@ export const AddExpense = (props: Props) => {
                 : props.expenseType === ExpenseEnum.def
                     ? home[props.lang].addDefRefuel
                     : props.formData.expenseItemDescription;
+        const favoriteData: AddExpenseFavoriteData = {
+            place: props.formData.place,
+            placeId: props.formData.placeId !== '' ? props.formData.placeId : '0',
+            country: props.formData.country,
+            itemDescription,
+            unitPrice: props.formData.expenseUnitPrice !== '' ? props.formData.expenseUnitPrice : '0',
+            payment: props.formData.payment,
+        };
         const sendData: AddExpenseData = {
             date: props.formData.date,
             country: props.formData.country,
@@ -102,6 +122,9 @@ export const AddExpense = (props: Props) => {
                     props.updateFormData('expenseUnitPrice', '');
                     props.updateFormData('expenseForeignAmount', '');
                     props.updateFormData('notes', '');
+                    if (favoriteSwitch === 'true' && props.expenseType === ExpenseEnum.standard) {
+                        fetchData(apiPaths.addExpenseFavorite, {method: 'POST', sendData: favoriteData}, {setAlert, lang: props.lang});
+                    }
                 }
             });
     }
@@ -130,6 +153,24 @@ export const AddExpense = (props: Props) => {
                 />
                 </div>
                 <br/>
+                {props.expenseType === ExpenseEnum.standard &&
+                    <>
+                        <div>
+                            <Link to="" className="Link" onClick={() => setShowFavorites(true)}>
+                                {form[props.lang].expenseFavLoad}
+                            </Link>
+                        </div>
+                        {showFavorites &&
+                            <ExpenseFavorites
+                                open={showFavorites}
+                                setOpen={setShowFavorites}
+                                lang={props.lang}
+                                applyFavorite={applyFavorite}
+                            />
+                        }
+                        <br/>
+                    </>
+                }
                 <div><PlaceInput
                     lang={props.lang}
                     defaultCountry={props.userData.country}
@@ -217,6 +258,18 @@ export const AddExpense = (props: Props) => {
                 <div><TextArea label={places[props.lang].description} value={props.formData.notes}
                                onChange={e => props.updateFormData('notes', e.target.value)}/></div>
                 <br/>
+                {props.expenseType === ExpenseEnum.standard &&
+                    <>
+                        <div>
+                            <OnOffSwitch
+                                label={form[props.lang].expenseFavSave}
+                                value={favoriteSwitch}
+                                onChange={e => setFavoriteSwitch(e)}
+                            />
+                        </div>
+                        <br/>
+                    </>
+                }
                 {loading ?
                     <CircularProgress/> :
                     <SubmitButton

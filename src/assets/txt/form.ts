@@ -77,6 +77,11 @@ interface Form {
     expenseUnitPrice: string;
     expenseItemDescription: string;
     expenseForeignCurrency: string;
+    expenseFavSave: string;
+    expenseFavLoad: string;
+    expenseFavTitle: string;
+    expenseFavDelete: string;
+    expenseFavEmpty: string;
     serviceEntry: string;
     odometerHelperDiff: string;
 }
@@ -162,6 +167,11 @@ export const form: Form[] =
         expenseQuantity: 'Quantity',
         expenseUnitPrice: 'Unit Price',
         expenseForeignCurrency: 'Foreign currency payment',
+        expenseFavSave: 'Save to favourites',
+        expenseFavLoad: 'Load from favourites',
+        expenseFavTitle: 'Expense favourites',
+        expenseFavDelete: 'Delete this favourite',
+        expenseFavEmpty: 'No saved favourites yet',
         serviceEntry: 'Description of repair/action',
         odometerHelperDiff: 'Odometer from last activity',
     },
@@ -244,6 +254,11 @@ export const form: Form[] =
             expenseQuantity: 'Ilość',
             expenseItemDescription: 'Pozycja (opis wydatku)',
             expenseForeignCurrency: 'Płatność w obcej walucie',
+            expenseFavSave: 'Zapisz w ulubionych',
+            expenseFavLoad: 'Wczytaj z ulubionych',
+            expenseFavTitle: 'Ulubione wydatki',
+            expenseFavDelete: 'Usuń tę pozycję z ulubionych',
+            expenseFavEmpty: 'Brak zapisanych ulubionych',
             serviceEntry: 'Opis naprawy / czynności',
             odometerHelperDiff: 'Przebieg od ostatniej czynności',
         }];
