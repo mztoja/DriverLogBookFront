@@ -4,7 +4,8 @@ import {vehicles} from "../../assets/txt/vehicles";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import InputLabel from "@mui/material/InputLabel";
-import {Fab, MenuItem, Select, Tooltip} from "@mui/material";
+import {MenuItem, Select, Tooltip} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import FormControl from "@mui/material/FormControl";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -204,15 +205,12 @@ export const ServiceList = (props: Props) => {
                                                     }
                                                     <br/>
                                                     <div>
-                                                        <Fab
-                                                            variant="extended"
-                                                            size="small"
-                                                            color="primary"
+                                                        <ActionButton
+                                                            icon={<EditIcon/>}
                                                             onClick={() => setEditServiceData(service)}
                                                         >
-                                                            <EditIcon sx={{mr: 1}}/>
                                                             {vehicles[props.lang].edit}
-                                                        </Fab>
+                                                        </ActionButton>
                                                     </div>
                                                 </td>
                                             </tr>

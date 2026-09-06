@@ -2,7 +2,8 @@ import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "reac
 import {TourMInterface, TourNumbersInterface, userLangEnum } from "types";
 import {apiPaths} from "../../config/api";
 import {tours} from "../../assets/txt/tours";
-import {CircularProgress, Fab} from "@mui/material";
+import {CircularProgress} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {useApi} from "../../hooks/useApi";
 import {useAlert} from "../../hooks/useAlert";
 import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
@@ -371,15 +372,13 @@ export const ToursSettlementList = (props: Props) => {
                                                 className={isHovered || settlement.id === monthlySettlement?.id ? 'highlighted' : ''}
                                             >
                                                 <td colSpan={11} className="extended">
-                                                    <Fab variant="extended" size="small" color="primary" onClick={() => handleShowTourList(settlement.id, settlement.month)}>
-                                                        <FormatListNumberedIcon sx={{mr: 1}}/>
+                                                    <ActionButton icon={<FormatListNumberedIcon/>} onClick={() => handleShowTourList(settlement.id, settlement.month)}>
                                                         {tours[props.lang].viewRouteList}
-                                                    </Fab>
+                                                    </ActionButton>
                                                     <br /><br />
-                                                    <Fab variant="extended" size="small" color="warning" onClick={() => handleDeleteSettlement(settlement.id, settlement.month)}>
-                                                        <ClearIcon sx={{ mr: 1 }} />
+                                                    <ActionButton variant="danger" icon={<ClearIcon/>} onClick={() => handleDeleteSettlement(settlement.id, settlement.month)}>
                                                         {tours[props.lang].delete}
-                                                    </Fab>
+                                                    </ActionButton>
                                                 </td>
                                             </tr>
                                         </>

@@ -15,7 +15,8 @@ import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import {FETCH_SEARCH_TIME, LOGS_PER_PAGE} from "../../config/set";
 import {logs} from "../../assets/txt/logs";
-import {CircularProgress, Fab, Tooltip} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {SearchInput} from "../common/form/SearchInput";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatCountry} from "../../utils/formats/formatCountry";
@@ -343,15 +344,12 @@ export const LogsList = (props: Props) => {
                                                         </div>)}
                                                     <br/>
                                                     <div>
-                                                        <Fab
-                                                            variant="extended"
-                                                            size="small"
-                                                            color="primary"
+                                                        <ActionButton
+                                                            icon={<EditIcon/>}
                                                             onClick={() => handleEditButton(log)}
                                                         >
-                                                            <EditIcon sx={{mr: 1}}/>
                                                             {logs[props.lang].edit}
-                                                        </Fab>
+                                                        </ActionButton>
                                                     </div>
                                                 </td>
                                             </tr>

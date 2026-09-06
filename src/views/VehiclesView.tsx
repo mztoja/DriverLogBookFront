@@ -4,7 +4,7 @@ import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {AddVehicle} from "../components/vehicles/AddVehicle";
 import {TrailersList} from "../components/vehicles/TrailersList";
 import {TrucksList} from "../components/vehicles/TrucksList";
-import {Fab} from "@mui/material";
+import {ActionButton} from "../components/common/ActionButton";
 import AddIcon from "@mui/icons-material/Add";
 import {TourInterface} from "types";
 import {CompanySelect} from "../components/common/form/place/CompanySelect";
@@ -36,7 +36,7 @@ export const VehiclesView = (props: Props) => {
                     <CompanySelect lang={props.userData.lang} value={companyId ? companyId.toString() : '0'}
                         onChange={e => setCompanyId(e)} />
                     {!showAddVehicle &&
-                        <Fab onClick={() => setShowAddVehicle(true)} color="primary" aria-label="add" size="medium"><AddIcon/></Fab>
+                        <ActionButton round ariaLabel="add" icon={<AddIcon/>} onClick={() => setShowAddVehicle(true)}/>
                     }
                 </div>
 

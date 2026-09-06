@@ -8,7 +8,7 @@ import {formatOdometer} from "../../utils/formats/formatOdometer";
 import {getFirstDayOfPreviousMonth} from "../../utils/getFirstDayOfPerviousMonth";
 import {AmountInput} from "../common/form/finance/AmountInput";
 import {DateInput} from "../common/form/DateInput";
-import {CircularProgress, Fab} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import {apiPaths} from "../../config/api";
 import {handleApiResult} from "../../utils/handleApiResult";
@@ -165,12 +165,13 @@ export const ToursCreateSettlement = (props: Props) => {
                             onlyMonth
                         />
                         <br/><br/>
-                        {loading
-                            ? <CircularProgress/>
-                            : <Fab variant="extended" size="small" color="primary" onClick={() => sendForm()}>
-                                <AssignmentIcon sx={{mr: 1}}/>
-                                {tours[props.lang].settle}</Fab>
-                        }
+                        <ActionButton
+                            loading={loading}
+                            icon={<AssignmentIcon/>}
+                            onClick={() => sendForm()}
+                        >
+                            {tours[props.lang].settle}
+                        </ActionButton>
                     </center>
                 </ModalContent>
             </Modal>

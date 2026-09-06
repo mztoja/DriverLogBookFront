@@ -5,7 +5,8 @@ import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "reac
 import {apiPaths} from "../../config/api";
 import {LOADINGS_PER_PAGE} from "../../config/set";
 import {loadings} from "../../assets/txt/loadings";
-import {CircularProgress, Fab, Tooltip} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatSimplePlace} from "../../utils/formats/formatSimplePlace";
 import {formatWeight} from "../../utils/formats/formatWeight";
@@ -321,15 +322,12 @@ export const LoadingsList = (props: Props) => {
                                                     }
                                                     <br/>
                                                     <div>
-                                                        <Fab
-                                                            variant="extended"
-                                                            size="small"
-                                                            color="primary"
+                                                        <ActionButton
+                                                            icon={<EditIcon/>}
                                                             onClick={() => handleEditButton(load)}
                                                         >
-                                                            <EditIcon sx={{mr: 1}}/>
                                                             {loadings[props.lang].edit}
-                                                        </Fab>
+                                                        </ActionButton>
                                                     </div>
                                                 </td>
                                             </tr>

@@ -263,7 +263,7 @@ tbody tr:hover, .highlighted {
     box-sizing: border-box;
 }
 
-/* pasek przypięty nad tabelą (np. Fab „dodaj" w /places) – rodzeństwo .TableView w panelu flex */
+/* pasek przypięty nad tabelą (np. przycisk „dodaj" w /places) – rodzeństwo .TableView w panelu flex */
 .TableView__toolbar {
     flex: 0 0 auto;
     display: flex;

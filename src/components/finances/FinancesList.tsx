@@ -5,7 +5,8 @@ import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "reac
 import {apiPaths} from "../../config/api";
 import {FINANCES_PER_PAGE} from "../../config/set";
 import {finances} from "../../assets/txt/finances";
-import {CircularProgress, Fab, Tooltip} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {formatDate} from "../../utils/formats/formatDate";
 import DetailsIcon from "@mui/icons-material/Details";
 import {formatQuantity} from "../../utils/formats/formatQuantity";
@@ -259,15 +260,12 @@ export const FinancesList = (props: Props) => {
                                                         {(finance.logData?.notes) && <><br /><DetailsIcon /><br /><div dangerouslySetInnerHTML={{ __html: formatText(finance.logData.notes) }} /></>}
                                                     <br/>
                                                     <div>
-                                                        <Fab
-                                                            variant="extended"
-                                                            size="small"
-                                                            color="primary"
+                                                        <ActionButton
+                                                            icon={<EditIcon/>}
                                                             onClick={() => handleEditButton(finance)}
                                                         >
-                                                            <EditIcon sx={{mr: 1}}/>
                                                             {finances[props.lang].edit}
-                                                        </Fab>
+                                                        </ActionButton>
                                                     </div>
                                                 </td>
                                             </tr>

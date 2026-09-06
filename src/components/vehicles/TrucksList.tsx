@@ -4,7 +4,8 @@ import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import {vehicles} from "../../assets/txt/vehicles";
-import {CircularProgress, Fab} from "@mui/material";
+import {CircularProgress} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {TruckEdit} from "./TruckEdit";
 import {formatWeight} from "../../utils/formats/formatWeight";
 import {formatShortDate} from "../../utils/formats/formatShortDate";
@@ -243,27 +244,21 @@ export const TrucksList = (props: Props) => {
                                                                 <div dangerouslySetInnerHTML={{ __html: formatText(vehicle.notes) }} />
                                                             </>}<br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<HandymanIcon/>}
                                                                     onClick={() => setVehicleIdService(vehicle.id)}
                                                                 >
-                                                                    <HandymanIcon sx={{mr: 1}}/>
                                                                     {vehicles[props.userData.lang].showServices}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                             <br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<EditIcon/>}
                                                                     onClick={() => setChosenVehicle(vehicle)}
                                                                 >
-                                                                    <EditIcon sx={{mr: 1}}/>
                                                                     {vehicles[props.userData.lang].edit}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                         </td>
                                                     </tr>

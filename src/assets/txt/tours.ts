@@ -67,6 +67,10 @@ interface Tours {
     deleteSuccess: string;
     generatorTourEdit: string;
     truck: string;
+    sectionTime: string;
+    sectionFuel: string;
+    sectionLoads: string;
+    sectionSalary: string;
 }
 
 export const tours: Tours[] = [
@@ -139,6 +143,10 @@ export const tours: Tours[] = [
         deleteSuccess: 'Monthly settlement was successfully deleted and all routes were marked as unbilled.',
         generatorTourEdit: 'Edit your route',
         truck: 'Truck',
+        sectionTime: 'Time',
+        sectionFuel: 'Fuel',
+        sectionLoads: 'Loads',
+        sectionSalary: 'Earnings',
     },
     {//pl
         apiError: 'Twoja lista tras nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -209,5 +217,9 @@ export const tours: Tours[] = [
         deleteSuccess: 'Pomyślnie usunięto rozliczenie miesięczne a wszystkie trasy zostały oznaczone jako nierozliczone.',
         generatorTourEdit: 'Edytuj przebieg trasy',
         truck: 'Ciągnik',
+        sectionTime: 'Czas',
+        sectionFuel: 'Paliwo',
+        sectionLoads: 'Ładunki',
+        sectionSalary: 'Wynagrodzenie',
     },
 ];

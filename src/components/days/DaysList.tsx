@@ -4,7 +4,8 @@ import {useApi} from "../../hooks/useApi";
 import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {DAYS_PER_PAGE} from "../../config/set";
-import {CircularProgress, Fab, Tooltip} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {days} from "../../assets/txt/days";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatOdometer} from "../../utils/formats/formatOdometer";
@@ -291,15 +292,12 @@ export const DaysList = (props: Props) => {
                                                         }
                                                         <br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<EditIcon/>}
                                                                     onClick={() => setEditDayData(day)}
                                                                 >
-                                                                    <EditIcon sx={{mr: 1}}/>
                                                                     {days[props.lang].edit}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                     </td>
                                                 </tr>

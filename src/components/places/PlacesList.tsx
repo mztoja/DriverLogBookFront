@@ -2,7 +2,8 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {places} from "../../assets/txt/places";
 import {PlaceInterface, UserInterface} from "types";
-import {CircularProgress, Fab} from "@mui/material";
+import {CircularProgress} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import AddIcon from "@mui/icons-material/Add";
 import {form} from "../../assets/txt/form";
 import DetailsIcon from '@mui/icons-material/Details';
@@ -150,9 +151,7 @@ export const PlacesList = (props: Props) => {
                                                  onChange={e => setFilterSearch(e)}/>
                                 </div>
                                 <div className="DivInline">
-                                    <Fab onClick={() => props.setShowAddPlace(true)} color="primary" aria-label="add" size="medium">
-                                        <AddIcon />
-                                    </Fab>
+                                    <ActionButton round ariaLabel="add" icon={<AddIcon/>} onClick={() => props.setShowAddPlace(true)}/>
                                 </div>
                             </div>
                         </div>
@@ -228,57 +227,42 @@ export const PlacesList = (props: Props) => {
                                                             )}
                                                             <br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<DirectionsIcon/>}
                                                                     onClick={() => openGoogleMaps(place.street + ' ' + place.code + ' ' + place.city)}>
-                                                                    <DirectionsIcon sx={{ mr: 1 }} />
                                                                     {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].directions})
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                             {Number(place.lat) > 0.001 && <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<LocationSearchingIcon/>}
                                                                     onClick={() => openGoogleMaps(place.lat + ', ' + place.lon)}>
-                                                                    <LocationSearchingIcon sx={{ mr: 1 }} />
                                                                     {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].gps})
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>}
                                                             <br />
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<NavigationIcon/>}
                                                                     onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
-                                                                    <NavigationIcon sx={{mr: 1}}/>
                                                                     {places[props.userData.lang].navigateSwitchLabel}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                             <br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<EditIcon/>}
                                                                     onClick={() => setChosenPlace(place)}>
-                                                                    <EditIcon sx={{mr: 1}}/>
                                                                     {places[props.userData.lang].edit}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                             <br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<AssignmentIcon/>}
                                                                     onClick={() => navigate('/logs/' + place.id)}>
-                                                                    <AssignmentIcon sx={{mr: 1}}/>
                                                                     {places[props.userData.lang].showActivities}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                         </td>
                                                     </tr>

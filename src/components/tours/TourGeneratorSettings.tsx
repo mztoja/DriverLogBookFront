@@ -1,9 +1,10 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {userLangEnum, TourSettleGeneratorInterface, TourSettleGeneratorLeg} from 'types';
 import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
-import {CircularProgress, Fab} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {tours} from "../../assets/txt/tours";
 import DeleteIcon from '@mui/icons-material/Delete';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {useAlert} from "../../hooks/useAlert";
@@ -106,10 +107,14 @@ export const TourGeneratorSettings = (props: Props) => {
                         </tbody>
                     </table>
                     <br/><br/>
-                    <Fab variant="extended" size="small" color="primary" disabled={loading}
-                         onClick={() => handleGeneratorButton()}>
-                        {!loading ? tours[props.lang].generate : <CircularProgress/>}
-                    </Fab>
+                    <ActionButton
+                        variant="accent"
+                        icon={<AutoAwesomeIcon/>}
+                        loading={loading}
+                        onClick={() => handleGeneratorButton()}
+                    >
+                        {tours[props.lang].generate}
+                    </ActionButton>
                 </ModalContent>
             </Modal>
         </div>

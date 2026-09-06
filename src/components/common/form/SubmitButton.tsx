@@ -1,22 +1,23 @@
 import React from "react";
 import SendIcon from "@mui/icons-material/Send";
-import {Button} from "@mui/material";
+import {ActionButton} from "../ActionButton";
 
 interface Props {
     text: string;
     disabled?: boolean;
 }
 
-export const SubmitButton = (props:Props) => {
+export const SubmitButton = (props: Props) => {
     return (
-        <Button
-            variant="contained"
+        <ActionButton
             type="submit"
-            size='small'
-            endIcon={<SendIcon/>}
+            variant="accent"
+            large
+            iconRight
+            icon={<SendIcon/>}
             disabled={props.disabled}
         >
             {props.text}
-        </Button>
+        </ActionButton>
     );
 }
