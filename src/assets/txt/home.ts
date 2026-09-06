@@ -89,6 +89,10 @@ interface Home {
     tourStopHelper2: (distance: number, burnedFuel: number) => string;
     finishTourUnloadedLoadsConfirm: (x: number) => string;
     finishTourUnloadNote: string;
+    tourStartKeepTrailerConfirm: (trailer: string) => string;
+    tourStartKeepLoadConfirm: (desc: string, weight: string) => string;
+    trailerAttachedBySystemNote: string;
+    loadAddedBySystemNote: string;
     cannotEditSettledTourData: string;
     notes: string;
     notesHistory: string;
@@ -184,6 +188,10 @@ export const home:Home[] = [{
     tourStopHelper2: (distance, burnedFuel) => `You passed ${formatOdometer(distance)}. Avg. fuel usage: ${formatFuelCombustion(burnedFuel, distance)}`,
     finishTourUnloadedLoadsConfirm: (x) => `You try to finish the route even though you still have ${x} ${x === 1 ? 'unloaded load.' : 'unloaded loads.'} If you finish the route, they will be described in the system as unloaded with a note in the notes that they were marked as such due to the end of the route.`,
     finishTourUnloadNote: 'Marked as unloaded due to end of tour',
+    tourStartKeepTrailerConfirm: (trailer) => `Do you still have trailer ${trailer} from the previous tour attached? If yes, it will be attached automatically.`,
+    tourStartKeepLoadConfirm: (desc, weight) => `Are you still carrying the load "${desc || '—'}" (${weight})? If yes, it will be added automatically as a new load.`,
+    trailerAttachedBySystemNote: 'Trailer attached automatically by the system – continuation from the previous tour',
+    loadAddedBySystemNote: 'Load added automatically by the system – continuation from the previous tour',
     cannotEditSettledTourData: 'You cannot edit data assigned to a route that has already been settled.',
     notes: 'Notes',
     notesHistory: 'Notes history',
@@ -276,6 +284,10 @@ export const home:Home[] = [{
     tourStopHelper2: (distance, burnedFuel) => `Przejechałeś ${formatOdometer(distance)}. Spalanie: ${formatFuelCombustion(burnedFuel, distance)}`,
     finishTourUnloadedLoadsConfirm: (x) => `Próbujesz zakończyć trasę pomimo, że masz jeszcze ${x} ${x === 1 ? 'nierozładowany ładunek.' : 'nierozładowane ładunki.'} Jeżeli zakończysz trasę to zostaną one w systemie opisane jako rozładowane z wpisaną w notatkach adnotacją, że zostały tak oznaczone z powodu zakończenia trasy.`,
     finishTourUnloadNote: 'Oznaczony jako rozładowany z powodu zakończenia trasy',
+    tourStartKeepTrailerConfirm: (trailer) => `Czy nadal masz podpiętą naczepę ${trailer} z poprzedniej trasy? Jeżeli tak, zostanie automatycznie podpięta.`,
+    tourStartKeepLoadConfirm: (desc, weight) => `Czy nadal wieziesz ładunek „${desc || '—'}" (${weight})? Jeżeli tak, zostanie automatycznie dodany jako nowy ładunek.`,
+    trailerAttachedBySystemNote: 'Naczepa podpięta automatycznie – kontynuacja z poprzedniej trasy',
+    loadAddedBySystemNote: 'Ładunek dodany automatycznie – kontynuacja z poprzedniej trasy',
     cannotEditSettledTourData: 'Nie możesz edytować danych przypisanych do rozliczonej już trasy.',
     notes: 'Notatki',
     notesHistory: 'Historia notatek',

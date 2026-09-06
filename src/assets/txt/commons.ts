@@ -12,6 +12,8 @@ interface Commons {
     windowConfirmTitle: string;
     windowConfirmAgree: string;
     windowConfirmCancel: string;
+    yes: string;
+    no: string;
 }
 
 export const commons:Commons[] = [{
@@ -28,6 +30,8 @@ export const commons:Commons[] = [{
     windowConfirmCancel: 'Cancel',
     windowConfirmAgree: 'Confirm',
     windowConfirmTitle: 'Warning!',
+    yes: 'Yes',
+    no: 'No',
 },{
     title: "D.K.",
     subTitle: "Dziennik Kierowcy",
@@ -42,4 +46,6 @@ export const commons:Commons[] = [{
     windowConfirmCancel: 'Anuluj',
     windowConfirmAgree: 'Zatwierdź',
     windowConfirmTitle: 'Ostrzeżenie!',
+    yes: 'Tak',
+    no: 'Nie',
 }];
