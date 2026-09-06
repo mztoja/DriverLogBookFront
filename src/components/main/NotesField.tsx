@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {Link} from "react-router-dom";
 import {home} from "../../assets/txt/home";
 import {UserNoteInterface, userLangEnum} from 'types';
@@ -22,7 +22,7 @@ export const NotesField = (props: Props) => {
 
     // Autopowiększanie textarea. Reset height:'auto' potrafi na chwilę skrócić stronę,
     // przez co kontener treści (.AppMain__content) przewija się – zapamiętujemy i przywracamy scrollTop.
-    const autoGrow = () => {
+    const autoGrow = useCallback(() => {
         const el = textareaRef.current;
         if (!el) return;
         const scroller = el.closest<HTMLElement>('.AppMain__content, #AppMain');
@@ -32,7 +32,7 @@ export const NotesField = (props: Props) => {
         if (scroller && savedScroll !== null) {
             scroller.scrollTop = savedScroll;
         }
-    };
+    }, []);
 
     const handleSave = (): void => {
         setSynchronized(false);
@@ -59,11 +59,22 @@ export const NotesField = (props: Props) => {
                 const current = res.responseData[0]?.notes ?? '';
                 setText(current);
                 savedTextRef.current = current;
-                autoGrow();
             }
         });
         // eslint-disable-next-line
     }, []);
+
+    // Wysokość liczymy PO commitcie nowej wartości do DOM – inaczej scrollHeight
+    // mierzy jeszcze pustą textarea (widoczne na produkcji: bez StrictMode nie ma
+    // drugiego przebiegu efektu, który przypadkiem "poprawiał" pomiar w devie).
+    useEffect(() => {
+        autoGrow();
+    }, [text, autoGrow]);
+
+    useEffect(() => {
+        window.addEventListener('resize', autoGrow);
+        return () => window.removeEventListener('resize', autoGrow);
+    }, [autoGrow]);
 
     return (
         <fieldset id={synchronized ? 'Notes' : 'NotesError'}>
@@ -75,7 +86,6 @@ export const NotesField = (props: Props) => {
                 value={text}
                 onChange={(e) => {
                     setText(e.target.value);
-                    autoGrow();
                     setSynchronized(false);
                 }}
                 onBlur={handleBlur}

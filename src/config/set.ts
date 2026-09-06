@@ -1,5 +1,7 @@
-export const REACT_APP_API_URL = 'https://mzservices.pl/api/v3';
-export const REACT_APP_URL = 'https://mzservices.pl/logbook';
+// export const REACT_APP_API_URL = 'https://mzservices.pl/api/v3';
+// export const REACT_APP_URL = 'https://mzservices.pl/logbook';
+export const REACT_APP_API_URL = 'http://localhost:3001/v3';
+export const REACT_APP_URL = 'http://localhost:3000/logbook';
 export const REACT_APP_PREFIX = '/logbook'; // pod-ścieżka hostowania SPA (basename routera); '' gdy front stoi w korzeniu domeny
 export const ALERT_TIME = 5000; // time after which the alerts popup disappears
 export const FETCH_SEARCH_TIME = 1000; // time after which the fetch will be done when you stop writing in search field
