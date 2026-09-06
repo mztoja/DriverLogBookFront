@@ -168,7 +168,11 @@ export const PlaceInput = (props: Props) => {
 
     const updateCountry = (e: string): void => {
         const next = e || '';
-        if (next && next !== props.countryValue && Number(props.placeIdValue) > 0) {
+        // Porównujemy z efektywnym krajem (country = countryValue || defaultCountry),
+        // a nie z surowym props.countryValue. Inaczej startowe onChange(defaultCountry)
+        // z CountrySelect (przy countryValue === '') wygląda jak zmiana kraju przez
+        // użytkownika i czyści wstępnie wybrane miejsce (np. nadawcę z markedArrive).
+        if (next && next !== country && Number(props.placeIdValue) > 0) {
             props.placeIdOnChange('0');
             props.placeOnChange('');
         }
