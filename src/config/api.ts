@@ -24,6 +24,7 @@ export const apiPaths = {
     editTour: '/tours/edit',
     editSimpleTour: '/tours/simpleEdit',
     generateSettlementRoute: '/tours/generator',
+    getRouteStats: '/tours/stats',
     deleteMonthlySettlement: '/tours/deleteMonthlySettlement',
     // users
     register: '/users/register',

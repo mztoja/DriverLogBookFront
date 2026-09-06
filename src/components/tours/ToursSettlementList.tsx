@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {TourMInterface, TourNumbersInterface, userLangEnum } from "types";
 import {apiPaths} from "../../config/api";
 import {tours} from "../../assets/txt/tours";
@@ -55,7 +55,6 @@ export const ToursSettlementList = (props: Props) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [monthlySettlement, setMonthlySettlement] = useState<MonthlySettlementTypes | null>(defaultMonthlySettlement());
-    const tourListRef = useRef<HTMLDivElement>(null);
     const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
     const [deleteId, setDeleteId] = useState<number>(0);
     const [deleteMonth, setDeleteMonth] = useState<string>('');
@@ -73,7 +72,6 @@ export const ToursSettlementList = (props: Props) => {
         setMonthlySettlement({id, month});
         SaveToLocalStorage('toursSetId', id.toString());
         SaveToLocalStorage('toursSetMonth', month);
-        tourListRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
     const handleDeleteSettlement = (id: number, monthValue: string): void => {
@@ -129,9 +127,14 @@ export const ToursSettlementList = (props: Props) => {
         // eslint-disable-next-line
     }, [data]);
 
-    const toursListComponent = React.useMemo(() => {
-        if (monthlySettlement) {
-            return (
+    if (loading && data.length === 0) {
+        return <CircularProgress/>
+    }
+
+    // Rozwinięta lista tras danego miesiąca – widok „na całą stronę" (jedna tabela naraz).
+    if (monthlySettlement) {
+        return (
+            <div className="TableView">
                 <ToursList
                     lang={props.lang}
                     refresh={props.refresh}
@@ -140,17 +143,12 @@ export const ToursSettlementList = (props: Props) => {
                     setMonthlySettlement={setMonthlySettlement}
                     setSelectedTour={props.setSelectedTour}
                 />
-            );
-        }
-        // eslint-disable-next-line
-    }, [monthlySettlement, props.lang, props.refresh, props.setRefresh]);
-
-    if (loading && data.length === 0) {
-        return <CircularProgress/>
+            </div>
+        );
     }
 
     return (
-        <div className="TableView--flow">
+        <div className="TableView">
             <main className="Table">
                 <section className="Table__Header">
                     {tours[props.lang].settlementsHeader}<br/>
@@ -226,10 +224,7 @@ export const ToursSettlementList = (props: Props) => {
                             return (
                                 <React.Fragment key={settlement.id}>
                                     {expandedRow !== settlement.id && (
-                                        <tr
-                                            onClick={() => setExpandedRow(settlement.id)}
-                                            className={settlement.id === monthlySettlement?.id ? 'highlighted' : ''}
-                                        >
+                                        <tr onClick={() => setExpandedRow(settlement.id)}>
                                             <td>
                                                 {formatShortDate(settlement.month).slice(3)}
                                             </td>
@@ -300,7 +295,7 @@ export const ToursSettlementList = (props: Props) => {
                                                 onClick={() => setExpandedRow(null)}
                                                 onMouseEnter={handleMouseEnter}
                                                 onMouseLeave={handleMouseLeave}
-                                                className={isHovered || settlement.id === monthlySettlement?.id ? 'highlighted' : ''}
+                                                className={isHovered ? 'highlighted' : ''}
                                             >
                                                 <td>
                                                     {formatShortDate(settlement.month).slice(3)}
@@ -369,7 +364,7 @@ export const ToursSettlementList = (props: Props) => {
                                             <tr
                                                 onMouseEnter={handleMouseEnter}
                                                 onMouseLeave={handleMouseLeave}
-                                                className={isHovered || settlement.id === monthlySettlement?.id ? 'highlighted' : ''}
+                                                className={isHovered ? 'highlighted' : ''}
                                             >
                                                 <td colSpan={11} className="extended">
                                                     <ActionButton icon={<FormatListNumberedIcon/>} onClick={() => handleShowTourList(settlement.id, settlement.month)}>
@@ -390,7 +385,6 @@ export const ToursSettlementList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            <div ref={tourListRef}>{toursListComponent}</div>
             <WindowConfirm lang={props.lang} text={tours[props.lang].deleteConfirm(deleteMonth)} show={deleteConfirm} setShow={setDeleteConfirm} execute={executeDelete} />
         </div>
     );
