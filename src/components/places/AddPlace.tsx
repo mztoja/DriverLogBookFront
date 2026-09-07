@@ -14,13 +14,13 @@ import {TextArea} from "../common/form/TextArea";
 import {PlaceGps} from "../common/form/place/PlaceGps";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
+import {usePlaces} from "../../hooks/usePlaces";
 import {apiPaths} from "../../config/api";
 import {handleApiResult} from "../../utils/handleApiResult";
 import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
 
 interface Props {
     lang: userLangEnum;
-    setRefresh: Dispatch<SetStateAction<boolean>>;
     show: boolean;
     setShow: Dispatch<SetStateAction<boolean>>;
 }
@@ -43,6 +43,7 @@ export const AddPlace = (props: Props) => {
 
     const {setAlert} = useAlert();
     const {loading, fetchDataOld} = useApi();
+    const {refreshPlaces} = usePlaces();
 
     const [addPlaceForm, setAddPlaceForm] = useState<AddPlaceFormInterface>(defaultValues);
 
@@ -59,10 +60,10 @@ export const AddPlace = (props: Props) => {
         const result = await fetchDataOld(apiPaths.createPlace, 'POST', addPlaceForm);
         handleApiResult(result, props.lang, setAlert, () => {
             setAddPlaceForm(defaultValues);
-            props.setRefresh((prev) => !prev);
+            refreshPlaces();
             setAlert(places[props.lang].addSuccess, 'success');
+            props.setShow(false);
         });
-        props.setShow(false);
     };
 
     const handleClose = () => props.setShow(false);
@@ -115,11 +116,11 @@ export const AddPlace = (props: Props) => {
                                               onChange={e => updateForm('isMarked', e)}/></div>
                             <br/>
                             <div className="DivInline"><PlaceGps label={places[props.lang].lat} value={addPlaceForm.lat}
-                                                                 onChange={e => updateForm('lat', e.target.value)}/>
+                                onChange={e => updateForm('lat', e)} />
                             </div>
 
                             <div className="DivInline"><PlaceGps label={places[props.lang].lon} value={addPlaceForm.lon}
-                                                                 onChange={e => updateForm('lon', e.target.value)}/>
+                                onChange={e => updateForm('lon', e)} />
                             </div>
                             <div className="DivClear"/>
                             <br/>

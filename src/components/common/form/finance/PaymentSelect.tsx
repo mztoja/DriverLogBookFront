@@ -50,6 +50,14 @@ export const PaymentSelect = (props: Props) => {
         // eslint-disable-next-line
     }, [value]);
 
+    // synchronizacja ze stanem zewnętrznym (np. wczytanie ulubionego wydatku)
+    useEffect(() => {
+        if (props.value && props.value !== value) {
+            setValue(props.value);
+        }
+        // eslint-disable-next-line
+    }, [props.value]);
+
     const handleClick = () => {
         setShowPaymentsSettings(true);
     }

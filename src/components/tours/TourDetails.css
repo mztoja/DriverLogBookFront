@@ -1,0 +1,136 @@
+/* Widok szczegółów trasy – układ „dashboard" (nagłówek + KPI + panele).
+   Zastępuje dawny wąski <fieldset> + <table>. */
+
+.TourDetails {
+    text-align: left;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.TourDetails__back {
+    display: flex;
+}
+
+.TourDetails__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.3rem 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #ffffff1f;
+}
+
+.TourDetails__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.8rem;
+}
+
+.TourDetails__tourNr {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f0a91e;
+}
+
+.TourDetails__dates {
+    color: #ffffffcf;
+}
+
+.TourDetails__truck {
+    color: #cfe0ff;
+}
+
+/* --- Pasek KPI --- */
+.TourDetails__kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.6rem;
+}
+
+.TourDetails__kpi {
+    background: linear-gradient(180deg, #ffffff14, #ffffff08);
+    border: 1px solid #2f6bb3;
+    border-radius: 0.7rem;
+    padding: 0.55rem 0.7rem;
+    text-align: center;
+}
+
+.TourDetails__kpiValue {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: whitesmoke;
+}
+
+.TourDetails__kpiLabel {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #ffffff9c;
+    margin-top: 0.15rem;
+}
+
+/* --- Siatka paneli tematycznych --- */
+.TourDetails__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.7rem;
+    align-items: start;
+}
+
+.TourDetails__panel {
+    background: #ffffff0d;
+    border: 1px solid #ffffff1f;
+    border-radius: 0.7rem;
+    padding: 0.45rem 0.8rem 0.65rem;
+}
+
+.TourDetails__panelTitle {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #f0a91e;
+    margin-bottom: 0.35rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid #ffffff1a;
+}
+
+.TourDetails__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.28rem 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #ffffff10;
+}
+
+.TourDetails__row:last-child {
+    border-bottom: none;
+}
+
+.TourDetails__rowLabel {
+    color: #ffffffab;
+}
+
+.TourDetails__rowValue {
+    color: whitesmoke;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* --- Pasek akcji (listy + generator) --- */
+.TourDetails__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    justify-content: center;
+    padding-top: 0.4rem;
+}

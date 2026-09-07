@@ -44,6 +44,9 @@ export const DayStop = (props: ActionsPropsTypes) => {
                     props.setDayData(null);
                     props.setRefresh((prev => !prev));
                     props.updateFormData('notes', '');
+                    props.updateFormData('fuelCombustion', '');
+                    props.updateFormData('driveTime', '');
+                    props.updateFormData('driveTime2', '');
                 }
             });
     }

@@ -66,6 +66,18 @@ interface Tours {
     deleteConfirm: (x: string) => string;
     deleteSuccess: string;
     generatorTourEdit: string;
+    truck: string;
+    sectionTime: string;
+    sectionFuel: string;
+    sectionLoads: string;
+    sectionSalary: string;
+    statsHeader: string;
+    statsTotalLabel: string;
+    statsYearLabel: string;
+    statsNoData: string;
+    statsByMonth: string;
+    statsApiError: string;
+    monthsShort: string[];
 }
 
 export const tours: Tours[] = [
@@ -137,6 +149,18 @@ export const tours: Tours[] = [
         deleteConfirm: (x) => `Are you sure you want to remove the settlement from ${x}? Routes covered by them will be marked as unsettled.`,
         deleteSuccess: 'Monthly settlement was successfully deleted and all routes were marked as unbilled.',
         generatorTourEdit: 'Edit your route',
+        truck: 'Truck',
+        sectionTime: 'Time',
+        sectionFuel: 'Fuel',
+        sectionLoads: 'Loads',
+        sectionSalary: 'Earnings',
+        statsHeader: 'Statistics',
+        statsTotalLabel: 'All-time totals',
+        statsYearLabel: 'Year',
+        statsNoData: 'No completed tours yet.',
+        statsByMonth: 'By month',
+        statsApiError: 'Statistics could not be downloaded. Please try again later.',
+        monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     },
     {//pl
         apiError: 'Twoja lista tras nie mogła zostać pobrana z powodu problemu z połączeniem. Spróbuj ponownie później.',
@@ -206,5 +230,17 @@ export const tours: Tours[] = [
         deleteConfirm: (x) => `Czy na pewno chcesz usunąć rozliczenie z ${x}? Trasy które pod nie podlegają będą oznaczone jako nie rozliczone.`,
         deleteSuccess: 'Pomyślnie usunięto rozliczenie miesięczne a wszystkie trasy zostały oznaczone jako nierozliczone.',
         generatorTourEdit: 'Edytuj przebieg trasy',
+        truck: 'Ciągnik',
+        sectionTime: 'Czas',
+        sectionFuel: 'Paliwo',
+        sectionLoads: 'Ładunki',
+        sectionSalary: 'Wynagrodzenie',
+        statsHeader: 'Statystyki',
+        statsTotalLabel: 'Podsumowanie ogółem',
+        statsYearLabel: 'Rok',
+        statsNoData: 'Brak zakończonych tras.',
+        statsByMonth: 'Wg miesiąca',
+        statsApiError: 'Nie udało się pobrać statystyk. Spróbuj ponownie później.',
+        monthsShort: ['sty', 'lut', 'mar', 'kwi', 'maj', 'cze', 'lip', 'sie', 'wrz', 'paź', 'lis', 'gru'],
     },
 ];

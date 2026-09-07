@@ -15,9 +15,9 @@ import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import {FETCH_SEARCH_TIME, LOGS_PER_PAGE} from "../../config/set";
 import {logs} from "../../assets/txt/logs";
-import {CircularProgress, Fab, Tooltip} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {SearchInput} from "../common/form/SearchInput";
-import {TablePagination} from "../common/TablePagination";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatCountry} from "../../utils/formats/formatCountry";
 import {formatOdometer} from "../../utils/formats/formatOdometer";
@@ -38,6 +38,8 @@ import { formatText } from "../../utils/formats/formatText";
 interface Props {
     lang: userLangEnum;
     tourId?: number;
+    placeId?: number;
+    placeName?: string;
     setShowLogList?: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -61,6 +63,8 @@ export const LogsList = (props: Props) => {
     const [editLoadingData, setEditLoadingData] = useState<LoadInterface | null>(null);
     const [editTourData, setEditTourData] = useState<TourInterface | null>(null);
     const [refresh, setRefresh] = useState<boolean>(false);
+    const [loadingMore, setLoadingMore] = useState<boolean>(false);
+    const loadingMoreRef = useRef<boolean>(false);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -120,6 +124,9 @@ export const LogsList = (props: Props) => {
     useEffect(() => {
         if (fetchDelay > 0) {
             const delayTimeout = setTimeout(() => {
+                // zmiana filtra – wracamy na początek listy i ładujemy od nowa
+                setPage(1);
+                setData(null);
                 setFetchDelay(fetchDelay + 1);
             }, FETCH_SEARCH_TIME);
 
@@ -142,18 +149,38 @@ export const LogsList = (props: Props) => {
             });
         } else {
             const search = filterSearch === '' ? '' : '/' + filterSearch;
-            fetchData<LogListResponse>(`${apiPaths.getLogs}/${page}/${LOGS_PER_PAGE + search}`).then((res) => {
+            const reqPage = page;
+            if (reqPage > 1) setLoadingMore(true);
+            const base = props.placeId
+                ? `${apiPaths.getLogsByPlaceId}/${props.placeId}`
+                : apiPaths.getLogs;
+            fetchData<LogListResponse>(`${base}/${reqPage}/${LOGS_PER_PAGE + search}`).then((res) => {
                 if (res.responseData) {
-                    setData(res.responseData.items);
+                    const items = res.responseData.items;
+                    setData(prev => (reqPage === 1 || !prev) ? items : [...prev, ...items]);
                     setTotalItems(Number(res.responseData.totalItems));
                 } else {
                     setAlert(logs[props.lang].apiError, 'error');
                 }
+                setLoadingMore(false);
+                loadingMoreRef.current = false;
             });
             setFetchDelay(1);
         }
         // eslint-disable-next-line
     }, [page, fetchDelay, props.tourId, refresh]);
+
+    // doładowywanie kolejnych porcji po dojechaniu do końca listy
+    const handleBodyScroll = (e: React.UIEvent<HTMLElement>): void => {
+        if (props.tourId || loadingMoreRef.current || !data) return;
+        if (data.length >= totalItems) return;
+        const el = e.currentTarget;
+        if (el.scrollHeight - el.scrollTop - el.clientHeight < 200) {
+            loadingMoreRef.current = true;
+            setLoadingMore(true);
+            setPage(p => p + 1);
+        }
+    };
 
     useEffect(() => {
         if (data) {
@@ -175,20 +202,11 @@ export const LogsList = (props: Props) => {
         // eslint-disable-next-line
     }, [data]);
 
-    if (loading) {
+    if (loading && !data) {
         return <CircularProgress/>
     }
 
-    return (
-        <>
-            {!props.tourId &&
-                <div className="Table__Filter">
-                    <div className="DivInline">
-                        <SearchInput lang={props.lang} value={filterSearch}
-                                     onChange={e => setFilterSearch(e)}/>
-                    </div>
-                </div>
-            }
+    const tableContent = (
             <main className="Table">
                 <section className="Table__Header">
                     {props.tourId
@@ -202,10 +220,29 @@ export const LogsList = (props: Props) => {
                                 </NavLink>
                             </Tooltip>
                         </>
-                        : logs[props.lang].tableHeader
+                        :
+                        <div className="Table__HeaderRow">
+                            <span className="Table__Title">
+                                {props.placeId
+                                    ? <>
+                                        {logs[props.lang].placeLogsHeader(props.placeName ?? '')}
+                                        &nbsp;&nbsp;
+                                        <Tooltip title={tours[props.lang].close} arrow>
+                                            <NavLink to='/logs' className='CloseLink'>
+                                                <ClearIcon sx={{mr: 1}}/>
+                                            </NavLink>
+                                        </Tooltip>
+                                    </>
+                                    : logs[props.lang].tableHeader}
+                            </span>
+                            <div className="Table__HeaderSearch">
+                                <SearchInput lang={props.lang} value={filterSearch}
+                                             onChange={e => setFilterSearch(e)}/>
+                            </div>
+                        </div>
                     }
                 </section>
-                <section className="Table__Body">
+                <section className="Table__Body" onScroll={handleBodyScroll}>
                     <table>
                         <thead>
                         <tr>
@@ -307,15 +344,12 @@ export const LogsList = (props: Props) => {
                                                         </div>)}
                                                     <br/>
                                                     <div>
-                                                        <Fab
-                                                            variant="extended"
-                                                            size="small"
-                                                            color="primary"
+                                                        <ActionButton
+                                                            icon={<EditIcon/>}
                                                             onClick={() => handleEditButton(log)}
                                                         >
-                                                            <EditIcon sx={{mr: 1}}/>
                                                             {logs[props.lang].edit}
-                                                        </Fab>
+                                                        </ActionButton>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -326,10 +360,21 @@ export const LogsList = (props: Props) => {
                         })}
                         </tbody>
                     </table>
+                    {!props.tourId && loadingMore &&
+                        <div className="TableView__more"><CircularProgress size={24}/></div>}
+                    {!props.tourId && !loadingMore && data && totalItems > 0 && data.length >= totalItems &&
+                        <div className="TableView__more TableView__more--end">— {totalItems} —</div>}
                 </section>
             </main>
-            {!props.tourId &&
-                <TablePagination totalItems={totalItems} page={page} rowsPerPage={LOGS_PER_PAGE} setPage={setPage}/>}
-        </>
+    );
+
+    if (props.tourId) {
+        return tableContent;
+    }
+
+    return (
+        <div className="TableView">
+            {tableContent}
+        </div>
     );
 }

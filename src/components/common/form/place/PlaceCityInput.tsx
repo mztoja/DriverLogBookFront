@@ -1,10 +1,16 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {TextField} from "@mui/material";
 import { form } from "../../../../assets/txt/form";
 import '../Form.css';
 import {InputPropsTypes} from "../../../../types/InputPropsTypes";
 
 export const PlaceCityInput = (props:InputPropsTypes) => {
+
+    const [validation, setValidation] = useState<boolean>(false);
+
+    useEffect(() => {
+        setValidation(!((props.value.length <= 30) || (props.value === '')));
+    }, [props.value]);
 
     return (
         <TextField
@@ -17,6 +23,7 @@ export const PlaceCityInput = (props:InputPropsTypes) => {
             value={props.value}
             onChange={props.onChange}
             fullWidth
+            error={validation}
             autoComplete='off'
             size='small'
         />

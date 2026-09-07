@@ -1,0 +1,172 @@
+/* Menu górne (przebudowa layoutu).
+   Segment o wspólnym stylu (szerokość/zaokrąglenie z AppLayout.css), własny kolor.
+   Zawsze poziome, nie zawija się; gdy brak miejsca na etykiety – zmieniają się w ikony. */
+
+.AppHeader {
+    background-color: #1e1e1f;
+    color: #ffffff;
+    box-shadow: 0 0.15rem 0.4rem #0006;
+}
+
+/* Prefiks #AppLayout – wyższa swoistość niż reguła MUI .MuiToolbar-root { display:flex },
+   inaczej grid (a więc wyśrodkowanie strefami) w ogóle się nie włącza. */
+#AppLayout .AppHeader__toolbar {
+    min-height: 48px !important;
+    height: 48px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); /* równe strefy boczne → nav idealnie na środku */
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0.6rem;
+    padding-right: 0.25rem; /* ikony tuż przy prawej krawędzi panelu menu */
+}
+
+/* Marka + nazwa aktywnego widoku: "D.K. - Strona główna" */
+.AppHeader__brand {
+    grid-column: 1;
+    justify-self: start;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.AppHeader__brandTitle {
+    font-weight: bold;
+    color: #d87a19;
+    text-decoration: none;
+    flex: 0 0 auto;
+}
+
+.AppHeader__brandPage {
+    color: #ffffffb0;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ≥960px: sama marka „D.K." bez nazwy widoku (nazwa jest w podświetleniu nawigacji) */
+@media (min-width: 960px) {
+    .AppHeader__brandPage {
+        display: none;
+    }
+}
+
+/* <500px: chowamy całą markę (brand title + brand page) */
+@media (max-width: 499.98px) {
+    .AppHeader__brand {
+        display: none;
+    }
+}
+
+/* Nawigacja – wyśrodkowana w środkowej kolumnie; nie zawija się,
+   w ostateczności przewija w poziomie (ukryty pasek). */
+.AppHeader__nav {
+    grid-column: 2;
+    justify-self: center;
+    min-width: 0;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem; /* jak odstęp ikon po prawej (.AppHeader__actions) */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+
+.AppHeader__nav::-webkit-scrollbar {
+    display: none;
+}
+
+.AppHeader__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* jak ikony po prawej – odstęp daje gap na .AppHeader__nav */
+    border-radius: 0.6rem;
+    white-space: nowrap;
+    color: #4078a5; /* jak .Link (ikona wyloguj) */
+    forced-color-adjust: none;
+    transition: color 0.05s;
+}
+
+.AppHeader__linkBody {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* hover – podświetlenie jak przy wyloguj (jaśniejszy niebieski) */
+.AppHeader__link:hover {
+    color: #90caf9;
+}
+
+/* bieżąca strona – ten sam kolor co pojazdy/profil */
+.AppHeader__link--active {
+    color: #90caf9;
+}
+
+/* Domyślnie (wąsko) – same ikony. Od 960px – ikona + etykieta obok siebie. */
+.AppHeader__linkText {
+    display: none;
+}
+
+.AppHeader__linkIcon {
+    display: inline-flex;
+}
+
+@media (min-width: 960px) {
+    .AppHeader__linkText {
+        display: inline;
+    }
+    .AppHeader__linkBody {
+        gap: 0.35rem; /* odstęp ikona–etykieta */
+    }
+    .AppHeader__linkIcon {
+        font-size: 1.2rem; /* mniejsza ikona przy tekście */
+    }
+    .AppHeader__nav {
+        gap: 0.15rem;
+    }
+    .AppHeader__link {
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Grupa ikon po prawej. Kolory z .Link / .Link__Active (jak wyloguj).
+   Poniżej 960px trafiają tu też wszystkie ikony nawigacji (z Header.tsx). */
+.AppHeader__actions {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+.AppHeader__actions::-webkit-scrollbar {
+    display: none;
+}
+
+/* < 960px: brak środkowej sekcji, wszystkie ikony w jednej grupie po prawej */
+@media (max-width: 959.98px) {
+    #AppLayout .AppHeader__toolbar {
+        grid-template-columns: minmax(0, auto) 0 minmax(0, 1fr);
+    }
+    .AppHeader__nav {
+        display: none;
+    }
+}
+.AppHeader__actions a {
+    forced-color-adjust: none;
+}
+.AppHeader__actionIcon {
+    display: inline-flex;
+    align-items: center;
+}

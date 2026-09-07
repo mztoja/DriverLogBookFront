@@ -1,0 +1,103 @@
+/* Shell aplikacji (przebudowa layoutu).
+   Kolumna na całą wysokość okna; przewija się WYŁĄCZNIE #AppMain,
+   dzięki czemu strona jako całość nie ma głównego paska przewijania.
+
+   Wszystkie segmenty (menu / InfoBar / treść / stopka) mają JEDEN styl
+   – ta sama szerokość i zaokrąglenie – różnią się tylko kolorem.
+   Reguły z prefiksem #AppLayout / #AppMain mają wyższą swoistość niż style MUI. */
+
+#AppLayout {
+    --seg-width: calc(100% - 1rem); /* pełna szerokość ekranu, mały margines po bokach */
+    --seg-radius: 0.7rem;
+    --seg-pad: 0.4rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0;
+    box-sizing: border-box;
+    height: 100dvh;
+    height: 100vh; /* fallback dla przeglądarek bez dvh */
+    overflow: hidden;
+    background-color: #161521;
+}
+
+/* --- Menu górne ---
+   Kolory pod prefiksem #AppLayout, żeby wygrały z domyślnym tłem MUI <AppBar color="primary">. */
+#AppLayout > .AppLayout__Header {
+    flex: 0 0 auto;
+    width: var(--seg-width);
+    border-radius: var(--seg-radius);
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #1e1e1f;
+    background-image: none;
+    color: #ffffff;
+    box-shadow: 0 0.15rem 0.4rem #0006;
+}
+
+/* --- InfoBar (poza treścią, bezpośrednio w shellu) ---
+   Stała wysokość; przy zwężaniu okna pojawia się w nim scroll. */
+#AppLayout > .AppLayout__InfoBar {
+    flex: 0 0 auto;
+    width: var(--seg-width);
+    border-radius: var(--seg-radius);
+    box-sizing: border-box;
+    height: 76px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--seg-pad);
+    background-color: #464918;
+    transition: height 0.25s ease;
+}
+
+/* Na czas pokazywania fieldsetu ze szczegółami pojazdu – panel Info dużo wyższy. */
+#AppLayout > .AppLayout__InfoBar.AppLayout__InfoBar--expanded {
+    height: min(70vh, 460px);
+}
+
+/* --- Przezroczysty kontener segmentu treści (pełna szerokość, bez własnego scrolla) --- */
+#AppMain {
+    align-self: stretch;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- Segment treści (dawniej komponent <Content>) ---
+   Stała wysokość = cała dostępna przestrzeń; pasek przewijania jest WEWNĄTRZ panelu. */
+#AppMain > .AppMain__content {
+    width: var(--seg-width);
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: var(--seg-radius);
+    box-sizing: border-box;
+    padding: var(--seg-pad);
+    text-align: center;
+    background-color: #3f3d3d;
+    color: #b3b3b3;
+}
+
+#AppMain > .AppMain__content::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+#AppMain > .AppMain__content::-webkit-scrollbar-thumb {
+    border-radius: 0.5rem;
+    background-color: #00000066;
+}
+
+/* --- Stopka --- */
+#AppLayout > #Footer {
+    flex: 0 0 auto;
+    width: var(--seg-width);
+    border-radius: var(--seg-radius);
+    margin: 0;
+}

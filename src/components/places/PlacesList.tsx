@@ -1,7 +1,10 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {places} from "../../assets/txt/places";
 import {PlaceInterface, UserInterface} from "types";
-import {CircularProgress, Fab} from "@mui/material";
+import {CircularProgress} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
+import AddIcon from "@mui/icons-material/Add";
 import {form} from "../../assets/txt/form";
 import DetailsIcon from '@mui/icons-material/Details';
 import RoomIcon from '@mui/icons-material/Room';
@@ -10,6 +13,7 @@ import {CountrySelect} from "../common/form/CountrySelect";
 import {SearchInput} from "../common/form/SearchInput";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from '../../hooks/useApi';
+import {usePlaces} from "../../hooks/usePlaces";
 import {apiPaths} from "../../config/api";
 import {commons} from "../../assets/txt/commons";
 import {formatCountry} from "../../utils/formats/formatCountry";
@@ -17,20 +21,24 @@ import NavigationIcon from '@mui/icons-material/Navigation';
 import EditIcon from "@mui/icons-material/Edit";
 import {PlaceEdit} from "./PlaceEdit";
 import { formatText } from "../../utils/formats/formatText";
+import DirectionsIcon from '@mui/icons-material/Directions';
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 interface Props {
     userData: UserInterface;
-    refresh: boolean;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
-    setRefresh: Dispatch<SetStateAction<boolean>>;
+    showAddButton: boolean;
+    setShowAddPlace: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PlacesList = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {loading, fetchDataOld} = useApi();
+    const {fetchDataOld} = useApi();
+    const {places: data, loading, ensurePlaces} = usePlaces();
+    const navigate = useNavigate();
 
-    const [data, setData] = useState<PlaceInterface[] | null>(null);
     const [showData, setShowData] = useState<PlaceInterface[] | null>(null);
     const [filterType, setFilterType] = useState<string>('999');
     const [filterCountry, setFilterCountry] = useState<string>(props.userData.country);
@@ -48,18 +56,10 @@ export const PlacesList = (props: Props) => {
     };
 
     useEffect(() => {
-        (async () => {
-            const result = await fetchDataOld(apiPaths.getPlaces, 'GET');
-            if ((result && result.responseData) && (!result.responseData.dtc)) {
-                setData(result.responseData);
-            } else {
-                setAlert(places[props.userData.lang].apiError, 'error');
-            }
-        })();
-        // eslint-disable-next-line
-    }, [props.refresh]);
+        ensurePlaces();
+    }, [ensurePlaces]);
 
-    const markPlace = async (id: number, info: string) => {
+    const markPlace = async (id: number, info: string): Promise<void> => {
         const result = await fetchDataOld(apiPaths.markDepart, 'PATCH', {placeId: id});
         if (result && !result.success) {
             setAlert(commons[props.userData.lang].apiConnectionError, 'error');
@@ -75,6 +75,10 @@ export const PlacesList = (props: Props) => {
                 }
             }
         }
+    }
+
+    const openGoogleMaps = (co: string): void => {
+        window.open(`https://www.google.com/maps/search/?api=1&query=${co}`, '_blank', 'noopener,noreferrer');
     }
 
     useEffect(() => {
@@ -117,33 +121,40 @@ export const PlacesList = (props: Props) => {
                 }
             }
         }
-    }, [props.refresh, filterType, data, filterCountry, filterSearch]);
+    }, [filterType, data, filterCountry, filterSearch]);
 
-    if (loading) {
+    if (!data && loading) {
         return <CircularProgress/>
+    }
+    if (!data) {
+        return <>{places[props.userData.lang].apiError}</>
     }
 
     if (data) {
         return (
-            <>
-                <div className="Table__Filter">
-                    <div className="DivInline">
-                        <PlaceTypeSelect lang={props.userData.lang} value={filterType}
-                                         onChange={e => setFilterType(e)} displayAll={true}/>
-                    </div>
-                    <div className="DivInline">
-                        <CountrySelect lang={props.userData.lang} value={filterCountry}
-                                       onChange={e => setFilterCountry(e)}/>
-                    </div>
-                    <div className="DivInline">
-                        <SearchInput lang={props.userData.lang} value={filterSearch}
-                                     onChange={e => setFilterSearch(e)}/>
-                    </div>
-                    <div className="DivClear"/>
-                </div>
+            <div className="TableView">
                 <main className="Table">
                     <section className="Table__Header">
-                        {places[props.userData.lang].tableHeader}
+                        <div className="Table__HeaderRow">
+                            <span className="Table__Title">{places[props.userData.lang].tableHeader}</span>
+                            <div className="Table__HeaderSearch">
+                                <div className="DivInline">
+                                    <PlaceTypeSelect lang={props.userData.lang} value={filterType}
+                                                     onChange={e => setFilterType(e)} displayAll={true}/>
+                                </div>
+                                <div className="DivInline">
+                                    <CountrySelect lang={props.userData.lang} value={filterCountry}
+                                                   onChange={e => setFilterCountry(e)}/>
+                                </div>
+                                <div className="DivInline">
+                                    <SearchInput lang={props.userData.lang} value={filterSearch}
+                                                 onChange={e => setFilterSearch(e)}/>
+                                </div>
+                                <div className="DivInline">
+                                    <ActionButton round ariaLabel="add" icon={<AddIcon/>} onClick={() => props.setShowAddPlace(true)}/>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                     <section className="Table__Body">
                         <table>
@@ -161,7 +172,6 @@ export const PlacesList = (props: Props) => {
                             {chosenPlace && <PlaceEdit
                                 lang={props.userData.lang}
                                 place={chosenPlace}
-                                setRefresh={props.setRefresh}
                                 setPlace={setChosenPlace}
                                 setAlert={setAlert}
                             />}
@@ -217,19 +227,42 @@ export const PlacesList = (props: Props) => {
                                                             )}
                                                             <br/>
                                                             <div>
-                                                                <Fab variant="extended" size="small" color="primary"
-                                                                     onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
-                                                                    <NavigationIcon sx={{mr: 1}}/>
+                                                                <ActionButton
+                                                                    icon={<DirectionsIcon/>}
+                                                                    onClick={() => openGoogleMaps(place.street + ' ' + place.code + ' ' + place.city)}>
+                                                                    {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].directions})
+                                                                </ActionButton>
+                                                            </div>
+                                                            {Number(place.lat) > 0.001 && <div>
+                                                                <ActionButton
+                                                                    icon={<LocationSearchingIcon/>}
+                                                                    onClick={() => openGoogleMaps(place.lat + ', ' + place.lon)}>
+                                                                    {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].gps})
+                                                                </ActionButton>
+                                                            </div>}
+                                                            <br />
+                                                            <div>
+                                                                <ActionButton
+                                                                    icon={<NavigationIcon/>}
+                                                                    onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
                                                                     {places[props.userData.lang].navigateSwitchLabel}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                             <br/>
                                                             <div>
-                                                                <Fab variant="extended" size="small" color="primary"
-                                                                     onClick={() => setChosenPlace(place)}>
-                                                                    <EditIcon sx={{mr: 1}}/>
+                                                                <ActionButton
+                                                                    icon={<EditIcon/>}
+                                                                    onClick={() => setChosenPlace(place)}>
                                                                     {places[props.userData.lang].edit}
-                                                                </Fab>
+                                                                </ActionButton>
+                                                            </div>
+                                                            <br/>
+                                                            <div>
+                                                                <ActionButton
+                                                                    icon={<AssignmentIcon/>}
+                                                                    onClick={() => navigate('/logs/' + place.id)}>
+                                                                    {places[props.userData.lang].showActivities}
+                                                                </ActionButton>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -243,7 +276,7 @@ export const PlacesList = (props: Props) => {
                         </table>
                     </section>
                 </main>
-            </>
+            </div>
         )
     }
 

@@ -5,6 +5,7 @@ import {userLangEnum} from "types";
 import {SetAlertType} from "../context/AlertContext";
 import {vehicles} from "../assets/txt/vehicles";
 import {tours} from "../assets/txt/tours";
+import {places} from "../assets/txt/places";
 
 interface HandleDtcErrors {
     message: string;
@@ -166,6 +167,26 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
         case 'city':
             return {
                 message: login[lang].registerCompanyCityNotExist,
+                type: 'warning',
+            }
+        case 'placeNameTooLong':
+            return {
+                message: places[lang].placeNameTooLong,
+                type: 'warning',
+            }
+        case 'placeStreetTooLong':
+            return {
+                message: places[lang].placeStreetTooLong,
+                type: 'warning',
+            }
+        case 'placeCodeTooLong':
+            return {
+                message: places[lang].placeCodeTooLong,
+                type: 'warning',
+            }
+        case 'placeCityTooLong':
+            return {
+                message: places[lang].placeCityTooLong,
                 type: 'warning',
             }
         case 'fuelCombustion':

@@ -15,7 +15,6 @@ import {PlaceStreetInput} from "../common/form/place/PlaceStreetInput";
 import {PlacePostCodeInput} from "../common/form/place/PlacePostCodeInput";
 import {PlaceCityInput} from "../common/form/place/PlaceCityInput";
 import {CountrySelect} from "../common/form/CountrySelect";
-import {DefaultCustomerInput} from "../common/form/profile/DefaultCustomerInput";
 import {BidTypeSelect} from "../common/form/profile/BidTypeSelect";
 import {AmountInput} from "../common/form/finance/AmountInput";
 import {FuelConsuptionTypeSelect} from "../common/form/profile/FuelConsuptionTypeSelect";
@@ -46,7 +45,6 @@ export const RegisterForm = (props: Props) => {
         companyPostCode: '',
         companyCity: '',
         country: '',
-        defaultCustomer: '',
         bidType: '',
         bid: '',
         currency: '',
@@ -141,11 +139,6 @@ export const RegisterForm = (props: Props) => {
                 <div>
                     <LastNameInput lang={props.lang} value={registerForm.lastName}
                                    onChange={e => updateForm('lastName', e.target.value)}/>
-                </div>
-                <br/>
-                <div>
-                    <DefaultCustomerInput lang={props.lang} value={registerForm.defaultCustomer}
-                                          onChange={e => updateForm('defaultCustomer', e.target.value)}/>
                 </div>
                 <br/>
                 <div>

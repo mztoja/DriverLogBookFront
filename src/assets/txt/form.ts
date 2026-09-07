@@ -18,10 +18,10 @@ interface Form {
     placeType5: string;
     placeType6: string;
     placeType7: string;
+    placeType8: string;
     placeTypeAll: string;
     favorite: string;
     country: string;
-    defaultCustomer: string;
     bidType: string;
     bidType0: string;
     bidType1: string;
@@ -46,8 +46,10 @@ interface Form {
     odometer: string;
     distance: string;
     place: string;
+    placeHelper: string;
     switchToPlace: string;
     switchToPlaceId: string;
+    placeIdSelected: string;
     driveTime: string;
     driveTime2: string;
     driveTimeHelper: string;
@@ -75,6 +77,11 @@ interface Form {
     expenseUnitPrice: string;
     expenseItemDescription: string;
     expenseForeignCurrency: string;
+    expenseFavSave: string;
+    expenseFavLoad: string;
+    expenseFavTitle: string;
+    expenseFavDelete: string;
+    expenseFavEmpty: string;
     serviceEntry: string;
     odometerHelperDiff: string;
 }
@@ -101,10 +108,10 @@ export const form: Form[] =
         placeType5: 'Parking',
         placeType6: 'Workshop/Dealer',
         placeType7: 'Customs',
+        placeType8: 'Fuel stations',
         placeTypeAll: 'All',
         favorite: 'Favourite',
         country: 'Country',
-        defaultCustomer: 'Default Customer',
         bidType: 'type of remuneration',
         bidType0: 'not specified',
         bidType1: 'per day',
@@ -129,8 +136,10 @@ export const form: Form[] =
         odometer: 'Odometer',
         distance: 'Distance',
         place: 'Place',
+        placeHelper: 'Max 30 characters',
         switchToPlace: 'Change to manual enter',
         switchToPlaceId: 'Switch to selection from the address list',
+        placeIdSelected: 'A place from the address list is selected',
         driveTime: 'Drive time',
         driveTime2: '2nd driver drive time',
         driveTimeHelper: 'Type your driving time from tacho throughout the day.',
@@ -158,6 +167,11 @@ export const form: Form[] =
         expenseQuantity: 'Quantity',
         expenseUnitPrice: 'Unit Price',
         expenseForeignCurrency: 'Foreign currency payment',
+        expenseFavSave: 'Save to favourites',
+        expenseFavLoad: 'Load from favourites',
+        expenseFavTitle: 'Expense favourites',
+        expenseFavDelete: 'Delete this favourite',
+        expenseFavEmpty: 'No saved favourites yet',
         serviceEntry: 'Description of repair/action',
         odometerHelperDiff: 'Odometer from last activity',
     },
@@ -181,10 +195,10 @@ export const form: Form[] =
             placeType5: 'Parking',
             placeType6: 'Warsztat/Serwis',
             placeType7: 'Urząd/Agencja celna',
+            placeType8: 'Stacje paliw',
             placeTypeAll: 'Wszystkie',
             favorite: 'Ulubione',
             country: 'Kraj',
-            defaultCustomer: 'Domyślny zleceniodawca',
             bidType: 'Rodzaj wynagrodzenia',
             bidType0: 'nie wybrano',
             bidType1: 'dniówka',
@@ -209,8 +223,10 @@ export const form: Form[] =
             odometer: 'Stan licznika',
             distance: 'Odległość',
             place: 'Miejsce',
+            placeHelper: 'Maksymalnie 30 znaków',
             switchToPlace: 'Przełącz na wpis manualny',
             switchToPlaceId: 'Przełącz na wybór z listy adresowej',
+            placeIdSelected: 'Wybrano miejsce z listy adresowej',
             driveTime: 'Czas jazdy',
             driveTime2: 'Czas jazdy 2 kierowcy',
             driveTimeHelper: 'Spisz swój czas jazdy z tachografu z całego dnia.',
@@ -238,6 +254,11 @@ export const form: Form[] =
             expenseQuantity: 'Ilość',
             expenseItemDescription: 'Pozycja (opis wydatku)',
             expenseForeignCurrency: 'Płatność w obcej walucie',
+            expenseFavSave: 'Zapisz w ulubionych',
+            expenseFavLoad: 'Wczytaj z ulubionych',
+            expenseFavTitle: 'Ulubione wydatki',
+            expenseFavDelete: 'Usuń tę pozycję z ulubionych',
+            expenseFavEmpty: 'Brak zapisanych ulubionych',
             serviceEntry: 'Opis naprawy / czynności',
             odometerHelperDiff: 'Przebieg od ostatniej czynności',
         }];

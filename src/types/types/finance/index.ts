@@ -6,3 +6,6 @@ export * from './ExpenseEnum';
 export * from './FinanceRefuelValueRes';
 export * from './FinanceListResponse';
 export * from './FinanceEditData';
+export * from './ExpenseFavoriteInterface';
+export * from './AddExpenseFavoriteData';
+export * from './DeleteExpenseFavoriteData';

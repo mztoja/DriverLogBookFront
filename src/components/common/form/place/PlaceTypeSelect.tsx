@@ -38,6 +38,7 @@ export const PlaceTypeSelect = (props: Props) => {
                 <MenuItem value={5}>{form[props.lang].placeType5}</MenuItem>
                 <MenuItem value={6}>{form[props.lang].placeType6}</MenuItem>
                 <MenuItem value={7}>{form[props.lang].placeType7}</MenuItem>
+                <MenuItem value={8}>{form[props.lang].placeType8}</MenuItem>
             </Select>
         </FormControl>);
 }

@@ -12,12 +12,14 @@ interface Commons {
     windowConfirmTitle: string;
     windowConfirmAgree: string;
     windowConfirmCancel: string;
+    yes: string;
+    no: string;
 }
 
 export const commons:Commons[] = [{
     title: "LogBook",
     subTitle: "Driver's Log-Book",
-    footer: "v 3.1.2",
+    footer: "v 3.4.1",
     notFound: "Content not found or page is not ready yet",
     pl: 'Polish',
     en: 'English',
@@ -28,10 +30,12 @@ export const commons:Commons[] = [{
     windowConfirmCancel: 'Cancel',
     windowConfirmAgree: 'Confirm',
     windowConfirmTitle: 'Warning!',
+    yes: 'Yes',
+    no: 'No',
 },{
     title: "D.K.",
     subTitle: "Dziennik Kierowcy",
-    footer: "v 3.1.2",
+    footer: "v 3.4.1",
     notFound: "Nie znaleziono zawartości lub strona nie jest jeszcze ukończona",
     pl: 'Polski',
     en: 'Angielski',
@@ -42,4 +46,6 @@ export const commons:Commons[] = [{
     windowConfirmCancel: 'Anuluj',
     windowConfirmAgree: 'Zatwierdź',
     windowConfirmTitle: 'Ostrzeżenie!',
+    yes: 'Tak',
+    no: 'Nie',
 }];

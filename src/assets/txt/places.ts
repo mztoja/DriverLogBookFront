@@ -10,6 +10,10 @@ interface Places {
     placeNameNotExist: string;
     placeCityNotExist: string;
     countryNotExist: string;
+    placeNameTooLong: string;
+    placeStreetTooLong: string;
+    placeCodeTooLong: string;
+    placeCityTooLong: string;
     tableHeader: string;
     thLp: string;
     thType: string;
@@ -21,7 +25,11 @@ interface Places {
     markedPlaceError: string;
     collapse: string;
     edit: string;
+    showActivities: string;
     editSuccessInfo: string;
+    googleMapsLabel: string;
+    directions: string;
+    gps: string;
 }
 
 
@@ -38,6 +46,10 @@ export const places: Places[] =
         placeNameNotExist: 'Please enter name of the place.',
         placeCityNotExist: 'Please enter city of the place.',
         countryNotExist: 'Please select country.',
+        placeNameTooLong: 'Company name is too long (max 30 characters).',
+        placeStreetTooLong: 'The street is too long (max 50 characters).',
+        placeCodeTooLong: 'The post code is too long (max 10 characters).',
+        placeCityTooLong: 'The town/city is too long (max 30 characters).',
         tableHeader: 'Address List',
         thLp: 'No.',
         thType: 'Group',
@@ -49,7 +61,11 @@ export const places: Places[] =
         markedPlaceError: 'Something went wrong with the place marking :( Check your connection or try again later.',
         collapse: 'Collapse',
         edit: 'Edit',
+        showActivities: 'Activities of this place',
         editSuccessInfo: 'The chosen place has been successfully edited.',
+        googleMapsLabel: 'Open in Google Maps',
+        directions: 'Directions',
+        gps: 'GPS',
     },
         {//pl
             addPlace: `Dodaj nowy adres`,
@@ -63,6 +79,10 @@ export const places: Places[] =
             placeNameNotExist: 'Nie podano nazwy dodawanego miejsca.',
             placeCityNotExist: 'Nie podano miejscowości.',
             countryNotExist: 'Nie podano kraju.',
+            placeNameTooLong: 'Nazwa firmy jest za długa (maks. 30 znaków).',
+            placeStreetTooLong: 'Ulica jest za długa (maks. 50 znaków).',
+            placeCodeTooLong: 'Kod pocztowy jest za długi (maks. 10 znaków).',
+            placeCityTooLong: 'Miejscowość jest za długa (maks. 30 znaków).',
             tableHeader: 'Lista adresowa',
             thLp: 'Lp.',
             thType: 'Grupa',
@@ -74,5 +94,9 @@ export const places: Places[] =
             markedPlaceError: 'Coś poszło nie tak z oznaczeniem miejsca :( Problem z połączeniem.',
             collapse: 'Zwiń',
             edit: 'Edytuj',
+            showActivities: 'Czynności tego miejsca',
             editSuccessInfo: 'Wybrane miejsce zostało edytowane pomyślnie.',
+            googleMapsLabel: 'Otwórz w Google Maps',
+            directions: 'Adres',
+            gps: 'GPS',
         }];

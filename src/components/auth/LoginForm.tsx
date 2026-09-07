@@ -23,12 +23,17 @@ export const LoginForm = (props: Props) => {
     const location = useLocation();
     const {loading, fetchDataOld} = useApi();
 
-    // show alert after register success
+    // show alert after register success / after session expiry
     useEffect(() => {
         const alertSuccess = DownloadFromLocalStorage('alertSuccess');
         if (alertSuccess != null) {
             setAlert(alertSuccess, 'success');
             DeleteFromLocalStorage('alertSuccess');
+        }
+        const alertError = DownloadFromLocalStorage('alertError');
+        if (alertError != null) {
+            setAlert(alertError, 'error');
+            DeleteFromLocalStorage('alertError');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);

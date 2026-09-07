@@ -1,94 +1,109 @@
-import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from 'react';
-// import ReactDOMServer from 'react-dom/server';
-import { home } from "../../assets/txt/home";
-import { UserInterface, userLangEnum } from 'types';
-import SaveAsIcon from '@mui/icons-material/SaveAs';
-import { Fab } from "@mui/material";
-import { useApi } from "../../hooks/useApi";
-import { apiPaths } from '../../config/api';
-import { formatText } from '../../utils/formats/formatText';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
+import {Link} from "react-router-dom";
+import {home} from "../../assets/txt/home";
+import {UserNoteInterface, userLangEnum} from 'types';
+import {useApi} from "../../hooks/useApi";
+import {apiPaths} from '../../config/api';
+import {NotesHistory} from './NotesHistory';
 
 interface Props {
-    userData: UserInterface;
-    setUserData: Dispatch<SetStateAction<UserInterface | null>>;
     lang: userLangEnum;
 }
 
 export const NotesField = (props: Props) => {
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-    const [text, setText] = useState<string | null>(props.userData.notes);
-    const [formatedText, setFormatedText] = useState<string>('');
+    const {fetchData} = useApi();
+
+    const [text, setText] = useState<string>('');
+    const [history, setHistory] = useState<UserNoteInterface[]>([]);
     const [synchronized, setSynchronized] = useState<boolean>(true);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const savedTextRef = useRef<string>('');
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const { fetchData } = useApi();
 
-    const handleClick = (): void => {
-        if (!isEditing) {
-            setIsEditing(true);
+    // Autopowiększanie textarea. Reset height:'auto' potrafi na chwilę skrócić stronę,
+    // przez co kontener treści (.AppMain__content) przewija się – zapamiętujemy i przywracamy scrollTop.
+    const autoGrow = useCallback(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        const scroller = el.closest<HTMLElement>('.AppMain__content, #AppMain');
+        const savedScroll = scroller ? scroller.scrollTop : null;
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+        if (scroller && savedScroll !== null) {
+            scroller.scrollTop = savedScroll;
         }
-    }
+    }, []);
+
     const handleSave = (): void => {
-        setIsEditing(false);
         setSynchronized(false);
-        const sendData = { notes: text };
-        fetchData<UserInterface>(apiPaths.editNotes, { method: 'PATCH', sendData }).then((res) => {
-            if (res.success && res.responseData) {
-                props.setUserData({ ...props.userData, notes: res.responseData.notes });
+        const value = text;
+        fetchData<UserNoteInterface[]>(apiPaths.saveUserNote, {method: 'POST', sendData: {notes: value}}).then((res) => {
+            if (res.success && Array.isArray(res.responseData)) {
+                setHistory(res.responseData);
+                savedTextRef.current = value;
                 setSynchronized(true);
-            };
+            }
         });
-    }
+    };
 
-    useEffect(() => {
-        handleTextareaChange();
-    }, [isEditing]);
-
-    useEffect(() => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-        }
-    }, [textareaRef]);
-
-    useEffect(() => {
-        if (text) {
-            setFormatedText(formatText(text));
-        } else {
-            setFormatedText('');
-        }
-    }, [text]);
-
-    const handleTextareaChange = () => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    const handleBlur = (): void => {
+        if (text !== savedTextRef.current) {
+            handleSave();
         }
     };
 
+    useEffect(() => {
+        fetchData<UserNoteInterface[]>(apiPaths.getUserNotes).then((res) => {
+            if (Array.isArray(res.responseData)) {
+                setHistory(res.responseData);
+                const current = res.responseData[0]?.notes ?? '';
+                setText(current);
+                savedTextRef.current = current;
+            }
+        });
+        // eslint-disable-next-line
+    }, []);
+
+    // Wysokość liczymy PO commitcie nowej wartości do DOM – inaczej scrollHeight
+    // mierzy jeszcze pustą textarea (widoczne na produkcji: bez StrictMode nie ma
+    // drugiego przebiegu efektu, który przypadkiem "poprawiał" pomiar w devie).
+    useEffect(() => {
+        autoGrow();
+    }, [text, autoGrow]);
+
+    useEffect(() => {
+        window.addEventListener('resize', autoGrow);
+        return () => window.removeEventListener('resize', autoGrow);
+    }, [autoGrow]);
 
     return (
-        <fieldset id={synchronized ? 'Notes' : 'NotesError'} onClick={handleClick}>
+        <fieldset id={synchronized ? 'Notes' : 'NotesError'}>
             <legend>
                 {home[props.lang].notes}
             </legend>
-            {
-                isEditing
-                    ?
-                    <>
-                        <textarea
-                            className='transparent-textarea'
-                            value={text ? text : ''}
-                            onChange={(e) => {
-                                setText(e.target.value);
-                                handleTextareaChange();
-                            }}
-                            autoFocus
-                            ref={textareaRef}
-                        />
-                        <center><Fab onClick={handleSave} color="primary" aria-label="save"><SaveAsIcon /></Fab></center>
-                    </>
-                    :
-                    <div dangerouslySetInnerHTML={{ __html: formatedText }} />
+            <textarea
+                className='transparent-textarea'
+                value={text}
+                onChange={(e) => {
+                    setText(e.target.value);
+                    setSynchronized(false);
+                }}
+                onBlur={handleBlur}
+                autoFocus
+                ref={textareaRef}
+            />
+            <div className="center">
+                <Link to="" className="Link" onClick={() => setShowHistory(true)}>
+                    {home[props.lang].notesHistory}
+                </Link>
+            </div>
+            {showHistory &&
+                <NotesHistory
+                    lang={props.lang}
+                    history={history}
+                    open={showHistory}
+                    setOpen={setShowHistory}
+                />
             }
         </fieldset>
     );

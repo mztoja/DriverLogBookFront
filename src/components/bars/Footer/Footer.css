@@ -1,8 +1,14 @@
+/* Segment stopki – ten sam styl co pozostałe segmenty, inny kolor,
+   możliwie niski (mała czcionka, mały padding pionowy). */
 #Footer {
-    background-color: #1e1e1f;
-    margin: 0.5rem auto;
     width: 90vw;
+    box-sizing: border-box;
+    margin: 0.4rem auto;
+    padding: 0.15rem 0.4rem;
+    background-color: #1e1e1f;
     color: #d87a19;
-    padding: 0.4rem;
     border-radius: 0.7rem;
+    font-size: 11px;
+    line-height: 1.4;
+    text-align: center;
 }

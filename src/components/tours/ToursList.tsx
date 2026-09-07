@@ -3,7 +3,8 @@ import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {apiPaths} from "../../config/api";
 import {useApi} from "../../hooks/useApi";
 import {useAlert} from "../../hooks/useAlert";
-import {CircularProgress, Fab, Tooltip} from "@mui/material";
+import {CircularProgress, Tooltip} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {tours} from "../../assets/txt/tours";
 import {formatDate} from "../../utils/formats/formatDate";
 import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
@@ -90,12 +91,11 @@ export const ToursList = (props: Props) => {
         // eslint-disable-next-line
     }, [props.refresh, props.monthlySettlement]);
 
-    if (loading) {
+    if (loading && data.length === 0) {
         return <CircularProgress/>
     }
 
-    return (
-        <>
+    const tableContent = (
             <main className="Table">
                 <section className="Table__Header">
                     {props.monthlySettlement
@@ -376,21 +376,17 @@ export const ToursList = (props: Props) => {
                                                         </>
                                                     }
                                                     <br/><br/>
-                                                    <Fab variant="extended" size="small" color="primary" onClick={() => handleDetails(tour.id)}>
-                                                        <InfoIcon sx={{mr: 1}}/>
+                                                    <ActionButton icon={<InfoIcon/>} onClick={() => handleDetails(tour.id)}>
                                                         {tours[props.lang].details}
-                                                    </Fab>
+                                                    </ActionButton>
                                                     <br/><br/>
                                                     <div>
-                                                        <Fab
-                                                            variant="extended"
-                                                            size="small"
-                                                            color="primary"
+                                                        <ActionButton
+                                                            icon={<EditIcon/>}
                                                             onClick={() => setEditTourData(tour)}
                                                         >
-                                                            <EditIcon sx={{mr: 1}}/>
                                                             {tours[props.lang].edit}
-                                                        </Fab>
+                                                        </ActionButton>
                                                     </div><br/>
                                                 </td>
                                             </tr>
@@ -403,15 +399,20 @@ export const ToursList = (props: Props) => {
                     </table>
                 </section>
             </main>
-            {!props.monthlySettlement &&
-                <div>
-                    <br/>
-                    <Fab variant="extended" size="small" color="primary" onClick={() => setShowSettlementWindow(true)}>
-                        <AssignmentIcon sx={{mr: 1}}/>
-                        {tours[props.lang].settle}
-                    </Fab>
-                </div>
-            }
-        </>
+    );
+
+    if (props.monthlySettlement) {
+        return tableContent;
+    }
+
+    return (
+        <div className="TableView">
+            {tableContent}
+            <div className="TableView__toolbar">
+                <ActionButton icon={<AssignmentIcon/>} onClick={() => setShowSettlementWindow(true)}>
+                    {tours[props.lang].settle}
+                </ActionButton>
+            </div>
+        </div>
     );
 }

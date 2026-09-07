@@ -15,7 +15,6 @@ export interface UserInterface {
   firstName: string;
   lastName: string;
   companyId: number;
-  customer: string;
   bidType: userBidTypeEnum;
   bid: number;
   currency: string;
@@ -24,6 +23,5 @@ export interface UserInterface {
   fuelConType: userFuelContypeEnum;
   fuelConDisp: userFuelConDispEnum;
   country: string;
-  notes: string | null;
   tourGenerator: string;
 }

@@ -6,22 +6,24 @@ import {TextField} from "@mui/material";
 interface Props {
     label: string
     value: string;
-    onChange: (e: any) => void;
+    onChange: (e: string) => void;
 }
 
 export const PlaceGps = (props: Props) => {
 
     const [validation, setValidation] = useState<boolean>(false);
-    const [value, setValue] = useState<string>(props.value);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        props.onChange(e.target.value.replace(',', '.').replace(/[^0-9.,-]/g, ''));
+    }
+
     useEffect(() => {
-        const newValue = props.value;
-        setValue(newValue.replace(',', '.'));
-        if ((value.length < 11) || (value === '')) {
+        if ((props.value.length < 9) || (props.value === '')) {
             setValidation(false);
         } else {
             setValidation(true);
         }
-    }, [props.value, value]);
+    }, [props.value]);
 
     return (
         <TextField
@@ -30,8 +32,8 @@ export const PlaceGps = (props: Props) => {
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput'}}
             type="text"
-            value={value}
-            onChange={props.onChange}
+            value={props.value}
+            onChange={handleChange}
             fullWidth
             error={validation}
             autoComplete='off'

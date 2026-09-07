@@ -1,0 +1,104 @@
+/* Wspólny przycisk akcji – zastępuje MUI <Fab>. */
+
+.ActionBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid #ffffff26;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffffff14, #ffffff08);
+    color: #dbe1ff;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.ActionBtn svg {
+    font-size: 1.1rem;
+    opacity: 0.85;
+}
+
+.ActionBtn:hover {
+    background: linear-gradient(180deg, #ffffff24, #ffffff12);
+    border-color: #90caf9;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 0.35rem 0.8rem #00000040;
+}
+
+.ActionBtn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.ActionBtn:focus-visible {
+    outline: 2px solid #90caf9;
+    outline-offset: 2px;
+}
+
+.ActionBtn:disabled {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- large (główna akcja formularza) --- */
+.ActionBtn--large {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+}
+
+.ActionBtn--large svg {
+    font-size: 1.25rem;
+}
+
+/* --- akcent (mocna akcja, np. „Generuj rozliczenie") --- */
+.ActionBtn--accent {
+    border-color: #2f6bb3;
+    background: linear-gradient(180deg, #f0a91e, #d8890f);
+    color: #221600;
+}
+
+.ActionBtn--accent svg {
+    opacity: 1;
+}
+
+.ActionBtn--accent:hover {
+    background: linear-gradient(180deg, #ffc24d, #eea01f);
+    border-color: #ffd27a;
+    color: #221600;
+}
+
+/* --- danger (usuwanie) --- */
+.ActionBtn--danger {
+    border-color: #9b3b3b;
+    background: linear-gradient(180deg, #ffffff14, #ffffff08);
+    color: #ffb4b4;
+}
+
+.ActionBtn--danger:hover {
+    background: linear-gradient(180deg, #b23c3c, #8f2f2f);
+    border-color: #ff9d9d;
+    color: #ffffff;
+}
+
+/* --- round (tylko ikona) --- */
+.ActionBtn--round {
+    padding: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 auto;
+}
+
+.ActionBtn--round svg {
+    font-size: 1.3rem;
+    opacity: 1;
+}

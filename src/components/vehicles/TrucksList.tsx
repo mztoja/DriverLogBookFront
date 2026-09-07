@@ -4,7 +4,8 @@ import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import {vehicles} from "../../assets/txt/vehicles";
-import {CircularProgress, Fab} from "@mui/material";
+import {CircularProgress} from "@mui/material";
+import {ActionButton} from "../common/ActionButton";
 import {TruckEdit} from "./TruckEdit";
 import {formatWeight} from "../../utils/formats/formatWeight";
 import {formatShortDate} from "../../utils/formats/formatShortDate";
@@ -24,6 +25,7 @@ interface Props {
     setRefresh: Dispatch<SetStateAction<boolean>>;
     tourData: TourInterface | null;
     companyId: number | null;
+    onWrongType?: () => void;
 }
 
 export const TrucksList = (props: Props) => {
@@ -67,19 +69,28 @@ export const TrucksList = (props: Props) => {
     useEffect(() => {
         if (showVehicleId) {
             setExpandedRow(Number(showVehicleId));
+            // głęboki link do pojazdu, którego nie ma na tej liście → przełącz zakładkę
+            if (data && !data.some(v => v.id === Number(showVehicleId))) {
+                props.onWrongType && props.onWrongType();
+            }
         }
-    }, [showVehicleId]);
+        // eslint-disable-next-line
+    }, [showVehicleId, data]);
 
     useLayoutEffect(() => {
         trRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'});
         // eslint-disable-next-line
     }, [trRef.current, showVehicleId]);
 
-    if (loading) return <CircularProgress/>;
+    if (loading && !data) return <CircularProgress/>;
 
     if (data) {
+        if (vehicleIdService) {
+            return <ServiceList lang={props.userData.lang} vehicleId={vehicleIdService}
+                                setVehicleId={setVehicleIdService}/>;
+        }
         return (
-            <>
+            <div className="TableView">
                 <main className="Table">
                     <section className="Table__Header">
                         {vehicles[props.userData.lang].trucksTableHeader}
@@ -233,27 +244,21 @@ export const TrucksList = (props: Props) => {
                                                                 <div dangerouslySetInnerHTML={{ __html: formatText(vehicle.notes) }} />
                                                             </>}<br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<HandymanIcon/>}
                                                                     onClick={() => setVehicleIdService(vehicle.id)}
                                                                 >
-                                                                    <HandymanIcon sx={{mr: 1}}/>
                                                                     {vehicles[props.userData.lang].showServices}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                             <br/>
                                                             <div>
-                                                                <Fab
-                                                                    variant="extended"
-                                                                    size="small"
-                                                                    color="primary"
+                                                                <ActionButton
+                                                                    icon={<EditIcon/>}
                                                                     onClick={() => setChosenVehicle(vehicle)}
                                                                 >
-                                                                    <EditIcon sx={{mr: 1}}/>
                                                                     {vehicles[props.userData.lang].edit}
-                                                                </Fab>
+                                                                </ActionButton>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -267,14 +272,7 @@ export const TrucksList = (props: Props) => {
                         </table>
                     </section>
                 </main>
-                {
-                    vehicleIdService &&
-                    <>
-                        <br/>
-                        <ServiceList lang={props.userData.lang} vehicleId={vehicleIdService} setVehicleId={setVehicleIdService}/>
-                    </>
-                }
-            </>
+            </div>
         );
     }
     return <>{vehicles[props.userData.lang].apiTrucksError}</>
