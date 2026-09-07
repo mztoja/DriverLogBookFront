@@ -1,0 +1,19 @@
+# build/ NIE jest ignorowany - to jego kopiujemy do obrazu
+node_modules
+src
+public
+config-overrides.js
+tsconfig.json
+tsconfig.paths.json
+package.json
+package-lock.json
+README.md
+dist
+.git
+.gitignore
+.idea
+Dockerfile
+docker-compose.yml
+.env
+.env.*
+npm-debug.log
