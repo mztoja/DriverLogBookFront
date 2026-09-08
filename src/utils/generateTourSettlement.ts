@@ -56,7 +56,7 @@ export const generateTourSettlement = async (
         const title = tours[lang].generateTitle(data.routeNr);
         pdfDoc.setTitle(title);
         const pdfBytes = await pdfDoc.save();
-        const blob = new Blob([pdfBytes], {type: 'application/pdf'});
+        const blob = new Blob([pdfBytes as BlobPart], {type: 'application/pdf'});
         saveAs(blob, `${title}.pdf`);
     } catch (e) {
         console.log(e);

@@ -55,6 +55,11 @@ export const PlaceInput = (props: Props) => {
 
     const {places: placesList, loading, ensurePlaces} = usePlaces();
     const [inputValue, setInputValue] = useState<string>('');
+    // lokalny kraj — fallback dla wywołań, w których rodzic nie przechowuje kraju
+    // (np. wybór nadawcy/odbiorcy: countryValue='' + countryOnChange={()=>''}).
+    // props.countryValue (kontrolowany rodzic) ma pierwszeństwo, więc nie zmienia
+    // to zachowania formularzy, które kraj obsługują.
+    const [localCountry, setLocalCountry] = useState<string>('');
 
     useEffect(() => {
         ensurePlaces();
@@ -67,7 +72,7 @@ export const PlaceInput = (props: Props) => {
         // eslint-disable-next-line
     }, []);
 
-    const country = props.countryValue || props.defaultCountry;
+    const country = props.countryValue || localCountry || props.defaultCountry;
 
     const selectedPlace = useMemo<PlaceInterface | null>(() => {
         const id = Number(props.placeIdValue);
@@ -95,7 +100,8 @@ export const PlaceInput = (props: Props) => {
 
     // kraj podąża za wybranym miejscem
     useEffect(() => {
-        if (selectedPlace && selectedPlace.country !== props.countryValue) {
+        if (selectedPlace && selectedPlace.country !== country) {
+            setLocalCountry(selectedPlace.country);
             props.countryOnChange(selectedPlace.country);
         }
         // eslint-disable-next-line
@@ -176,6 +182,7 @@ export const PlaceInput = (props: Props) => {
             props.placeIdOnChange('0');
             props.placeOnChange('');
         }
+        setLocalCountry(next);
         props.countryOnChange(next);
     };
 
