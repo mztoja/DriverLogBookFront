@@ -19,7 +19,7 @@ interface Commons {
 export const commons:Commons[] = [{
     title: "LogBook",
     subTitle: "Driver's Log-Book",
-    footer: "v 3.4.1",
+    footer: "v 3.4.2",
     notFound: "Content not found or page is not ready yet",
     pl: 'Polish',
     en: 'English',
@@ -35,7 +35,7 @@ export const commons:Commons[] = [{
 },{
     title: "D.K.",
     subTitle: "Dziennik Kierowcy",
-    footer: "v 3.4.1",
+    footer: "v 3.4.2",
     notFound: "Nie znaleziono zawartości lub strona nie jest jeszcze ukończona",
     pl: 'Polski',
     en: 'Angielski',
