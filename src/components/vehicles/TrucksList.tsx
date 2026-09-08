@@ -193,7 +193,7 @@ export const TrucksList = (props: Props) => {
                                                         onMouseLeave={handleMouseLeave}
                                                         className=
                                                             {isHovered ||
-                                                            Number(showVehicleId) === expandedRow ? 'highlighted' : '' ||
+                                                            Number(showVehicleId) === expandedRow ||
                                                             vehicleIdService === expandedRow ? 'highlighted' : ''
                                                             }
                                                     >
@@ -234,7 +234,7 @@ export const TrucksList = (props: Props) => {
                                                         onMouseLeave={handleMouseLeave}
                                                         className=
                                                             {isHovered ||
-                                                            Number(showVehicleId) === expandedRow ? 'highlighted' : '' ||
+                                                            Number(showVehicleId) === expandedRow ||
                                                             vehicleIdService === expandedRow ? 'highlighted' : ''
                                                             }
                                                     >
