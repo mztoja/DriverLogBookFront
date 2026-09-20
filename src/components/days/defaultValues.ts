@@ -26,7 +26,6 @@ export const defaultValues = (day:DayInterface | null):DayEditData => ({
     distance: day?.distance ? day.distance.toString() : '0',
     driveTime: day?.driveTime ? day.driveTime : '',
     driveTime2: day?.driveTime2 ? day.driveTime2 : '',
-    workTime: day?.workTime ? day.workTime : '',
     fuelBurned: day?.fuelBurned ? day.fuelBurned.toString() : '0',
     doubleCrew: day?.doubleCrew ? 'true' : 'false',
 })

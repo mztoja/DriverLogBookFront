@@ -20,7 +20,6 @@ import {DistanceInput} from "../common/form/DistanceInput";
 import {OnOffSwitch} from "../common/form/OnOffSwitch";
 import {home} from "../../assets/txt/home";
 import {DayCardStateSelect} from "../common/form/day/DayCardStateSelect";
-import {LongTimeInput} from "../common/form/day/LongTimeInput";
 import {FuelInput} from "../common/form/FuelInput";
 import {CircularProgress} from "@mui/material";
 import {SubmitButton} from "../common/form/SubmitButton";
@@ -28,7 +27,6 @@ import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {defaultValues} from "./defaultValues";
 import {areFieldsEqual} from "./areFieldsEqual";
-import {subtractDatesToTime} from "../../utils/subtractDatesToTime";
 import {apiPaths} from "../../config/api";
 
 interface Props {
@@ -59,13 +57,6 @@ export const DaysEdit = (props: Props) => {
             setFormData((formData: DayEditData) => ({...formData, [key]: value}));
         }
     };
-
-    useEffect(() => {
-        if (!isNaN(Date.parse(formData.startData.date)) && !isNaN(Date.parse(formData.stopData.date))) {
-            updateForm('workTime', null, subtractDatesToTime(formData.stopData.date, formData.startData.date));
-        }
-        //eslint-disable-next-line
-    }, [formData.startData.date, formData.stopData.date]);
 
     useEffect(() => {
         if (Number(formData.startData.odometer) && Number(formData.stopData.odometer)) {
@@ -205,8 +196,7 @@ export const DaysEdit = (props: Props) => {
                     }
                     <br/><br/>
                     <div><DayCardStateSelect lang={props.lang} value={formData.cardState.toString()}
-                                             onChange={e => updateForm('cardState', null, e)}
-                                             disabled={props.day?.status === dayStatusEnum.finished}/></div>
+                                             onChange={e => updateForm('cardState', null, e)}/></div>
                     <br/>
                     <div><OnOffSwitch label={home[props.lang].doubleCrew} value={formData.doubleCrew}
                                       onChange={e => updateForm('doubleCrew', null, e)}/></div>
@@ -226,14 +216,6 @@ export const DaysEdit = (props: Props) => {
                                     </div>
                                 </>
                             }
-                            <br/>
-                            <div><LongTimeInput
-                                lang={props.lang}
-                                type='work'
-                                value={formData.workTime}
-                                onChange={e => updateForm('workTime', null, e)}
-                            />
-                            </div>
                             <br/>
                             <div><FuelInput
                                 type='combustion'

@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import {DaysEdit} from "./DaysEdit";
 import { formatText } from "../../utils/formats/formatText";
 import {calcBreakTime} from "../../utils/calcBreakTime";
+import {calcWorkTime} from "../../utils/calcWorkTime";
 
 interface Props {
     lang: userLangEnum;
@@ -200,7 +201,7 @@ export const DaysList = (props: Props) => {
                                                     ⊙ {day.doubleCrew ? formatTimeToTime(day.driveTime2) : days[props.lang].na}
                                                 </td>
                                                 <td>
-                                                    💼 {formatTimeToTime(day.workTime)}
+                                                    💼 {formatTimeToTime(calcWorkTime(day))}
                                                     <br/>
                                                     {breakTime !== null ?
                                                         <>⏸ {formatTimeToTime(breakTime)}</>
@@ -261,7 +262,7 @@ export const DaysList = (props: Props) => {
                                                         ⊙ {day.doubleCrew ? formatTimeToTime(day.driveTime2) : days[props.lang].na}
                                                     </td>
                                                     <td>
-                                                        💼 {formatTimeToTime(day.workTime)}
+                                                        💼 {formatTimeToTime(calcWorkTime(day))}
                                                         <br/>
                                                         {breakTime !== null ?
                                                             <>⏸ {formatTimeToTime(breakTime)}</>

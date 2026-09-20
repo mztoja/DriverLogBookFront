@@ -27,7 +27,7 @@ export const DayCardStateSelect = (props: Props) => {
         >
             <MenuItem value={dayCardStateEnum.notUsed}>{days[props.lang].dayCardStateSelect.notUsed}</MenuItem>
             <MenuItem value={dayCardStateEnum.inserted}>{days[props.lang].dayCardStateSelect.inserted}</MenuItem>
-            <MenuItem value={dayCardStateEnum.takenOut} disabled>{days[props.lang].dayCardStateSelect.takenOut}</MenuItem>
+            <MenuItem value={dayCardStateEnum.takenOut}>{days[props.lang].dayCardStateSelect.takenOut}</MenuItem>
         </Select>
     </FormControl>);
 }
