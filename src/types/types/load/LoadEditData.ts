@@ -2,6 +2,7 @@ import { LogEditData } from '../log';
 
 export interface LoadEditData {
   id: number;
+  loadNr: string;
   loadingLogData: LogEditData;
   unloadingLogData: LogEditData;
   vehicle: string;

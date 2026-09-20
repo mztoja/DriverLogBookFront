@@ -107,6 +107,7 @@ export const TourStart = (props:ActionsPropsTypes) => {
                 odometer: props.formData.odometer,
                 notes: home[props.lang].loadAddedBySystemNote,
                 action: home[props.lang].loadingAction,
+                loadNr: orig.loadNr.toString(),
                 vehicle: orig.vehicle,
                 senderId: orig.senderId.toString(),
                 receiverId: orig.receiverId.toString(),

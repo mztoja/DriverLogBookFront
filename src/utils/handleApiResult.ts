@@ -154,6 +154,11 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
                 message: home[lang].noWeight,
                 type: 'warning',
             }
+        case 'loadNr':
+            return {
+                message: home[lang].noLoadNr,
+                type: 'warning',
+            }
         case 'description':
             return {
                 message: home[lang].noDescription,

@@ -18,6 +18,7 @@ import {loadings} from "../../assets/txt/loadings";
 import {areFieldsEqual} from "./areFieldsEqual";
 import {home} from "../../assets/txt/home";
 import {LoadReferenceInput} from "../common/form/load/LoadReferenceInput";
+import {LoadNrInput} from "../common/form/load/LoadNrInput";
 import {LoadDescriptionInput} from "../common/form/load/LoadDescriptionInput";
 import {LoadWeightInput} from "../common/form/load/LoadWeightInput";
 import {LoadQuantityInput} from "../common/form/load/LoadQuantityInput";
@@ -199,6 +200,10 @@ export const LoadingEdit = (props: Props) => {
                         </div>
                     </fieldset>
                     <br/><br/>
+                    <div>
+                        <LoadNrInput lang={props.lang} value={formData.loadNr} onChange={e => updateForm('loadNr', null, e)}/>
+                    </div>
+                    <br/>
                     <div>
                         <RegistrationNrInput vehicle='vehicle' lang={props.lang} value={formData.vehicle} onChange={e => updateForm('vehicle', null, e)}/>
                     </div>

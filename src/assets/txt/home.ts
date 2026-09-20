@@ -72,6 +72,7 @@ interface Home {
     noVehicle: string;
     noWeight: string;
     noDescription: string;
+    noLoadNr: string;
     noLoadChosen: string;
     chosenLoadIsUnloaded: string;
     noLoadReceiver: string;
@@ -171,6 +172,7 @@ export const home:Home[] = [{
     noVehicle: 'You must select a loaded vehicle',
     noWeight: 'You must enter the weight of the load.',
     noDescription: 'You must enter the description of the load.',
+    noLoadNr: 'You must enter a valid load number.',
     noLoadChosen: 'Please choose the load.',
     chosenLoadIsUnloaded: 'The selected load is already unloaded.',
     noLoadReceiver: 'You cannot enter a receiver as unloading place because the selected load does not have any receiver.',
@@ -267,6 +269,7 @@ export const home:Home[] = [{
     noVehicle: 'Musisz wybrać załadowany pojazd.',
     noWeight: 'Musisz podać masę ładunku.',
     noDescription: 'Musisz podać opis towaru.',
+    noLoadNr: 'Musisz podać poprawny numer porządkowy ładunku.',
     noLoadChosen: 'Nie wybrano ładunku',
     chosenLoadIsUnloaded: 'Wybrany ładunek jest już rozładowany.',
     noLoadReceiver: 'Nie można wpisać odbiorcy gdyż wybrany ładunek go nie posiada.',
