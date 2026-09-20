@@ -1,4 +1,4 @@
-import {dayCardStateEnum, DayInterface, TourNumbersInterface, userLangEnum, DayListResponse} from "types";
+import {DayInterface, TourNumbersInterface, userLangEnum, DayListResponse} from "types";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react";
@@ -20,6 +20,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import EditIcon from "@mui/icons-material/Edit";
 import {DaysEdit} from "./DaysEdit";
 import { formatText } from "../../utils/formats/formatText";
+import {calcBreakTime} from "../../utils/calcBreakTime";
 
 interface Props {
     lang: userLangEnum;
@@ -42,6 +43,14 @@ export const DaysList = (props: Props) => {
     const [refresh, setRefresh] = useState<boolean>(false);
     const [loadingMore, setLoadingMore] = useState<boolean>(false);
     const loadingMoreRef = useRef<boolean>(false);
+
+    // odświeża widok co 30s, żeby przerwa "w trakcie" (bez jeszcze wczytanego/rozpoczętego
+    // kolejnego dnia) tykała na żywo — zob. calcBreakTime.ts
+    const [, setTick] = useState<number>(0);
+    useEffect(() => {
+        const intervalId = setInterval(() => setTick(t => t + 1), 30000);
+        return () => clearInterval(intervalId);
+    }, []);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -157,6 +166,7 @@ export const DaysList = (props: Props) => {
                         {
                             data?.map((day, index) => {
                                 const tourNr = Array.isArray(tourNrs) ? (tourNrs.find(tour => tour.tourId === day.tourId)?.tourNr ?? '') : '';
+                                const breakTime = calcBreakTime(data ?? [], day);
                                 const division = prevTourId.current !== day.tourId;
                                 prevTourId.current = day.tourId;
                                 return (
@@ -192,10 +202,10 @@ export const DaysList = (props: Props) => {
                                                 <td>
                                                     💼 {formatTimeToTime(day.workTime)}
                                                     <br/>
-                                                    {day.cardState === dayCardStateEnum.notUsed ?
-                                                        days[props.lang].na
+                                                    {breakTime !== null ?
+                                                        <>⏸ {formatTimeToTime(breakTime)}</>
                                                         :
-                                                        <>⏸ {formatTimeToTime(day.breakTime)}</>
+                                                        days[props.lang].na
                                                     }
                                                 </td>
                                                 <td>
@@ -253,10 +263,10 @@ export const DaysList = (props: Props) => {
                                                     <td>
                                                         💼 {formatTimeToTime(day.workTime)}
                                                         <br/>
-                                                        {day.cardState === dayCardStateEnum.notUsed ?
-                                                            days[props.lang].na
+                                                        {breakTime !== null ?
+                                                            <>⏸ {formatTimeToTime(breakTime)}</>
                                                             :
-                                                            <>⏸ {formatTimeToTime(day.breakTime)}</>
+                                                            days[props.lang].na
                                                         }
                                                     </td>
                                                     <td>

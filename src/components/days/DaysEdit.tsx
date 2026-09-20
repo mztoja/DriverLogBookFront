@@ -3,7 +3,6 @@ import {
     DayInterface,
     userLangEnum,
     DayEditData,
-    dayCardStateEnum,
     LogEditData,
     dayStatusEnum,
     userFuelContypeEnum
@@ -46,7 +45,6 @@ export const DaysEdit = (props: Props) => {
     const {loading, fetchData} = useApi();
     const [formData, setFormData] = useState<DayEditData>(defaultValues(props.day));
     const [combustionValue, setCombustionValue] = useState<string>((Number(formData.fuelBurned) / Number(formData.distance) * 100).toFixed(1));
-    const [breakStopDate, setBreakStopDate] = useState<string>('');
 
     const updateForm = (key: keyof DayEditData, subKey: keyof LogEditData | null, value: string | number) => {
         if (subKey) {
@@ -63,13 +61,6 @@ export const DaysEdit = (props: Props) => {
     };
 
     useEffect(() => {
-        const [hours, minutes] = formData.breakTime.split(':').map(Number);
-        const seconds = hours * 3600 + minutes * 60;
-        setBreakStopDate((new Date(formData.stopData.date).getTime() + seconds * 1000).toString());
-        // eslint-disable-next-line
-    }, []);
-
-    useEffect(() => {
         if (!isNaN(Date.parse(formData.startData.date)) && !isNaN(Date.parse(formData.stopData.date))) {
             updateForm('workTime', null, subtractDatesToTime(formData.stopData.date, formData.startData.date));
         }
@@ -81,12 +72,6 @@ export const DaysEdit = (props: Props) => {
             updateForm('distance', null, Number(formData.stopData.odometer) - Number(formData.startData.odometer));
         }
     },[formData.startData.odometer, formData.stopData.odometer]);
-    useEffect(() => {
-        if (!isNaN(Date.parse(formData.stopData.date)) && breakStopDate !== '') {
-            updateForm('breakTime', null, subtractDatesToTime(new Date(Number(breakStopDate)).toISOString(), formData.stopData.date + ':00.000Z'));
-        }
-        // eslint-disable-next-line
-    }, [formData.stopData.date]);
 
     const changingCombustion = (v: string): void => {
         const newValue = Number(formData.distance) / 100 * Number(v);
@@ -249,18 +234,6 @@ export const DaysEdit = (props: Props) => {
                                 onChange={e => updateForm('workTime', null, e)}
                             />
                             </div>
-                            {props.day.cardState !== dayCardStateEnum.notUsed &&
-                                <>
-                                    <br/>
-                                    <div><LongTimeInput
-                                        lang={props.lang}
-                                        type='break'
-                                        value={formData.breakTime}
-                                        onChange={e => updateForm('breakTime', null, e)}
-                                    />
-                                    </div>
-                                </>
-                            }
                             <br/>
                             <div><FuelInput
                                 type='combustion'
