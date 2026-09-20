@@ -5,6 +5,7 @@ export interface TourEditData {
   tourNr: string;
   startData: LogEditData;
   stopData: LogEditData;
+  distance: string;
   fuelStateBefore: string;
   fuelStateAfter: string;
   expectedSalary: string;

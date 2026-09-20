@@ -284,6 +284,7 @@ export const DaysEdit = (props: Props) => {
                     <br/>
                     <div><DistanceInput
                         lang={props.lang}
+                        label={home[props.lang].dayDistanceLabel}
                         value={formData.distance.toString()}
                         onChange={e => changingDistance(e)}
                     />

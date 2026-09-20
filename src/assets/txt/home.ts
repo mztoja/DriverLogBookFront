@@ -95,6 +95,8 @@ interface Home {
     trailerAttachedBySystemNote: string;
     loadAddedBySystemNote: string;
     cannotEditSettledTourData: string;
+    tourDistanceLabel: string;
+    dayDistanceLabel: string;
     notes: string;
     notesHistory: string;
     notesHistoryTitle: string;
@@ -195,6 +197,8 @@ export const home:Home[] = [{
     trailerAttachedBySystemNote: 'Trailer attached automatically by the system – continuation from the previous tour',
     loadAddedBySystemNote: 'Load added automatically by the system – continuation from the previous tour',
     cannotEditSettledTourData: 'You cannot edit data assigned to a route that has already been settled.',
+    tourDistanceLabel: 'Route distance',
+    dayDistanceLabel: 'Work day distance',
     notes: 'Notes',
     notesHistory: 'Notes history',
     notesHistoryTitle: 'Notes history',
@@ -292,6 +296,8 @@ export const home:Home[] = [{
     trailerAttachedBySystemNote: 'Naczepa podpięta automatycznie – kontynuacja z poprzedniej trasy',
     loadAddedBySystemNote: 'Ładunek dodany automatycznie – kontynuacja z poprzedniej trasy',
     cannotEditSettledTourData: 'Nie możesz edytować danych przypisanych do rozliczonej już trasy.',
+    tourDistanceLabel: 'Przebieg trasy',
+    dayDistanceLabel: 'Przebieg dnia pracy',
     notes: 'Notatki',
     notesHistory: 'Historia notatek',
     notesHistoryTitle: 'Historia notatek',

@@ -6,7 +6,11 @@ import {InputPropsTypes} from "../../../types/InputPropsTypes";
 import {extractDigits} from "../../../utils/extractDigits";
 import InputAdornment from "@mui/material/InputAdornment";
 
-export const DistanceInput = (props:InputPropsTypes) => {
+interface Props extends InputPropsTypes {
+    label?: string;
+}
+
+export const DistanceInput = (props: Props) => {
 
     const onChange = (v: string) => {
         const newValue = extractDigits(v);
@@ -15,7 +19,7 @@ export const DistanceInput = (props:InputPropsTypes) => {
 
     return (
         <TextField
-            label={form[props.lang].distance}
+            label={props.label ? props.label : form[props.lang].distance}
             id="distance"
             InputLabelProps={{className: 'TextInput__Label'}}
             InputProps={{className: 'TextInput',

@@ -5,6 +5,7 @@ export const areFieldsEqual = (data: TourInterface, formData: TourEditData): boo
         return false;
     }
     const areStartDataEqual: boolean = (
+        data.distance.toString() === formData.distance.toString() &&
         new Date(data.startLogData.date).getTime() + (new Date(data.startLogData.date).getTimezoneOffset() * 60 * 1000) === new Date(formData.startData.date).getTime() &&
         data.startLogData.action === formData.startData.action &&
         data.startLogData.country === formData.startData.country &&
