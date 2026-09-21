@@ -101,6 +101,21 @@ interface Home {
     resumeDayConfirm: (time: string) => string;
     resumedDay: string;
     resumeDayAction: string;
+    addBreak: string;
+    driverChange: string;
+    addBreakSuccess: string;
+    addBreakAction: (time: string) => string;
+    changeSlot1Action: string;
+    changeSlot2Action: string;
+    breakTakenLabel: string;
+    breakDriveTimeLabel: string;
+    breakDriveTimeHelper: string;
+    addDriveTimeSwitch: string;
+    addDriveTimeLabel: string;
+    breakOnlyBreakSwitch: string;
+    changeToSlot1: string;
+    changeToSlot2: string;
+    myCardInSlot1: string;
     notes: string;
     notesHistory: string;
     notesHistoryTitle: string;
@@ -207,6 +222,21 @@ export const home:Home[] = [{
     resumeDayConfirm: (time) => `Your previous working day started at ${time} — it looks like the break was not a full rest. Do you want to resume that day instead of starting a new one?`,
     resumedDay: 'Your working day has been resumed.',
     resumeDayAction: 'Resuming the day',
+    addBreak: 'Add a break',
+    driverChange: 'Driver change',
+    addBreakSuccess: 'The entry has been added successfully.',
+    addBreakAction: (time) => `Break taken: ${time}`,
+    changeSlot1Action: 'Card change to slot 1',
+    changeSlot2Action: 'Card change to slot 2',
+    breakTakenLabel: 'Break taken',
+    breakDriveTimeLabel: 'Drive time',
+    breakDriveTimeHelper: 'This time will be added to the drive time of the whole day.',
+    addDriveTimeSwitch: 'Add drive time',
+    addDriveTimeLabel: 'Time to add',
+    breakOnlyBreakSwitch: 'Enter break only',
+    changeToSlot1: 'Change to slot 1',
+    changeToSlot2: 'Change to slot 2',
+    myCardInSlot1: 'Your card is in slot 1',
     notes: 'Notes',
     notesHistory: 'Notes history',
     notesHistoryTitle: 'Notes history',
@@ -310,6 +340,21 @@ export const home:Home[] = [{
     resumeDayConfirm: (time) => `Twój poprzedni dzień pracy rozpoczął się o ${time} — wygląda na to, że przerwa nie była pełnym odpoczynkiem. Czy chcesz wznowić tamten dzień zamiast rozpoczynać nowy?`,
     resumedDay: 'Twój dzień pracy został wznowiony.',
     resumeDayAction: 'Wznowienie dnia',
+    addBreak: 'Dodaj przerwę',
+    driverChange: 'Zmiana kierowcy',
+    addBreakSuccess: 'Wpis został pomyślnie dodany.',
+    addBreakAction: (time) => `Zrobiono przerwę: ${time}`,
+    changeSlot1Action: 'Zmiana karty na 1 slot',
+    changeSlot2Action: 'Zmiana karty na 2 slot',
+    breakTakenLabel: 'Zrobiona przerwa',
+    breakDriveTimeLabel: 'Czas jazdy',
+    breakDriveTimeHelper: 'Ten czas zostanie dodany do czasu jazdy z całego dnia.',
+    addDriveTimeSwitch: 'Dopisz czas jazdy',
+    addDriveTimeLabel: 'Czas do dopisania',
+    breakOnlyBreakSwitch: 'Wpisz tylko przerwę',
+    changeToSlot1: 'Zmiana na 1 slot',
+    changeToSlot2: 'Zmiana na 2 slot',
+    myCardInSlot1: 'Twoja karta w 1 slocie',
     notes: 'Notatki',
     notesHistory: 'Historia notatek',
     notesHistoryTitle: 'Historia notatek',

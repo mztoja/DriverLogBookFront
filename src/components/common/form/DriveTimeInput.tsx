@@ -6,6 +6,8 @@ import {extractTime} from "../../../utils/extractTime";
 
 export interface Props extends InputPropsTypes {
     secDriver?: boolean;
+    label?: string;
+    helperText?: string;
 }
 
 export const DriveTimeInput = (props: Props) => {
@@ -20,10 +22,15 @@ export const DriveTimeInput = (props: Props) => {
         props.onChange(extractTime(newValue));
     }
 
+    const label = props.label ? props.label : (props.secDriver ? form[props.lang].driveTime2 : form[props.lang].driveTime);
+    const helperText = props.helperText !== undefined
+        ? props.helperText
+        : (props.secDriver ? form[props.lang].driveTimeHelper2 : form[props.lang].driveTimeHelper);
+
     return (
         <>
             <TextField
-                label={props.secDriver ? form[props.lang].driveTime2 : form[props.lang].driveTime}
+                label={label}
                 id={props.secDriver ? 'driveTime2' : 'driveTime'}
                 InputLabelProps={{className: 'TextInput__Label'}}
                 InputProps={{className: 'TextInput'}}
@@ -33,9 +40,11 @@ export const DriveTimeInput = (props: Props) => {
                 autoComplete='off'
                 size='small'
             />
-            <FormHelperText className='TextInput__Label'>
-                {props.secDriver ? form[props.lang].driveTimeHelper2 : form[props.lang].driveTimeHelper}
-            </FormHelperText>
+            {helperText &&
+                <FormHelperText className='TextInput__Label'>
+                    {helperText}
+                </FormHelperText>
+            }
         </>
     );
 }

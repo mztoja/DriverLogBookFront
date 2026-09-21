@@ -14,6 +14,7 @@ import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
 import {dayCardStateEnum, StopDayData} from "types";
 import {DriveTimeInput} from "../../common/form/DriveTimeInput";
+import { AddDurationSwitch } from "../../common/form/AddDurationSwitch";
 import {FuelInput} from "../../common/form/FuelInput";
 import {apiPaths} from "../../../config/api";
 import {extractTime} from "../../../utils/extractTime";
@@ -96,12 +97,32 @@ export const DayStop = (props: ActionsPropsTypes) => {
                 </div>
                 <br/>
                 <div>
+                    <AddDurationSwitch
+                        lang={props.lang}
+                        value={props.formData.driveTime}
+                        onChange={v => props.updateFormData('driveTime', v)}
+                        switchLabel={home[props.lang].addDriveTimeSwitch}
+                        addLabel={home[props.lang].addDriveTimeLabel}
+                    />
+                </div>
+                <br />
+                <div>
                     <DriveTimeInput lang={props.lang} value={props.formData.driveTime}
                                     onChange={e => props.updateFormData('driveTime', e)}/>
                 </div>
                 <br/>
                 {props.dayData?.doubleCrew ?
                     <>
+                        <div>
+                            <AddDurationSwitch
+                                lang={props.lang}
+                                value={props.formData.driveTime2}
+                                onChange={v => props.updateFormData('driveTime2', v)}
+                                switchLabel={home[props.lang].addDriveTimeSwitch}
+                                addLabel={home[props.lang].addDriveTimeLabel}
+                            />
+                        </div>
+                        <br />
                         <div><DriveTimeInput lang={props.lang} value={props.formData.driveTime2}
                                              onChange={e => props.updateFormData('driveTime2', e)}
                                              secDriver={true}/></div>

@@ -40,6 +40,7 @@ export const apiPaths = {
     createNewDay: '/days/create',
     finishDay: '/days/finish',
     resumeDay: '/days/resume',
+    addBreak: '/days/addBreak',
     getActiveDay: '/days/getActiveDay',
     getLastDay: '/days/getLastDay',
     getYourLastDay: '/days/getYourLastDay',
