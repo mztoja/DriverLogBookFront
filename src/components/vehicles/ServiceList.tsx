@@ -7,6 +7,7 @@ import InputLabel from "@mui/material/InputLabel";
 import {MenuItem, Select, Tooltip} from "@mui/material";
 import {ActionButton} from "../common/ActionButton";
 import FormControl from "@mui/material/FormControl";
+import {SearchInput} from "../common/form/SearchInput";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
 import {formatShortDate} from "../../utils/formats/formatShortDate";
@@ -36,6 +37,7 @@ export const ServiceList = (props: Props) => {
     const [showData, setShowData] = useState<ServiceInterface[]>([]);
     const {fetchData} = useApi();
     const [serviceType, setServiceType] = useState<ServiceType>(ServiceType.all);
+    const [filterSearch, setFilterSearch] = useState<string>('');
     const [vehicleReg, setVehicleReg] = useState<string>('. . . . .');
     const ref = useRef<HTMLTableRowElement | null>(null);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
@@ -66,18 +68,25 @@ export const ServiceList = (props: Props) => {
     }, [props.vehicleId, refresh]);
 
     useEffect(() => {
-        if (serviceType === ServiceType.all) {
-            setShowData(data);
-        } else if (serviceType === ServiceType.service) {
-            setShowData(data.filter(service => service.type === serviceTypeEnum.service));
+        let filtered = data;
+        if (serviceType === ServiceType.service) {
+            filtered = filtered.filter(service => service.type === serviceTypeEnum.service);
         } else if (serviceType === ServiceType.maintenance) {
-            setShowData(data.filter(service => service.type === serviceTypeEnum.maintenance));
-        } else {
-            setShowData([]);
+            filtered = filtered.filter(service => service.type === serviceTypeEnum.maintenance);
         }
-
+        // ten sam warunek co na liście czynności (logs.controller.ts) — szukanie zaczyna działać
+        // dopiero od 2 znaków, dopasowanie po entry/action (odpowiednik action) i dacie loga
+        if (filterSearch.length >= 2) {
+            const search = filterSearch.toLowerCase();
+            filtered = filtered.filter(service =>
+                service.entry?.toLowerCase().includes(search) ||
+                service.logData?.action?.toLowerCase().includes(search) ||
+                service.logData?.date?.toLowerCase().includes(search)
+            );
+        }
+        setShowData(filtered);
         // eslint-disable-next-line
-    }, [data, serviceType]);
+    }, [data, serviceType, filterSearch]);
 
     const handleClose = (): void => {
         props.setVehicleId(null);
@@ -121,6 +130,8 @@ export const ServiceList = (props: Props) => {
                                     <MenuItem value={ServiceType.service}>{vehicles[props.lang].serviceService}</MenuItem>
                                 </Select>
                             </FormControl>
+                            &nbsp;
+                            <SearchInput lang={props.lang} value={filterSearch} onChange={e => setFilterSearch(e)}/>
                         </div>
                     </div>
                 </section>
