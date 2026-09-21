@@ -77,6 +77,7 @@ export const apiPaths = {
     // services
     createService: '/services/create',
     getServiceByVehicleId: '/services/getByVehicleId',
+    getServiceByLogId: '/services/getByLogId',
     editService: '/services/edit',
     // loadings
     createLoad: '/loads/create',

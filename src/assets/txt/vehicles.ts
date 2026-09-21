@@ -46,6 +46,7 @@ interface Vehicles {
     servicePlace: string;
     serviceAction: string;
     serviceOdometer: string;
+    serviceVehicleReg: string;
     close: string;
 }
 
@@ -98,6 +99,7 @@ export const vehicles: Vehicles[] = [
         serviceDate: 'Date',
         servicePlace: 'Place',
         serviceOdometer: 'Mileage',
+        serviceVehicleReg: 'Vehicle',
         close: 'Close',
     },
     {//pl
@@ -148,6 +150,7 @@ export const vehicles: Vehicles[] = [
         serviceDate: 'Data',
         serviceAction: 'Czynność serwisowa',
         serviceOdometer: 'Przebieg',
+        serviceVehicleReg: 'Pojazd',
         close: 'Zamknij',
     }
 ];

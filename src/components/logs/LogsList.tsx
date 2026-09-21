@@ -6,6 +6,8 @@ import {
     LogInterface,
     LogListResponse,
     logTypeEnum,
+    ServiceInterface,
+    serviceTypeEnum,
     TourInterface,
     TourNumbersInterface,
     userLangEnum
@@ -15,6 +17,11 @@ import {useApi} from "../../hooks/useApi";
 import {apiPaths} from "../../config/api";
 import {FETCH_SEARCH_TIME, LOGS_PER_PAGE} from "../../config/set";
 import {logs} from "../../assets/txt/logs";
+import {finances} from "../../assets/txt/finances";
+import {loadings} from "../../assets/txt/loadings";
+import {vehicles} from "../../assets/txt/vehicles";
+import {form} from "../../assets/txt/form";
+import {info} from "../../assets/txt/info";
 import {CircularProgress, Tooltip} from "@mui/material";
 import {ActionButton} from "../common/ActionButton";
 import {SearchInput} from "../common/form/SearchInput";
@@ -24,6 +31,10 @@ import {formatOdometer} from "../../utils/formats/formatOdometer";
 import DetailsIcon from "@mui/icons-material/Details";
 import {formatPlace} from "../../utils/formats/formatPlace";
 import {formatSimplePlace} from "../../utils/formats/formatSimplePlace";
+import {formatQuantity} from "../../utils/formats/formatQuantity";
+import {formatAmount} from "../../utils/formats/formatAmount";
+import {formatWeight} from "../../utils/formats/formatWeight";
+import {formatTimeToTime} from "../../utils/formats/formatTimeToTime";
 import {tours} from "../../assets/txt/tours";
 import {NavLink} from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -47,8 +58,12 @@ export const LogsList = (props: Props) => {
 
     const {setAlert} = useAlert();
     const {loading, fetchData} = useApi();
+    const {fetchData: fetchDetails} = useApi();
 
     const [data, setData] = useState<LogInterface[] | null>(null);
+    const [detailsCache, setDetailsCache] = useState<Record<number, FinanceInterface | LoadInterface | DayInterface | TourInterface | ServiceInterface>>({});
+    const [detailsLoadingId, setDetailsLoadingId] = useState<number | null>(null);
+    const [vehicleRegCache, setVehicleRegCache] = useState<Record<number, string>>({});
     const [totalItems, setTotalItems] = useState<number>(0);
     const [page, setPage] = useState<number>(1);
     const [filterSearch, setFilterSearch] = useState<string>('');
@@ -118,6 +133,134 @@ export const LogsList = (props: Props) => {
                     setEditLogData(log);
                     break;
             }
+        }
+    }
+
+    // Typy wpisów mające bogatsze, powiązane dane — reszta (zmiana karty, przerwa, wznowienie
+    // dnia, dołączenie/odłączenie naczepy, przekroczenie granicy, ogólny log) jest już
+    // samowystarczalna w samym LogInterface, więc nic dodatkowo nie dociągamy.
+    const detailsEndpointByType: Partial<Record<logTypeEnum, string>> = {
+        [logTypeEnum.days]: apiPaths.getDayByLogId,
+        [logTypeEnum.tours]: apiPaths.getRouteByLogId,
+        [logTypeEnum.generalExpense]: apiPaths.getFinanceByLogId,
+        [logTypeEnum.refuelDiesel]: apiPaths.getFinanceByLogId,
+        [logTypeEnum.refuelAdblue]: apiPaths.getFinanceByLogId,
+        [logTypeEnum.finishLoading]: apiPaths.getLoadingByLogId,
+        [logTypeEnum.finishUnloading]: apiPaths.getLoadingByLogId,
+        [logTypeEnum.service]: apiPaths.getServiceByLogId,
+        [logTypeEnum.maintenance]: apiPaths.getServiceByLogId,
+    };
+
+    // Po rozwinięciu wiersza dociągamy w tle pełne dane wpisu (dla typów, które je mają) —
+    // z cache po log.id, żeby zwinięcie/rozwinięcie tego samego wiersza nie pytało backendu ponownie.
+    useEffect(() => {
+        if (expandedRow === null) return;
+        const log = data?.find(l => l.id === expandedRow);
+        if (!log || detailsCache[log.id] !== undefined) return;
+        const endpoint = detailsEndpointByType[log.type];
+        if (!endpoint) return;
+        setDetailsLoadingId(log.id);
+        fetchDetails<FinanceInterface | LoadInterface | DayInterface | TourInterface | ServiceInterface>(`${endpoint}/${log.id}`)
+            .then((res) => {
+                const responseData = res.responseData;
+                if (responseData) {
+                    setDetailsCache(prev => ({...prev, [log.id]: responseData}));
+                    if (
+                        (log.type === logTypeEnum.service || log.type === logTypeEnum.maintenance) &&
+                        'vehicleId' in responseData &&
+                        vehicleRegCache[responseData.vehicleId] === undefined
+                    ) {
+                        const vehicleId = responseData.vehicleId;
+                        fetchDetails<{ data: string }>(`${apiPaths.getVehicleRegById}/${vehicleId}`).then((regRes) => {
+                            if (regRes.responseData) {
+                                const reg = regRes.responseData.data;
+                                setVehicleRegCache(current => ({...current, [vehicleId]: reg}));
+                            }
+                        });
+                    }
+                }
+                setDetailsLoadingId(null);
+            });
+        // eslint-disable-next-line
+    }, [expandedRow]);
+
+    const renderExtraDetails = (log: LogInterface) => {
+        if (detailsLoadingId === log.id) {
+            return <CircularProgress size={16}/>;
+        }
+        const details = detailsCache[log.id];
+        if (!details) {
+            return null;
+        }
+        switch (log.type) {
+            case logTypeEnum.generalExpense:
+            case logTypeEnum.refuelDiesel:
+            case logTypeEnum.refuelAdblue: {
+                const finance = details as FinanceInterface;
+                return (
+                    <div className="LogsList__details">
+                        <div>{finances[props.lang].description}: {finance.itemDescription}</div>
+                        <div>{finances[props.lang].quantity}: {formatQuantity(Number(finance.quantity))}</div>
+                        <div>{finances[props.lang].amount}: {formatAmount(Number(finance.amount), finance.currency)}</div>
+                        {finance.foreignCurrency &&
+                            <div>{finances[props.lang].localAmount}: {formatAmount(Number(finance.foreignAmount), finance.foreignCurrency)}</div>
+                        }
+                        <div>{finances[props.lang].payment}: {finance.payment}</div>
+                    </div>
+                );
+            }
+            case logTypeEnum.finishLoading:
+            case logTypeEnum.finishUnloading: {
+                const load = details as LoadInterface;
+                return (
+                    <div className="LogsList__details">
+                        <div>{loadings[props.lang].loadNr}: {load.loadNr}</div>
+                        <div>{loadings[props.lang].description}: {load.description}</div>
+                        <div>{loadings[props.lang].quantity}: {load.quantity}</div>
+                        <div>{loadings[props.lang].weight}: {formatWeight(load.weight)}</div>
+                        <div>{loadings[props.lang].refNr}: {load.reference}</div>
+                        <div>{loadings[props.lang].distance}: {formatOdometer(load.distance)}</div>
+                    </div>
+                );
+            }
+            case logTypeEnum.days: {
+                const day = details as DayInterface;
+                return (
+                    <div className="LogsList__details">
+                        <div>{form[props.lang].driveTime}: {formatTimeToTime(day.driveTime)}</div>
+                        {day.doubleCrew &&
+                            <div>{form[props.lang].driveTime2}: {formatTimeToTime(day.driveTime2)}</div>
+                        }
+                        <div>{tours[props.lang].distance}: {formatOdometer(day.distance)}</div>
+                    </div>
+                );
+            }
+            case logTypeEnum.tours: {
+                const tour = details as TourInterface;
+                return (
+                    <div className="LogsList__details">
+                        <div>{tours[props.lang].distance}: {formatOdometer(tour.distance)}</div>
+                        <div>{tours[props.lang].workTime}: {formatTimeToTime(tour.workTime)}</div>
+                        <div>{info[props.lang].truck}: {tour.truck}</div>
+                        {tour.trailer &&
+                            <div>{info[props.lang].trailer}: {tour.trailer}</div>
+                        }
+                    </div>
+                );
+            }
+            case logTypeEnum.service:
+            case logTypeEnum.maintenance: {
+                const service = details as ServiceInterface;
+                return (
+                    <div className="LogsList__details">
+                        <div>{vehicles[props.lang].serviceVehicleReg}: {vehicleRegCache[service.vehicleId] ?? '...'}</div>
+                        <div>{vehicles[props.lang].serviceType}: {service.type === serviceTypeEnum.service ? vehicles[props.lang].serviceService : vehicles[props.lang].serviceMaintenance}</div>
+                        <div>{service.entry}</div>
+                    </div>
+                );
+            }
+            default:
+                return null;
         }
     }
 
@@ -337,6 +480,7 @@ export const LogsList = (props: Props) => {
                                                 className={isHovered ? 'highlighted' : ''}
                                             >
                                                 <td colSpan={7} className="extended">
+                                                    {renderExtraDetails(log)}
                                                     {log.notes !== null && (
                                                         <div>
                                                             <br/><DetailsIcon/><br/>
