@@ -4,7 +4,10 @@ import { UserInterface } from "types";
 import {MenuLabelTypes} from "../types/MenuLabelTypes";
 import {AddPlace} from "../components/places/AddPlace";
 import {PlacesList} from "../components/places/PlacesList";
+import {PlacesMap} from "../components/places/PlacesMap";
 import { usePlaces } from "../hooks/usePlaces";
+import {TableTabs} from "../components/common/TableTabs";
+import {places} from "../assets/txt/places";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -15,6 +18,7 @@ interface Props extends AppMainElementsTypes {
 export const PlacesView = (props: Props) => {
 
     const [showAddPlace, setShowAddPlace] = useState<boolean>(false);
+    const [tab, setTab] = useState<"list" | "map">("list");
     const {syncPlaces} = usePlaces();
 
     // Wejście na listę miejsc – pobierz w tle i podmień tylko gdy różne od stanu globalnego.
@@ -25,7 +29,19 @@ export const PlacesView = (props: Props) => {
     return (
         <>
             <AddPlace lang={props.userData.lang} show={showAddPlace} setShow={setShowAddPlace}/>
-            <PlacesList userData={props.userData} setUserData={props.setUserData} showAddButton={showAddPlace} setShowAddPlace={setShowAddPlace} />
+
+            <TableTabs
+                active={tab}
+                onChange={(k) => setTab(k as "list" | "map")}
+                tabs={[
+                    {key: "list", label: places[props.userData.lang].tableHeader},
+                    {key: "map", label: places[props.userData.lang].mapTab},
+                ]}
+            />
+
+            {tab === "list"
+                ? <PlacesList userData={props.userData} setUserData={props.setUserData} showAddButton={showAddPlace} setShowAddPlace={setShowAddPlace} />
+                : <PlacesMap userData={props.userData} setUserData={props.setUserData} />}
         </>
     );
 };

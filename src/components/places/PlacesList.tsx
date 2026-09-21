@@ -1,5 +1,4 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {places} from "../../assets/txt/places";
 import {PlaceInterface, UserInterface} from "types";
 import {CircularProgress} from "@mui/material";
@@ -12,18 +11,10 @@ import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
 import {CountrySelect} from "../common/form/CountrySelect";
 import {SearchInput} from "../common/form/SearchInput";
 import {useAlert} from "../../hooks/useAlert";
-import {useApi} from '../../hooks/useApi';
 import {usePlaces} from "../../hooks/usePlaces";
-import {apiPaths} from "../../config/api";
-import {commons} from "../../assets/txt/commons";
 import {formatCountry} from "../../utils/formats/formatCountry";
-import NavigationIcon from '@mui/icons-material/Navigation';
-import EditIcon from "@mui/icons-material/Edit";
 import {PlaceEdit} from "./PlaceEdit";
-import { formatText } from "../../utils/formats/formatText";
-import DirectionsIcon from '@mui/icons-material/Directions';
-import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import {PlaceDetailCard} from "./PlaceDetailCard";
 
 interface Props {
     userData: UserInterface;
@@ -35,9 +26,7 @@ interface Props {
 export const PlacesList = (props: Props) => {
 
     const {setAlert} = useAlert();
-    const {fetchDataOld} = useApi();
     const {places: data, loading, ensurePlaces} = usePlaces();
-    const navigate = useNavigate();
 
     const [showData, setShowData] = useState<PlaceInterface[] | null>(null);
     const [filterType, setFilterType] = useState<string>('999');
@@ -58,28 +47,6 @@ export const PlacesList = (props: Props) => {
     useEffect(() => {
         ensurePlaces();
     }, [ensurePlaces]);
-
-    const markPlace = async (id: number, info: string): Promise<void> => {
-        const result = await fetchDataOld(apiPaths.markDepart, 'PATCH', {placeId: id});
-        if (result && !result.success) {
-            setAlert(commons[props.userData.lang].apiConnectionError, 'error');
-        } else {
-            if (result && result.responseData) {
-                if (!result.responseData.dtc) {
-                    setAlert(places[props.userData.lang].markedPlace + ' ' + info, 'success');
-                    const changedUser = props.userData;
-                    changedUser.markedDepart = result.responseData;
-                    props.setUserData(changedUser);
-                } else {
-                    setAlert(places[props.userData.lang].markedPlaceError, 'warning');
-                }
-            }
-        }
-    }
-
-    const openGoogleMaps = (co: string): void => {
-        window.open(`https://www.google.com/maps/search/?api=1&query=${co}`, '_blank', 'noopener,noreferrer');
-    }
 
     useEffect(() => {
         if (data) {
@@ -215,55 +182,12 @@ export const PlacesList = (props: Props) => {
                                                         className={isHovered ? 'highlighted' : ''}
                                                     >
                                                         <td colSpan={6} className="extended">
-                                                            <div>
-                                                                <RoomIcon/><br/>
-                                                                {place.lat}, {place.lon}
-                                                            </div>
-                                                            {place.description !== null && (
-                                                                <div>
-                                                                    <DetailsIcon/><br/>
-                                                                    <div dangerouslySetInnerHTML={{ __html: formatText(place.description) }} />
-                                                                </div>
-                                                            )}
-                                                            <br/>
-                                                            <div>
-                                                                <ActionButton
-                                                                    icon={<DirectionsIcon/>}
-                                                                    onClick={() => openGoogleMaps(place.street + ' ' + place.code + ' ' + place.city)}>
-                                                                    {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].directions})
-                                                                </ActionButton>
-                                                            </div>
-                                                            {Number(place.lat) > 0.001 && <div>
-                                                                <ActionButton
-                                                                    icon={<LocationSearchingIcon/>}
-                                                                    onClick={() => openGoogleMaps(place.lat + ', ' + place.lon)}>
-                                                                    {places[props.userData.lang].googleMapsLabel} ({places[props.userData.lang].gps})
-                                                                </ActionButton>
-                                                            </div>}
-                                                            <br />
-                                                            <div>
-                                                                <ActionButton
-                                                                    icon={<NavigationIcon/>}
-                                                                    onClick={() => markPlace(place.id, place.name + ' - ' + place.city)}>
-                                                                    {places[props.userData.lang].navigateSwitchLabel}
-                                                                </ActionButton>
-                                                            </div>
-                                                            <br/>
-                                                            <div>
-                                                                <ActionButton
-                                                                    icon={<EditIcon/>}
-                                                                    onClick={() => setChosenPlace(place)}>
-                                                                    {places[props.userData.lang].edit}
-                                                                </ActionButton>
-                                                            </div>
-                                                            <br/>
-                                                            <div>
-                                                                <ActionButton
-                                                                    icon={<AssignmentIcon/>}
-                                                                    onClick={() => navigate('/logs/' + place.id)}>
-                                                                    {places[props.userData.lang].showActivities}
-                                                                </ActionButton>
-                                                            </div>
+                                                            <PlaceDetailCard
+                                                                userData={props.userData}
+                                                                setUserData={props.setUserData}
+                                                                place={place}
+                                                                onEdit={setChosenPlace}
+                                                            />
                                                         </td>
                                                     </tr>
                                                 </>
