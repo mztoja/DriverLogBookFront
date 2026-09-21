@@ -1,0 +1,85 @@
+.TimeArcGauge {
+    /* float (nie inline-block) — tekst obok komponentu (np. w InfoBar) ma go opływać
+       przez całą jego wysokość (obie linie), a nie tylko stać w tej samej linii co pierwsza */
+    float: left;
+    margin-right: 0.6rem;
+}
+
+.TimeArcGauge__svg {
+    width: 100%;
+    height: auto;
+    /* bez tego niektóre silniki nie wyliczają wysokości z samego viewBox wewnątrz flexa —
+       całość (łuk + napisy) renderowała się wtedy wyśrodkowana w za wysokim, "domyślnym"
+       pudełku SVG zamiast dosunięta do faktycznych granic komponentu.
+       118/45 — przy domyślnej szerokości 118px daje ~45px wysokości, czyli dwie linie tekstu
+       #InfoBar (font-size 1rem/16px × line-height 1.4 ≈ 22.4px/linię) — wysokość celowo
+       trzymana stała przy zmianach szerokości. Razem z preserveAspectRatio="none"
+       (na <svg> w TimeArcGauge.tsx) treść rozciąga się dokładnie do tych proporcji zamiast
+       dopasowywać się (letterbox) do wewnętrznego viewBox. */
+    aspect-ratio: 118 / 45;
+    display: block;
+    overflow: visible;
+}
+
+.TimeArcGauge__track {
+    fill: none;
+    stroke: #ffffff26;
+    stroke-width: 10;
+    stroke-linecap: round;
+}
+
+.TimeArcGauge__fill {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease, stroke 0.4s ease;
+}
+
+.TimeArcGauge__fill--ok {
+    stroke: #4caf50;
+}
+
+.TimeArcGauge__fill--warn {
+    stroke: #ffc107;
+}
+
+.TimeArcGauge__fill--over {
+    stroke: #f44336;
+}
+
+.TimeArcGauge__value {
+    font-size: 20px;
+    font-weight: bold;
+    transition: fill 0.4s ease;
+}
+
+.TimeArcGauge__value--ok {
+    fill: #a5d6a7;
+}
+
+.TimeArcGauge__value--warn {
+    fill: #ffe082;
+}
+
+.TimeArcGauge__value--over {
+    fill: #ff8a80;
+}
+
+.TimeArcGauge__label {
+    fill: #ffffffb0;
+    font-size: 10px;
+}
+
+/* "łagodnie i rzadko" — wolny, płynny puls, tylko po przekroczeniu progu czerwonego */
+@keyframes TimeArcGauge__blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.TimeArcGauge__blink {
+    animation: TimeArcGauge__blink 2.6s ease-in-out infinite;
+}
