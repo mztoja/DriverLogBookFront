@@ -1,4 +1,4 @@
-import React, {FormEvent} from "react";
+import React, {FormEvent, useEffect} from "react";
 import {ActionsPropsTypes} from "../../../types/ActionsPropsTypes";
 import {useApi} from "../../../hooks/useApi";
 import {useAlert} from "../../../hooks/useAlert";
@@ -16,10 +16,29 @@ import {dayCardStateEnum, StopDayData} from "types";
 import {DriveTimeInput} from "../../common/form/DriveTimeInput";
 import {FuelInput} from "../../common/form/FuelInput";
 import {apiPaths} from "../../../config/api";
+import {extractTime} from "../../../utils/extractTime";
 
 export const DayStop = (props: ActionsPropsTypes) => {
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
+
+    // Dzień mógł być wcześniej wznowiony po krótkiej przerwie (zob. DayStart.tsx) — driveTime/
+    // driveTime2/fuelBurned zapisane wtedy na dniu to wartości sprzed przerwy, nadal tam obecne
+    // (nie są czyszczone przy wznowieniu). Podpowiadamy je tutaj, żeby użytkownik ich nie zgubił
+    // i doliczył do nich nowy odcinek, zamiast wpisać tylko sam nowy fragment.
+    useEffect(() => {
+        if (!props.dayData) return;
+        if (props.dayData.driveTime && props.dayData.driveTime !== '00:00:00') {
+            props.updateFormData('driveTime', extractTime(props.dayData.driveTime));
+        }
+        if (props.dayData.driveTime2 && props.dayData.driveTime2 !== '00:00:00') {
+            props.updateFormData('driveTime2', extractTime(props.dayData.driveTime2));
+        }
+        if (Number(props.dayData.fuelBurned) > 0) {
+            props.updateFormData('fuelCombustion', props.dayData.fuelBurned.toString());
+        }
+        // eslint-disable-next-line
+    }, []);
 
     const sendDayStop = async (e: FormEvent) => {
         e.preventDefault();

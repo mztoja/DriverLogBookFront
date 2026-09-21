@@ -97,6 +97,10 @@ interface Home {
     cannotEditSettledTourData: string;
     tourDistanceLabel: string;
     dayDistanceLabel: string;
+    resumeDayButton: string;
+    resumeDayConfirm: (time: string) => string;
+    resumedDay: string;
+    resumeDayAction: string;
     notes: string;
     notesHistory: string;
     notesHistoryTitle: string;
@@ -199,6 +203,10 @@ export const home:Home[] = [{
     cannotEditSettledTourData: 'You cannot edit data assigned to a route that has already been settled.',
     tourDistanceLabel: 'Route distance',
     dayDistanceLabel: 'Work day distance',
+    resumeDayButton: 'Resume previous working day',
+    resumeDayConfirm: (time) => `Your previous working day started at ${time} — it looks like the break was not a full rest. Do you want to resume that day instead of starting a new one?`,
+    resumedDay: 'Your working day has been resumed.',
+    resumeDayAction: 'Resuming the day',
     notes: 'Notes',
     notesHistory: 'Notes history',
     notesHistoryTitle: 'Notes history',
@@ -298,6 +306,10 @@ export const home:Home[] = [{
     cannotEditSettledTourData: 'Nie możesz edytować danych przypisanych do rozliczonej już trasy.',
     tourDistanceLabel: 'Przebieg trasy',
     dayDistanceLabel: 'Przebieg dnia pracy',
+    resumeDayButton: 'Wznów poprzedni dzień pracy',
+    resumeDayConfirm: (time) => `Twój poprzedni dzień pracy rozpoczął się o ${time} — wygląda na to, że przerwa nie była pełnym odpoczynkiem. Czy chcesz wznowić tamten dzień zamiast rozpoczynać nowy?`,
+    resumedDay: 'Twój dzień pracy został wznowiony.',
+    resumeDayAction: 'Wznowienie dnia',
     notes: 'Notatki',
     notesHistory: 'Historia notatek',
     notesHistoryTitle: 'Historia notatek',

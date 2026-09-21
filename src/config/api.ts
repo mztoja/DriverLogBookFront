@@ -39,6 +39,7 @@ export const apiPaths = {
     // days
     createNewDay: '/days/create',
     finishDay: '/days/finish',
+    resumeDay: '/days/resume',
     getActiveDay: '/days/getActiveDay',
     getLastDay: '/days/getLastDay',
     getYourLastDay: '/days/getYourLastDay',
