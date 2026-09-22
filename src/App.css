@@ -240,6 +240,12 @@ tbody tr:hover, .highlighted {
     background-color: #d8690f82 !important;
 }
 
+.TableView__summary, .TableView__summary:hover {
+    font-weight: bold;
+    background-color: #0000005e !important;
+    border-top: 2px solid whitesmoke;
+}
+
 /* --- Listy tabelaryczne: jeden scroll, tylko na wierszach danych ---
    Wspólny wzorzec dla /logs, /days, /finances, /loadings, /places. */
 

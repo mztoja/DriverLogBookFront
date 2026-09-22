@@ -13,6 +13,8 @@ import {formatFuelCombustion} from "../../utils/formats/formatFuelCombustion";
 import {formatWeight} from "../../utils/formats/formatWeight";
 import {formatOdometer} from "../../utils/formats/formatOdometer";
 import {formatAmount} from "../../utils/formats/formatAmount";
+import {calcSecondsFromTime} from "../../utils/calcSecondsFromTime";
+import {addTimes} from "../../utils/addTimes";
 import DetailsIcon from "@mui/icons-material/Details";
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { ToursCreateSettlement } from "./ToursCreateSettlement";
@@ -94,6 +96,34 @@ export const ToursList = (props: Props) => {
     if (loading && data.length === 0) {
         return <CircularProgress/>
     }
+
+    // Wiersz podsumowania — tylko dla listy tras nierozliczonych (nie dla podglądu tras
+    // pojedynczego rozliczenia miesięcznego, gdzie te same sumy widać już zbiorczo w
+    // ToursSettlementList). Średnia waga liczona jako średnia ważona liczbą ładunków, nie
+    // prosta średnia z uśrednionych wag poszczególnych tras.
+    const totals = data.reduce((acc, tour) => ({
+        driveTimeSeconds: acc.driveTimeSeconds + calcSecondsFromTime(tour.driveTime),
+        workTimeSeconds: acc.workTimeSeconds + calcSecondsFromTime(tour.workTime),
+        daysOnDuty: acc.daysOnDuty + Number(tour.daysOnDuty),
+        daysOffDuty: acc.daysOffDuty + Number(tour.daysOffDuty),
+        burnedFuelComp: acc.burnedFuelComp + Number(tour.burnedFuelComp),
+        burnedFuelReal: acc.burnedFuelReal + Number(tour.burnedFuelReal),
+        totalRefuel: acc.totalRefuel + Number(tour.totalRefuel),
+        weightedLoadWeight: acc.weightedLoadWeight + Number(tour.avgWeight) * Number(tour.numberOfLoads),
+        numberOfLoads: acc.numberOfLoads + Number(tour.numberOfLoads),
+        distance: acc.distance + Number(tour.distance),
+        expectedSalary: acc.expectedSalary + Number(tour.expectedSalary),
+        outgoings: acc.outgoings + Number(tour.outgoings),
+    }), {
+        driveTimeSeconds: 0, workTimeSeconds: 0, daysOnDuty: 0, daysOffDuty: 0,
+        burnedFuelComp: 0, burnedFuelReal: 0, totalRefuel: 0, weightedLoadWeight: 0, numberOfLoads: 0,
+        distance: 0, expectedSalary: 0, outgoings: 0,
+    });
+    // data[0] nie nadaje się wprost — lista tras nierozliczonych zawiera też trasy jeszcze
+    // w trakcie (status 'started'), a te dostają currency dopiero przy zakończeniu trasy
+    // (finish() w tours.service.ts); do tego czasu w bazie mają '' i psuły cały wiersz sum.
+    const totalsCurrency = data.find(tour => tour.currency)?.currency ?? '';
+    const totalsAvgWeight = totals.numberOfLoads > 0 ? totals.weightedLoadWeight / totals.numberOfLoads : 0;
 
     const tableContent = (
             <main className="Table">
@@ -395,6 +425,58 @@ export const ToursList = (props: Props) => {
                                 </React.Fragment>
                             );
                         })}
+                        {!props.monthlySettlement && data.length > 0 &&
+                            <tr className="TableView__summary">
+                                <td colSpan={2}>
+                                    {tours[props.lang].statsTotalLabel}
+                                </td>
+                                <td>
+                                    {formatTimeToTime(addTimes('00:00', totals.driveTimeSeconds))}
+                                    <br/><br/>
+                                    {formatTimeToTime(addTimes('00:00', totals.workTimeSeconds))}
+                                </td>
+                                <td>
+                                    {totals.daysOnDuty}
+                                    <br/><br/>
+                                    {totals.daysOffDuty}
+                                </td>
+                                <td>
+                                    {tours[props.lang].na}
+                                    <br/><br/>
+                                    {tours[props.lang].na}
+                                </td>
+                                <td>
+                                    {formatFuelQuantity(totals.burnedFuelComp, 'integer')}
+                                    <br/><br/>
+                                    {formatFuelQuantity(totals.burnedFuelReal, 'integer')}
+                                </td>
+                                <td>
+                                    {formatFuelQuantity(totals.totalRefuel, 'twoDecimals')}
+                                    <br/><br/>
+                                    {formatFuelCombustion(totals.burnedFuelReal, totals.distance)}
+                                </td>
+                                <td>
+                                    {formatWeight(Math.round(totalsAvgWeight))}
+                                    <br/>
+                                    ({totals.numberOfLoads})
+                                </td>
+                                <td>
+                                    {formatOdometer(totals.distance)}
+                                </td>
+                                <td>
+                                    {formatAmount(totals.expectedSalary, totalsCurrency)}
+                                    <br/><br/>
+                                    {tours[props.lang].na}
+                                </td>
+                                <td>
+                                    {tours[props.lang].na}
+                                </td>
+                                <td>
+                                    {formatAmount(totals.outgoings, totalsCurrency)}
+                                </td>
+                                <td></td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </section>
