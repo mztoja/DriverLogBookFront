@@ -107,7 +107,7 @@ export const AddBreak = (props: ActionsPropsTypes) => {
                 />
                 </div>
                 <br/>
-                {props.formData.breakOnlyBreak === 'true' &&
+                {(!doubleCrew || props.formData.breakOnlyBreak === 'true') &&
                 <>
                 <div><DriveTimeInput
                     lang={props.lang}
