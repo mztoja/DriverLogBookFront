@@ -12,6 +12,8 @@ import {useApi} from "../../../../hooks/useApi";
 interface Props extends InputPropsTypes {
     companyId: number;
     vehicleType: vehicleTypeEnum;
+    currentRegistration?: string | null;
+    onRegistrationChange?: (registration: string) => void;
 }
 
 export const VehicleRegistrationSelect = (props: Props) => {
@@ -47,10 +49,28 @@ export const VehicleRegistrationSelect = (props: Props) => {
         // eslint-disable-next-line
     }, [props.vehicleType]);
 
+    // Osobny efekt od pobierania listy — currentRegistration bywa policzony (w komponencie
+    // nadrzędnym) na podstawie formData, które aktualizuje się dopiero PO pierwszym renderze
+    // (np. VehicleTypeSelect ustawia swój domyślny typ przez onChange już po zamontowaniu).
+    // Bez osobnej zależności od currentRegistration dopasowanie odpalało się tylko raz,
+    // ze starą/niepoprawną wartością, i nigdy nie było ponawiane.
+    useEffect(() => {
+        if (!data || !props.currentRegistration) return;
+        const match = data.find((vehicle) => (
+            vehicle.companyId === props.companyId && vehicle.registrationNr === props.currentRegistration
+        ));
+        if (match) setValue(match.id);
+        // eslint-disable-next-line
+    }, [data, props.currentRegistration]);
+
     useEffect(() => {
         props.onChange(value);
+        if (props.onRegistrationChange) {
+            const selected = data?.find((vehicle) => vehicle.id === value);
+            props.onRegistrationChange(selected ? selected.registrationNr : '');
+        }
         // eslint-disable-next-line
-    }, [value]);
+    }, [value, data]);
 
 
     if (data) {

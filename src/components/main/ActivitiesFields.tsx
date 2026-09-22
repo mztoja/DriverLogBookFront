@@ -79,6 +79,7 @@ export const ActivitiesFields = (props: Props) => {
         serviceEntry: '',
         serviceType: '',
         serviceVehicleId: '',
+        serviceVehicleReg: '',
         serviceVehicleType: '',
     });
 

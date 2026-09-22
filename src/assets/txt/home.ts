@@ -85,7 +85,7 @@ interface Home {
     addService: string;
     addLubrication: string;
     addServiceSuccess: string;
-    addServiceAction: string;
+    addServiceAction: (registration: string) => string;
     tourStopHelper1: string;
     tourStopHelper2: (distance: number, burnedFuel: number) => string;
     finishTourUnloadedLoadsConfirm: (x: number) => string;
@@ -206,7 +206,7 @@ export const home:Home[] = [{
     addService: 'AddService / Maintenance',
     addLubrication: '5th Wheel Lubrication',
     addServiceSuccess: 'Vehicle service activity successfully added.',
-    addServiceAction: 'Vehicle maintenance/service entry added',
+    addServiceAction: (registration) => `Vehicle maintenance/service entry added${registration ? ' ' + registration : ''}`,
     tourStopHelper1: 'The proposed value was calculated based on on-board computer data. It\'s recommended to measure manually to increase the accuracy of combustion results.',
     tourStopHelper2: (distance, burnedFuel) => `You passed ${formatOdometer(distance)}. Avg. fuel usage: ${formatFuelCombustion(burnedFuel, distance)}`,
     finishTourUnloadedLoadsConfirm: (x) => `You try to finish the route even though you still have ${x} ${x === 1 ? 'unloaded load.' : 'unloaded loads.'} If you finish the route, they will be described in the system as unloaded with a note in the notes that they were marked as such due to the end of the route.`,
@@ -324,7 +324,7 @@ export const home:Home[] = [{
     addLubrication: 'Smarowanie siodła',
     addService: 'Serwis / Obsługa',
     addServiceSuccess: 'Pomyślnie dodano czynność serwisową pojazdu.',
-    addServiceAction: 'Dodano wpis obsługi/serwisu pojazdu',
+    addServiceAction: (registration) => `Dodano wpis obsługi/serwisu pojazdu${registration ? ' ' + registration : ''}`,
     tourStopHelper1: 'Proponowaną wartość wyliczono na podstawie danych komputera pokładowego. Zaleca się dokonać ręcznego pomiaru celem zwiększenia dokładności wyników spalania.',
     tourStopHelper2: (distance, burnedFuel) => `Przejechałeś ${formatOdometer(distance)}. Spalanie: ${formatFuelCombustion(burnedFuel, distance)}`,
     finishTourUnloadedLoadsConfirm: (x) => `Próbujesz zakończyć trasę pomimo, że masz jeszcze ${x} ${x === 1 ? 'nierozładowany ładunek.' : 'nierozładowane ładunki.'} Jeżeli zakończysz trasę to zostaną one w systemie opisane jako rozładowane z wpisaną w notatkach adnotacją, że zostały tak oznaczone z powodu zakończenia trasy.`,
