@@ -1,6 +1,7 @@
 interface Friends {
     friendsToggleLabel: string;
     placesToggleLabel: string;
+    selfLabel: string;
     addFriend: string;
     addFriendConsentInfo: string;
     inviteSubmit: string;
@@ -29,6 +30,7 @@ export const friends: Friends[] =
     [{//en
         friendsToggleLabel: 'Friends',
         placesToggleLabel: 'Places',
+        selfLabel: 'You',
         addFriend: 'Add a friend',
         addFriendConsentInfo: 'After your friend accepts the invitation, you will both be able to see ' +
             'each other\'s last known position and information about the destination of the load ' +
@@ -58,6 +60,7 @@ export const friends: Friends[] =
     {//pl
         friendsToggleLabel: 'Znajomi',
         placesToggleLabel: 'Miejsca',
+        selfLabel: 'Ty',
         addFriend: 'Dodaj znajomego',
         addFriendConsentInfo: 'Po zaakceptowaniu zaproszenia przez znajomego będziecie nawzajem mieli ' +
             'dostęp do swojej ostatniej pozycji oraz informacji o celu podróży i miejscach docelowych ' +

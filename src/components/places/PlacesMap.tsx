@@ -9,7 +9,7 @@ import {CircularProgress} from "@mui/material";
 import {places} from "../../assets/txt/places";
 import {friends as friendsTxt} from "../../assets/txt/friends";
 import {form} from "../../assets/txt/form";
-import {FriendSummaryInterface, PlaceInterface, UserInterface} from "types";
+import {FriendCargoInterface, FriendPositionInterface, FriendSummaryInterface, PlaceInterface, UserInterface, userLangEnum} from "types";
 import {usePlaces} from "../../hooks/usePlaces";
 import {useFriends} from "../../hooks/useFriends";
 import {PlaceEdit} from "./PlaceEdit";
@@ -22,7 +22,7 @@ import {apiPaths} from "../../config/api";
 import {WindowYesNo} from "../common/WindowYesNo";
 import {WindowConfirm} from "../common/WindowConfirm";
 import {getPlaceMarkerIcon} from "./placeMarkerIcon";
-import {getFriendMarkerIcon} from "./friendMarkerIcon";
+import {getFriendMarkerIcon, getSelfMarkerIcon} from "./friendMarkerIcon";
 import {formatDate} from "../../utils/formats/formatDate";
 import {getInitials} from "../../utils/getInitials";
 import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
@@ -46,6 +46,48 @@ interface Props {
     userData: UserInterface;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
 }
+
+// Blok "Ostatnia pozycja" + "Cel" — identyczny dla znajomego i dla nas samych, więc wydzielony
+// zamiast powielony w obu modalach.
+const FriendPositionInfo = (props: {
+    lang: userLangEnum;
+    position: FriendPositionInterface | null;
+    cargo: FriendCargoInterface | null;
+}) => (
+    <>
+        <div className="PlacesMap__category">
+            {friendsTxt[props.lang].lastPositionLabel}
+        </div>
+        <div className="PlacesMap__address">
+            {props.position
+                ? `${formatDate(props.position.date, props.lang)} - ` +
+                    `${props.position.placeName}` +
+                    `${props.position.city ? ' - ' + props.position.city : ''}`
+                : friendsTxt[props.lang].noPosition}
+        </div>
+        <br/>
+        <div className="PlacesMap__category">
+            {friendsTxt[props.lang].currentCargoLabel}
+        </div>
+        {props.cargo && (props.cargo.targetPlace || props.cargo.destinations.length > 0)
+            ? (
+                <>
+                    {props.cargo.targetPlace && (
+                        <div className="PlacesMap__address">
+                            {friendsTxt[props.lang].targetPlaceLabel}: {props.cargo.targetPlace}
+                        </div>
+                    )}
+                    {props.cargo.destinations.length > 0 && (
+                        <div className="PlacesMap__address">
+                            {friendsTxt[props.lang].loadDestinationsLabel}: {props.cargo.destinations.join(', ')}
+                        </div>
+                    )}
+                </>
+            )
+            : <div className="PlacesMap__address">{friendsTxt[props.lang].noActiveTour}</div>
+        }
+    </>
+);
 
 // Dopasowuje widoczny obszar mapy do wszystkich pinezek, raz przy pierwszym renderze.
 const FitBounds = ({positions}: { positions: [number, number][] }) => {
@@ -85,6 +127,7 @@ export const PlacesMap = (props: Props) => {
     const [geocodeConfirmMode, setGeocodeConfirmMode] = useState<'full' | 'partial' | null>(null);
     const [showAddFriend, setShowAddFriend] = useState<boolean>(false);
     const [confirmRemoveFriend, setConfirmRemoveFriend] = useState<boolean>(false);
+    const [showSelf, setShowSelf] = useState<boolean>(false);
 
     // Za każdym wejściem na mapę (zamontowanie tego komponentu) — nie tylko przy braku danych —
     // żeby lista znajomych i oczekujących zaproszeń była aktualna po powrocie z innego miejsca.
@@ -137,9 +180,15 @@ export const PlacesMap = (props: Props) => {
     );
 
     const friendPositions = useMemo<[number, number][]>(
-        () => (friendsData?.accepted ?? [])
-            .filter((friend) => friend.position)
-            .map((friend) => [friend.position!.lat, friend.position!.lon]),
+        () => {
+            const positions: [number, number][] = (friendsData?.accepted ?? [])
+                .filter((friend) => friend.position)
+                .map((friend): [number, number] => [friend.position!.lat, friend.position!.lon]);
+            if (friendsData?.self.position) {
+                positions.push([friendsData.self.position.lat, friendsData.self.position.lon]);
+            }
+            return positions;
+        },
         [friendsData]
     );
 
@@ -223,37 +272,11 @@ export const PlacesMap = (props: Props) => {
                                 <h2 onClick={() => setSelectedFriend(null)}>
                                     {selectedFriend.firstName} {selectedFriend.lastName}
                                 </h2>
-                                <div className="PlacesMap__category">
-                                    {friendsTxt[props.userData.lang].lastPositionLabel}
-                                </div>
-                                <div className="PlacesMap__address">
-                                    {selectedFriend.position
-                                        ? `${formatDate(selectedFriend.position.date, props.userData.lang)} - ` +
-                                            `${selectedFriend.position.placeName}` +
-                                            `${selectedFriend.position.city ? ' - ' + selectedFriend.position.city : ''}`
-                                        : friendsTxt[props.userData.lang].noPosition}
-                                </div>
-                                <br/>
-                                <div className="PlacesMap__category">
-                                    {friendsTxt[props.userData.lang].currentCargoLabel}
-                                </div>
-                                {selectedFriend.cargo && (selectedFriend.cargo.targetPlace || selectedFriend.cargo.destinations.length > 0)
-                                    ? (
-                                        <>
-                                            {selectedFriend.cargo.targetPlace && (
-                                                <div className="PlacesMap__address">
-                                                    {friendsTxt[props.userData.lang].targetPlaceLabel}: {selectedFriend.cargo.targetPlace}
-                                                </div>
-                                            )}
-                                            {selectedFriend.cargo.destinations.length > 0 && (
-                                                <div className="PlacesMap__address">
-                                                    {friendsTxt[props.userData.lang].loadDestinationsLabel}: {selectedFriend.cargo.destinations.join(', ')}
-                                                </div>
-                                            )}
-                                        </>
-                                    )
-                                    : <div className="PlacesMap__address">{friendsTxt[props.userData.lang].noActiveTour}</div>
-                                }
+                                <FriendPositionInfo
+                                    lang={props.userData.lang}
+                                    position={selectedFriend.position}
+                                    cargo={selectedFriend.cargo}
+                                />
                                 <br/>
                                 <ActionButton
                                     variant="danger"
@@ -262,6 +285,27 @@ export const PlacesMap = (props: Props) => {
                                 >
                                     {friendsTxt[props.userData.lang].removeFriend}
                                 </ActionButton>
+                            </ModalContent>
+                        </Modal>
+                    )}
+                    {showSelf && friendsData?.self && (
+                        <Modal
+                            aria-labelledby="unstyled-modal-title"
+                            aria-describedby="unstyled-modal-description"
+                            open={showSelf}
+                            onClose={() => setShowSelf(false)}
+                            slots={{backdrop: StyledBackdrop}}
+                        >
+                            <ModalContent sx={{width: 400}}>
+                                <h2 onClick={() => setShowSelf(false)}>
+                                    {friendsTxt[props.userData.lang].selfLabel}
+                                    {' '}({friendsData.self.firstName} {friendsData.self.lastName})
+                                </h2>
+                                <FriendPositionInfo
+                                    lang={props.userData.lang}
+                                    position={friendsData.self.position}
+                                    cargo={friendsData.self.cargo}
+                                />
                             </ModalContent>
                         </Modal>
                     )}
@@ -362,6 +406,22 @@ export const PlacesMap = (props: Props) => {
                                 </Tooltip>
                             </Marker>
                         ))}
+                        {showFriends && friendsData?.self.position && (
+                            <Marker
+                                position={[friendsData.self.position.lat, friendsData.self.position.lon]}
+                                icon={getSelfMarkerIcon(
+                                    getInitials(friendsData.self.firstName, friendsData.self.lastName),
+                                    !!friendsData.self.cargo?.destinations.length,
+                                )}
+                                eventHandlers={{click: () => setShowSelf(true)}}
+                            >
+                                <Tooltip>
+                                    {friendsTxt[props.userData.lang].selfLabel}
+                                    <br/>
+                                    {formatDate(friendsData.self.position.date, props.userData.lang)}
+                                </Tooltip>
+                            </Marker>
+                        )}
                     </MapContainer>
                     {(hiddenCount > 0 || partialCount > 0) && (
                         <div className="PlacesMap__badges">
