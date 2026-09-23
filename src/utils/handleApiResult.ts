@@ -6,6 +6,7 @@ import {SetAlertType} from "../context/AlertContext";
 import {vehicles} from "../assets/txt/vehicles";
 import {tours} from "../assets/txt/tours";
 import {places} from "../assets/txt/places";
+import {friends} from "../assets/txt/friends";
 
 interface HandleDtcErrors {
     message: string;
@@ -273,6 +274,31 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
             return {
                 message: commons[lang].apiUnauthorized,
                 type: 'error',
+            }
+        case 'friendUserNotFound':
+            return {
+                message: friends[lang].friendUserNotFound,
+                type: 'warning',
+            }
+        case 'friendCannotInviteSelf':
+            return {
+                message: friends[lang].friendCannotInviteSelf,
+                type: 'warning',
+            }
+        case 'friendAlreadyExists':
+            return {
+                message: friends[lang].friendAlreadyExists,
+                type: 'warning',
+            }
+        case 'friendNotFound':
+            return {
+                message: friends[lang].friendNotFound,
+                type: 'warning',
+            }
+        case 'friendEmailInvalid':
+            return {
+                message: friends[lang].friendEmailInvalid,
+                type: 'warning',
             }
         default:
             return {

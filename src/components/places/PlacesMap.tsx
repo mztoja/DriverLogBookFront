@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useMemo, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from "react";
 import {MapContainer, Marker, Tooltip, TileLayer, useMap} from "react-leaflet";
 import L from "leaflet";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
@@ -7,16 +7,32 @@ import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import {CircularProgress} from "@mui/material";
 import {places} from "../../assets/txt/places";
+import {friends as friendsTxt} from "../../assets/txt/friends";
 import {form} from "../../assets/txt/form";
-import {PlaceInterface, UserInterface} from "types";
+import {FriendSummaryInterface, PlaceInterface, UserInterface} from "types";
 import {usePlaces} from "../../hooks/usePlaces";
+import {useFriends} from "../../hooks/useFriends";
 import {PlaceEdit} from "./PlaceEdit";
 import {PlaceDetailCard} from "./PlaceDetailCard";
+import {AddFriend} from "./AddFriend";
 import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
 import {useAlert} from "../../hooks/useAlert";
+import {useApi} from "../../hooks/useApi";
+import {apiPaths} from "../../config/api";
 import {WindowYesNo} from "../common/WindowYesNo";
+import {WindowConfirm} from "../common/WindowConfirm";
 import {getPlaceMarkerIcon} from "./placeMarkerIcon";
+import {getFriendMarkerIcon} from "./friendMarkerIcon";
+import {formatDate} from "../../utils/formats/formatDate";
+import {getInitials} from "../../utils/getInitials";
 import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
+import {ActionButton} from "../common/ActionButton";
+import PeopleIcon from "@mui/icons-material/People";
+import RoomIcon from "@mui/icons-material/Room";
+import AddIcon from "@mui/icons-material/Add";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
+import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 
 // Gotcha webpack+Leaflet: domyślne ścieżki ikon pinezki liczone są względem base URL
 // budowanego bundla i wychodzą błędne — trzeba je jawnie podpiąć.
@@ -53,12 +69,42 @@ export const PlacesMap = (props: Props) => {
     const {
         places: data, loading, refreshPlaces,
         geocodeRunning, geocodeActiveMode, geocodeDone, geocodeTotal, startGeocode,
+        // Przełączniki warstw i filtr kategorii trzymane w PlacesContext (nie lokalnie) —
+        // żeby przetrwały odmontowanie tego komponentu (przełączenie karty Lista/Mapa,
+        // wyjście z /places i powrót), tak samo jak stan geokodowania wyżej.
+        showPlacesLayer: showPlaces, setShowPlacesLayer: setShowPlaces,
+        showFriendsLayer: showFriends, setShowFriendsLayer: setShowFriends,
+        mapFilterType: filterType, setMapFilterType: setFilterType,
     } = usePlaces();
+    const {friends: friendsData, refreshFriends} = useFriends();
+    const {fetchDataOld} = useApi();
     const [chosenPlace, setChosenPlace] = useState<PlaceInterface | null>(null);
     const [selectedPlace, setSelectedPlace] = useState<PlaceInterface | null>(null);
+    const [selectedFriend, setSelectedFriend] = useState<FriendSummaryInterface | null>(null);
     // null = brak otwartego potwierdzenia; inaczej tryb, którego dotyczy pytanie
     const [geocodeConfirmMode, setGeocodeConfirmMode] = useState<'full' | 'partial' | null>(null);
-    const [filterType, setFilterType] = useState<string>('999');
+    const [showAddFriend, setShowAddFriend] = useState<boolean>(false);
+    const [confirmRemoveFriend, setConfirmRemoveFriend] = useState<boolean>(false);
+
+    // Za każdym wejściem na mapę (zamontowanie tego komponentu) — nie tylko przy braku danych —
+    // żeby lista znajomych i oczekujących zaproszeń była aktualna po powrocie z innego miejsca.
+    useEffect(() => {
+        refreshFriends();
+        // eslint-disable-next-line
+    }, []);
+
+    const respondToFriendRequest = (friendshipId: number, accept: boolean): void => {
+        const path = accept ? apiPaths.acceptFriendRequest : apiPaths.declineFriendRequest;
+        fetchDataOld(path, 'POST', {id: friendshipId}).then(() => refreshFriends());
+    };
+
+    const removeFriend = (): void => {
+        if (!selectedFriend) return;
+        fetchDataOld(apiPaths.declineFriendRequest, 'POST', {id: selectedFriend.friendshipId}).then(() => {
+            refreshFriends();
+            setSelectedFriend(null);
+        });
+    };
 
     const hasLat = (place: PlaceInterface): boolean => Number(place.lat) > 0.001;
     const hasLon = (place: PlaceInterface): boolean => Number(place.lon) > 0.001;
@@ -90,9 +136,19 @@ export const PlacesMap = (props: Props) => {
         [coordPlaces, filterType]
     );
 
+    const friendPositions = useMemo<[number, number][]>(
+        () => (friendsData?.accepted ?? [])
+            .filter((friend) => friend.position)
+            .map((friend) => [friend.position!.lat, friend.position!.lon]),
+        [friendsData]
+    );
+
     const positions = useMemo<[number, number][]>(
-        () => pinnedPlaces.map((place) => [Number(place.lat), Number(place.lon)]),
-        [pinnedPlaces]
+        () => [
+            ...(showPlaces ? pinnedPlaces.map((place): [number, number] => [Number(place.lat), Number(place.lon)]) : []),
+            ...(showFriends ? friendPositions : []),
+        ],
+        [pinnedPlaces, friendPositions, showPlaces, showFriends]
     );
 
     // Uruchamia geokodowanie w PlacesContext (patrz komentarz przy destrukturyzacji usePlaces()
@@ -155,6 +211,71 @@ export const PlacesMap = (props: Props) => {
                             </ModalContent>
                         </Modal>
                     )}
+                    {selectedFriend && (
+                        <Modal
+                            aria-labelledby="unstyled-modal-title"
+                            aria-describedby="unstyled-modal-description"
+                            open={selectedFriend !== null}
+                            onClose={() => setSelectedFriend(null)}
+                            slots={{backdrop: StyledBackdrop}}
+                        >
+                            <ModalContent sx={{width: 400}}>
+                                <h2 onClick={() => setSelectedFriend(null)}>
+                                    {selectedFriend.firstName} {selectedFriend.lastName}
+                                </h2>
+                                <div className="PlacesMap__category">
+                                    {friendsTxt[props.userData.lang].lastPositionLabel}
+                                </div>
+                                <div className="PlacesMap__address">
+                                    {selectedFriend.position
+                                        ? `${formatDate(selectedFriend.position.date, props.userData.lang)} - ` +
+                                            `${selectedFriend.position.placeName}` +
+                                            `${selectedFriend.position.city ? ' - ' + selectedFriend.position.city : ''}`
+                                        : friendsTxt[props.userData.lang].noPosition}
+                                </div>
+                                <br/>
+                                <div className="PlacesMap__category">
+                                    {friendsTxt[props.userData.lang].currentCargoLabel}
+                                </div>
+                                {selectedFriend.cargo && (selectedFriend.cargo.targetPlace || selectedFriend.cargo.destinations.length > 0)
+                                    ? (
+                                        <>
+                                            {selectedFriend.cargo.targetPlace && (
+                                                <div className="PlacesMap__address">
+                                                    {friendsTxt[props.userData.lang].targetPlaceLabel}: {selectedFriend.cargo.targetPlace}
+                                                </div>
+                                            )}
+                                            {selectedFriend.cargo.destinations.length > 0 && (
+                                                <div className="PlacesMap__address">
+                                                    {friendsTxt[props.userData.lang].loadDestinationsLabel}: {selectedFriend.cargo.destinations.join(', ')}
+                                                </div>
+                                            )}
+                                        </>
+                                    )
+                                    : <div className="PlacesMap__address">{friendsTxt[props.userData.lang].noActiveTour}</div>
+                                }
+                                <br/>
+                                <ActionButton
+                                    variant="danger"
+                                    icon={<PersonRemoveIcon/>}
+                                    onClick={() => setConfirmRemoveFriend(true)}
+                                >
+                                    {friendsTxt[props.userData.lang].removeFriend}
+                                </ActionButton>
+                            </ModalContent>
+                        </Modal>
+                    )}
+                    {selectedFriend && (
+                        <WindowConfirm
+                            lang={props.userData.lang}
+                            show={confirmRemoveFriend}
+                            setShow={setConfirmRemoveFriend}
+                            text={friendsTxt[props.userData.lang].removeFriendConfirm(
+                                `${selectedFriend.firstName} ${selectedFriend.lastName}`,
+                            )}
+                            execute={removeFriend}
+                        />
+                    )}
                     <WindowYesNo
                         lang={props.userData.lang}
                         show={geocodeConfirmMode !== null}
@@ -167,14 +288,51 @@ export const PlacesMap = (props: Props) => {
                     <div className="PlacesMap__filter">
                         <PlaceTypeSelect lang={props.userData.lang} value={filterType}
                                          onChange={e => setFilterType(e)} displayAll={true}/>
+                        <div className="PlacesMap__layerToggles">
+                            <ActionButton
+                                variant={showFriends ? 'accent' : 'default'}
+                                icon={<PeopleIcon/>}
+                                onClick={() => setShowFriends(v => !v)}
+                            >
+                                {friendsTxt[props.userData.lang].friendsToggleLabel}
+                            </ActionButton>
+                            <ActionButton
+                                variant={showPlaces ? 'accent' : 'default'}
+                                icon={<RoomIcon/>}
+                                onClick={() => setShowPlaces(v => !v)}
+                            >
+                                {friendsTxt[props.userData.lang].placesToggleLabel}
+                            </ActionButton>
+                        </div>
+                        <ActionButton round icon={<AddIcon/>} onClick={() => setShowAddFriend(true)}
+                                      ariaLabel={friendsTxt[props.userData.lang].addFriend}/>
+                        {!!friendsData?.incoming.length && (
+                            <div className="PlacesMap__friendRequests">
+                                <div className="PlacesMap__friendRequestsHeader">
+                                    {friendsTxt[props.userData.lang].incomingRequestsHeader}
+                                </div>
+                                {friendsData.incoming.map((request) => (
+                                    <div key={request.friendshipId} className="PlacesMap__friendRequest">
+                                        <span>{request.firstName} {request.lastName} ({request.email})</span>
+                                        <ActionButton round icon={<CheckIcon/>}
+                                                      ariaLabel={friendsTxt[props.userData.lang].accept}
+                                                      onClick={() => respondToFriendRequest(request.friendshipId, true)}/>
+                                        <ActionButton round variant="danger" icon={<ClearIcon/>}
+                                                      ariaLabel={friendsTxt[props.userData.lang].decline}
+                                                      onClick={() => respondToFriendRequest(request.friendshipId, false)}/>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
+                    <AddFriend lang={props.userData.lang} show={showAddFriend} setShow={setShowAddFriend}/>
                     <MapContainer center={[52, 19]} zoom={5} scrollWheelZoom={true}>
                         <TileLayer
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
                         <FitBounds positions={positions}/>
-                        {pinnedPlaces.map((place) => {
+                        {showPlaces && pinnedPlaces.map((place) => {
                             const isPartial = hasLat(place) !== hasLon(place);
                             return (
                                 <Marker
@@ -190,6 +348,20 @@ export const PlacesMap = (props: Props) => {
                                 </Marker>
                             );
                         })}
+                        {showFriends && (friendsData?.accepted ?? []).filter((friend) => friend.position).map((friend) => (
+                            <Marker
+                                key={friend.friendshipId}
+                                position={[friend.position!.lat, friend.position!.lon]}
+                                icon={getFriendMarkerIcon(getInitials(friend.firstName, friend.lastName), !!friend.cargo?.destinations.length)}
+                                eventHandlers={{click: () => setSelectedFriend(friend)}}
+                            >
+                                <Tooltip>
+                                    {friend.firstName} {friend.lastName}
+                                    <br/>
+                                    {formatDate(friend.position!.date, props.userData.lang)}
+                                </Tooltip>
+                            </Marker>
+                        ))}
                     </MapContainer>
                     {(hiddenCount > 0 || partialCount > 0) && (
                         <div className="PlacesMap__badges">

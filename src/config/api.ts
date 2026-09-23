@@ -106,4 +106,9 @@ export const apiPaths = {
     getExpenseFavorites: '/expense-favorites',
     addExpenseFavorite: '/expense-favorites/add',
     deleteExpenseFavorite: '/expense-favorites/delete',
+    // friends
+    getFriends: '/friends/get',
+    inviteFriend: '/friends/invite',
+    acceptFriendRequest: '/friends/accept',
+    declineFriendRequest: '/friends/decline',
 }

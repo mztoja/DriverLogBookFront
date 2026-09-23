@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useCallback, useMemo, useRef, useState} from 'react';
+import {createContext, Dispatch, ReactNode, SetStateAction, useCallback, useMemo, useRef, useState} from 'react';
 import {PlaceInterface, userLangEnum} from 'types';
 import {apiPaths} from '../config/api';
 import {apiFetch} from '../utils/apiFetch';
@@ -23,6 +23,17 @@ interface PlacesCtx {
     geocodeDone: number;
     geocodeTotal: number;
     startGeocode: (mode: GeocodeMode, lang: userLangEnum, setAlert: (text: string, type: SetAlertType) => void) => void;
+    // Stan widoku karty /places (aktywna karta Lista/Mapa, przełączniki warstw pinezek na mapie,
+    // filtr kategorii) trzymany tutaj z tego samego powodu co stan geokodowania wyżej — żeby
+    // przetrwał odmontowanie PlacesView/PlacesMap (przełączenie na inną trasę i powrót).
+    mapTab: 'list' | 'map';
+    setMapTab: Dispatch<SetStateAction<'list' | 'map'>>;
+    showPlacesLayer: boolean;
+    setShowPlacesLayer: Dispatch<SetStateAction<boolean>>;
+    showFriendsLayer: boolean;
+    setShowFriendsLayer: Dispatch<SetStateAction<boolean>>;
+    mapFilterType: string;
+    setMapFilterType: Dispatch<SetStateAction<string>>;
 }
 
 export const PlacesContext = createContext<PlacesCtx>({
@@ -36,6 +47,14 @@ export const PlacesContext = createContext<PlacesCtx>({
     geocodeDone: 0,
     geocodeTotal: 0,
     startGeocode: () => {},
+    mapTab: 'list',
+    setMapTab: () => {},
+    showPlacesLayer: true,
+    setShowPlacesLayer: () => {},
+    showFriendsLayer: true,
+    setShowFriendsLayer: () => {},
+    mapFilterType: '999',
+    setMapFilterType: () => {},
 });
 
 interface Props {
@@ -100,6 +119,11 @@ export const PlacesProvider = ({children}: Props) => {
     const [geocodeTotal, setGeocodeTotal] = useState<number>(0);
     const geocodeRunningRef = useRef<boolean>(false);
 
+    const [mapTab, setMapTab] = useState<'list' | 'map'>('list');
+    const [showPlacesLayer, setShowPlacesLayer] = useState<boolean>(true);
+    const [showFriendsLayer, setShowFriendsLayer] = useState<boolean>(true);
+    const [mapFilterType, setMapFilterType] = useState<string>('999');
+
     const startGeocode = useCallback((
         mode: GeocodeMode,
         lang: userLangEnum,
@@ -159,9 +183,12 @@ export const PlacesProvider = ({children}: Props) => {
         () => ({
             places, loading, ensurePlaces, refreshPlaces, syncPlaces,
             geocodeRunning, geocodeActiveMode, geocodeDone, geocodeTotal, startGeocode,
+            mapTab, setMapTab, showPlacesLayer, setShowPlacesLayer,
+            showFriendsLayer, setShowFriendsLayer, mapFilterType, setMapFilterType,
         }),
         [places, loading, ensurePlaces, refreshPlaces, syncPlaces,
-            geocodeRunning, geocodeActiveMode, geocodeDone, geocodeTotal, startGeocode],
+            geocodeRunning, geocodeActiveMode, geocodeDone, geocodeTotal, startGeocode,
+            mapTab, showPlacesLayer, showFriendsLayer, mapFilterType],
     );
 
     return <PlacesContext.Provider value={value}>{children}</PlacesContext.Provider>;

@@ -18,8 +18,7 @@ interface Props extends AppMainElementsTypes {
 export const PlacesView = (props: Props) => {
 
     const [showAddPlace, setShowAddPlace] = useState<boolean>(false);
-    const [tab, setTab] = useState<"list" | "map">("list");
-    const {syncPlaces} = usePlaces();
+    const {syncPlaces, mapTab, setMapTab} = usePlaces();
 
     // Wejście na listę miejsc – pobierz w tle i podmień tylko gdy różne od stanu globalnego.
     useEffect(() => {
@@ -31,15 +30,15 @@ export const PlacesView = (props: Props) => {
             <AddPlace lang={props.userData.lang} show={showAddPlace} setShow={setShowAddPlace}/>
 
             <TableTabs
-                active={tab}
-                onChange={(k) => setTab(k as "list" | "map")}
+                active={mapTab}
+                onChange={(k) => setMapTab(k as "list" | "map")}
                 tabs={[
                     {key: "list", label: places[props.userData.lang].tableHeader},
                     {key: "map", label: places[props.userData.lang].mapTab},
                 ]}
             />
 
-            {tab === "list"
+            {mapTab === "list"
                 ? <PlacesList userData={props.userData} setUserData={props.setUserData} showAddButton={showAddPlace} setShowAddPlace={setShowAddPlace} />
                 : <PlacesMap userData={props.userData} setUserData={props.setUserData} />}
         </>
