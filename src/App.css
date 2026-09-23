@@ -240,6 +240,12 @@ tbody tr:hover, .highlighted {
     background-color: #d8690f82 !important;
 }
 
+.TableView__summary, .TableView__summary:hover {
+    font-weight: bold;
+    background-color: #0000005e !important;
+    border-top: 2px solid whitesmoke;
+}
+
 /* --- Listy tabelaryczne: jeden scroll, tylko na wierszach danych ---
    Wspólny wzorzec dla /logs, /days, /finances, /loadings, /places. */
 
@@ -380,6 +386,127 @@ tbody tr:hover, .highlighted {
     height: auto;
     max-height: none; /* było 88% – usuwamy zagnieżdżony limit */
     margin: 0.4rem auto;
+}
+
+/* karta "Mapa" na /places — .Table__Body jako zwykły kontener overflow:auto nie ma
+   jawnej wysokości, więc Leaflet (który wymaga rodzica o realnej wysokości) dostaje ją tu */
+.Table__Body.PlacesMap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.Table__Body.PlacesMap .leaflet-container {
+    width: 100%;
+    height: 100%;
+    border-radius: .6rem;
+}
+
+/* kontener plakietek informacyjnych (brak/niepełne współrzędne) — lewy dolny róg mapy,
+   nad warstwami Leaflet (kontrolki zoom mają z-index 1000, dlatego 1001); ułożone w kolumnę,
+   żeby dwie jednoczesne plakietki się nie nakładały */
+.PlacesMap__badges {
+    position: absolute;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    z-index: 1001;
+    max-width: calc(100% - 1.2rem);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.4rem;
+}
+.PlacesMap__badge {
+    background-color: #000000c0;
+    color: whitesmoke;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    box-shadow: 0 .2rem .5rem #0006;
+    transition: background 0.05s;
+}
+.PlacesMap__badge:hover {
+    background-color: #d8690fc0;
+}
+.PlacesMap__badge--loading {
+    cursor: default;
+    display: flex;
+    align-items: center;
+}
+.PlacesMap__badge--loading:hover {
+    background-color: #000000c0;
+}
+
+/* L.divIcon domyślnie dostaje białe tło + ramkę (klasa leaflet-div-icon) — pinezki
+   kategorii miejsc (PlacesMap/placeMarkerIcon.ts) rysują własne SVG, więc to zdejmujemy */
+.PlacesMap__pin {
+    background: transparent;
+    border: none;
+}
+
+/* dokładny adres / kategoria pod nagłówkiem karty szczegółów w popupie mapy */
+.PlacesMap__address {
+    opacity: 0.75;
+    font-size: 0.85rem;
+    margin-top: -0.4rem;
+}
+.PlacesMap__category {
+    opacity: 0.75;
+    font-size: 0.85rem;
+    margin-top: -0.4rem;
+    font-style: italic;
+}
+
+/* filtr kategorii — prawy górny róg mapy, nad warstwami Leaflet (patrz .PlacesMap__badge) */
+.PlacesMap__filter {
+    position: absolute;
+    right: 0.6rem;
+    top: 0.6rem;
+    z-index: 1001;
+    background-color: #000000c0;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 .2rem .5rem #0006;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: min(80vw, 20rem);
+}
+
+/* przełączniki Znajomi/Miejsca pod selectem grupy miejsc — dwa niezależne ActionButton,
+   wariant "accent" oznacza włączoną warstwę */
+.PlacesMap__layerToggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+/* lista oczekujących zaproszeń pod przyciskiem + (dodaj znajomego) */
+.PlacesMap__friendRequests {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+}
+
+.PlacesMap__friendRequestsHeader {
+    font-size: 0.8rem;
+    opacity: 0.75;
+}
+
+.PlacesMap__friendRequest {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+}
+
+.PlacesMap__friendRequest span {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #Notes {

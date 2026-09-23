@@ -1,14 +1,16 @@
-import React, {Dispatch, FormEvent, SetStateAction, useState} from 'react';
+import React, {Dispatch, FormEvent, SetStateAction, useEffect, useState} from 'react';
 import {LogEditData, TourEditData, TourInterface, tourStatusEnum, userFuelContypeEnum, userLangEnum } from 'types';
 import {defaultValues} from "./defaultValues";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
+import {home} from "../../assets/txt/home";
 import {DateTimeInput} from "../common/form/DateTimeInput";
 import {OdometerInput} from "../common/form/OdometerInput";
 import {PlaceInput} from "../common/form/PlaceInput";
 import {ActionInput} from "../common/form/ActionInput";
 import {TextArea} from "../common/form/TextArea";
+import {DistanceInput} from "../common/form/DistanceInput";
 import {places} from "../../assets/txt/places";
 import {CircularProgress} from "@mui/material";
 import {SubmitButton} from "../common/form/SubmitButton";
@@ -45,6 +47,13 @@ export const TourEdit = (props: Props) => {
             setFormData((formData: TourEditData) => ({...formData, [key]: value}));
         }
     };
+
+    useEffect(() => {
+        if (Number(formData.startData.odometer) && Number(formData.stopData.odometer)) {
+            updateForm('distance', null, (Number(formData.stopData.odometer) - Number(formData.startData.odometer)).toString());
+        }
+        // eslint-disable-next-line
+    }, [formData.startData.odometer, formData.stopData.odometer]);
 
     const sendForm = (e: FormEvent): void => {
         e.preventDefault();
@@ -179,6 +188,15 @@ export const TourEdit = (props: Props) => {
                                 <br/>
                                 <div><TextArea label={places[props.lang].description} value={formData.stopData.notes}
                                                onChange={e => updateForm('stopData', 'notes', e.target.value)}/></div>
+                                <br/>
+                                <div>
+                                    <DistanceInput
+                                        lang={props.lang}
+                                        label={home[props.lang].tourDistanceLabel}
+                                        value={formData.distance}
+                                        onChange={e => updateForm('distance', null, e)}
+                                    />
+                                </div>
                             </fieldset>
                         </>
                     }

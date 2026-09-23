@@ -9,6 +9,7 @@ export const apiPaths = {
     createPlace: '/places/create',
     getCompanyList: '/places/companyList',
     editPlace: '/places/edit',
+    geocodeNextPlace: '/places/geocodeNext',
     // routes
     getActiveRoute: '/tours/getActiveRoute',
     getPreviousRoute: '/tours/getPreviousRoute',
@@ -39,6 +40,8 @@ export const apiPaths = {
     // days
     createNewDay: '/days/create',
     finishDay: '/days/finish',
+    resumeDay: '/days/resume',
+    addBreak: '/days/addBreak',
     getActiveDay: '/days/getActiveDay',
     getLastDay: '/days/getLastDay',
     getYourLastDay: '/days/getYourLastDay',
@@ -75,6 +78,7 @@ export const apiPaths = {
     // services
     createService: '/services/create',
     getServiceByVehicleId: '/services/getByVehicleId',
+    getServiceByLogId: '/services/getByLogId',
     editService: '/services/edit',
     // loadings
     createLoad: '/loads/create',
@@ -102,4 +106,9 @@ export const apiPaths = {
     getExpenseFavorites: '/expense-favorites',
     addExpenseFavorite: '/expense-favorites/add',
     deleteExpenseFavorite: '/expense-favorites/delete',
+    // friends
+    getFriends: '/friends/get',
+    inviteFriend: '/friends/invite',
+    acceptFriendRequest: '/friends/accept',
+    declineFriendRequest: '/friends/decline',
 }

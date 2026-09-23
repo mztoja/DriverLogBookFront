@@ -3,6 +3,7 @@ import {Navigate, Route, Routes, useLocation} from "react-router-dom";
 import {DayInterface, LogInterface, TourInterface, UserInterface} from "types";
 import {AppLayout} from "../../components/layout/AppLayout";
 import {PlacesProvider} from "../../context/PlacesContext";
+import {FriendsProvider} from "../../context/FriendsContext";
 import {InfoBar} from "../../components/bars/InfoBar/InfoBar";
 import {useDocumentTitle} from "../../hooks/useDocumentTitle";
 import {HomeView} from "../HomeView";
@@ -37,6 +38,7 @@ export const LoggedInView = (props: Props) => {
 
     return (
         <PlacesProvider>
+        <FriendsProvider>
         <AppLayout
             lang={userData.lang}
             userData={userData}
@@ -83,6 +85,7 @@ export const LoggedInView = (props: Props) => {
                                                   tourData={tourData}/>}/>
             </Routes>
         </AppLayout>
+        </FriendsProvider>
         </PlacesProvider>
     );
 };

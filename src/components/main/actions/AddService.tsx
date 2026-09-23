@@ -36,7 +36,7 @@ export const AddService = (props: Props) => {
             placeId: props.formData.placeId,
             odometer: props.formData.serviceVehicleType === vehicleTypeEnum.truck.toString() ? props.formData.odometer : '0',
             notes: props.formData.notes,
-            action: home[props.lang].addServiceAction,
+            action: home[props.lang].addServiceAction(props.formData.serviceVehicleReg),
             serviceVehicleId: props.formData.serviceVehicleId,
             serviceType: props.serviceType === ServiceEnum.fifthWheelLube
                 ? serviceTypeEnum.maintenance.toString()
@@ -52,6 +52,8 @@ export const AddService = (props: Props) => {
                     props.setActivityForm(null);
                     props.setRefresh((prev => !prev));
                     props.updateFormData('notes', '');
+                    props.updateFormData('serviceEntry', '');
+                    props.updateFormData('serviceVehicleReg', '');
                 }
             });
     }
@@ -94,9 +96,14 @@ export const AddService = (props: Props) => {
                         vehicleType={props.serviceType === ServiceEnum.fifthWheelLube
                             ? vehicleTypeEnum.truck
                             : Number(props.formData.serviceVehicleType)}
+                        currentRegistration={(props.serviceType === ServiceEnum.fifthWheelLube
+                            || props.formData.serviceVehicleType === vehicleTypeEnum.truck.toString())
+                            ? props.tourData?.truck
+                            : props.tourData?.trailer}
                         lang={props.userData.lang}
                         value={props.formData.serviceVehicleId}
                         onChange={e => props.updateFormData('serviceVehicleId', e)}
+                        onRegistrationChange={e => props.updateFormData('serviceVehicleReg', e)}
                     />
                 </div>
                 <br/>

@@ -13,7 +13,6 @@ import {
 import './InfoBar.css';
 import {info} from "../../../assets/txt/info";
 import {formatOdometer} from "../../../utils/formats/formatOdometer";
-import {formatSimplePlace} from "../../../utils/formats/formatSimplePlace";
 import {formatDateToTime} from "../../../utils/formats/formatDateToTime";
 import {formatFuelQuantity} from "../../../utils/formats/formatFuelQuantity";
 import {apiPaths} from "../../../config/api";
@@ -29,6 +28,9 @@ import {AddVehicle} from "../../vehicles/AddVehicle";
 import ClearIcon from "@mui/icons-material/Clear";
 import {Tooltip} from "@mui/material";
 import { formatText } from '../../../utils/formats/formatText';
+import {TimeArcGauge} from "../../common/TimeArcGauge";
+import {calcWorkTime} from "../../../utils/calcWorkTime";
+import {calcSecondsFromTime} from "../../../utils/calcSecondsFromTime";
 
 interface Props {
     lang: userLangEnum;
@@ -239,6 +241,13 @@ export const InfoBar = (props: Props) => {
         };
     }, [detailsOpen]);
 
+    // Test komponentu TimeArcGauge — czas pracy dzisiejszego dnia, progi zielony/żółty/czerwony
+    // wg obsady (1-osobowa: 13h/15h, 2-osobowa: 20h/21h). `currentTime` tyka co 2s (patrz wyżej),
+    // więc calcWorkTime (licząca live na "teraz" gdy dzień trwa) odświeża się przy każdym tym tyknięciu.
+    const workSeconds = dayData?.startData ? calcSecondsFromTime(calcWorkTime(dayData)) : 0;
+    const workWarnSeconds = (dayData?.doubleCrew ? 20 : 13) * 3600;
+    const workMaxSeconds = (dayData?.doubleCrew ? 21 : 15) * 3600;
+
     return (
         <div id="InfoBar" ref={infoBarRef}>
             {showAddVehicle && <AddVehicle userData={props.userData} setRefresh={props.setRefresh} show={showAddVehicle}
@@ -276,16 +285,18 @@ export const InfoBar = (props: Props) => {
                             ?
                             <>
                                 {dayData.startData &&
-                                    <>
-                                        {txt.youStartedDayAt} {formatDateToTime(dayData.startData.date)}
-                                        &nbsp;
-                                        {txt.in} {formatSimplePlace(dayData.startData.place, dayData.startData.placeData)}<br/>
-                                    </>
+                                    <TimeArcGauge
+                                        label={txt.workTimeGaugeLabel}
+                                        seconds={workSeconds}
+                                        warnSeconds={workWarnSeconds}
+                                        maxSeconds={workMaxSeconds}
+                                    />
                                 }
+                                &nbsp;
                                 {txt.traveledToday}: {formatOdometer(dayData.distance)}
                                 {dayData.startData &&
                                     <>
-                                        &nbsp;|&nbsp;
+                                        <br/>
                                         {txt.workingTimeUntil}:
                                         {dayData.doubleCrew
                                             ?

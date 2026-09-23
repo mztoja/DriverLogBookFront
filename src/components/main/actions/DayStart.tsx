@@ -13,24 +13,22 @@ import {SubmitButton} from "../../common/form/SubmitButton";
 import {Link} from "react-router-dom";
 import {apiPaths} from "../../../config/api";
 import {OnOffSwitch} from "../../common/form/OnOffSwitch";
-import {dayCardStateEnum, DayInterface, StartDayData} from "types";
+import {AddLogData, dayCardStateEnum, DayInterface, StartDayData} from "types";
+import {ActionButton} from "../../common/ActionButton";
+import {WindowYesNo} from "../../common/WindowYesNo";
+import {getResumableDay} from "../../../utils/getResumableDay";
+import {formatDateToTime} from "../../../utils/formats/formatDateToTime";
 
 export const DayStart = (props: ActionsPropsTypes) => {
 
     const {loading, fetchData} = useApi();
+    const {fetchData: fetchResumeCheck} = useApi();
     const {setAlert} = useAlert();
     const [lastDay, setLastDay] = useState<DayInterface | null>(null);
+    const [resumableDay, setResumableDay] = useState<DayInterface | null>(null);
+    const [showResumeConfirm, setShowResumeConfirm] = useState<boolean>(false);
 
     useEffect(() => {
-        // (async () => {
-        //     const result = await fetchDataOld(apiPaths.getLastDay, 'GET');
-        //     if ((result && result.responseData) && (!result.responseData.dtc)) {
-        //         setLastDay(result.responseData);
-        //         if (result.responseData.cardState === dayCardStateEnum.inserted) {
-        //             props.updateFormData('cardInserted', 'true');
-        //         }
-        //     }
-        // })();
         fetchData<DayInterface>(apiPaths.getLastDay, {setData: setLastDay})
             .then((res) => {
                 if (res.responseData?.cardState === dayCardStateEnum.inserted) {
@@ -39,6 +37,39 @@ export const DayStart = (props: ActionsPropsTypes) => {
             });
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        if (!props.tourData) return;
+        fetchResumeCheck<DayInterface[]>(`${apiPaths.getDaysByTourId}/${props.tourData.id}`)
+            .then((res) => {
+                setResumableDay(getResumableDay(res.responseData ?? []));
+            });
+        // eslint-disable-next-line
+    }, [props.tourData]);
+
+    const sendResumeDay = (): void => {
+        setShowResumeConfirm(false);
+        if (!resumableDay) return;
+        const sendData: AddLogData = {
+            date: props.formData.date,
+            country: props.formData.country,
+            place: props.formData.place,
+            placeId: props.formData.placeId,
+            odometer: props.formData.odometer,
+            notes: props.formData.notes,
+            action: home[props.lang].resumeDayAction,
+        };
+        fetchData<DayInterface>(`${apiPaths.resumeDay}/${resumableDay.id}`, {method: 'POST', sendData}, {setAlert, lang: props.lang})
+            .then((res) => {
+                if (res.success && res.responseData) {
+                    setAlert(home[props.lang].resumedDay, 'success');
+                    props.setActivityForm(null);
+                    props.setDayData(res.responseData);
+                    props.setRefresh((prev => !prev));
+                    props.updateFormData('notes', '');
+                }
+            });
+    }
 
     const sendDayStart = async (e: FormEvent) => {
         e.preventDefault();
@@ -72,6 +103,14 @@ export const DayStart = (props: ActionsPropsTypes) => {
         <fieldset>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link><br/><br/>
             <legend>{home[props.lang].dayStart}</legend>
+            {resumableDay &&
+                <>
+                    <ActionButton variant="accent" onClick={() => setShowResumeConfirm(true)}>
+                        {home[props.lang].resumeDayButton}
+                    </ActionButton>
+                    <br/><br/>
+                </>
+            }
             <form onSubmit={sendDayStart}>
                 <div><DateTimeInput
                     lang={props.lang}
@@ -117,6 +156,13 @@ export const DayStart = (props: ActionsPropsTypes) => {
             </form>
             <br/>
             <Link to="" className="Link" onClick={() => props.setActivityForm(null)}>{home[props.lang].back}</Link>
+            <WindowYesNo
+                lang={props.lang}
+                show={showResumeConfirm}
+                text={resumableDay?.startData ? home[props.lang].resumeDayConfirm(formatDateToTime(resumableDay.startData.date)) : ''}
+                onYes={sendResumeDay}
+                onNo={() => setShowResumeConfirm(false)}
+            />
         </fieldset>
     );
 }

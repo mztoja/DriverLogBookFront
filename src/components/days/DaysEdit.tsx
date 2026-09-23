@@ -3,7 +3,6 @@ import {
     DayInterface,
     userLangEnum,
     DayEditData,
-    dayCardStateEnum,
     LogEditData,
     dayStatusEnum,
     userFuelContypeEnum
@@ -21,7 +20,6 @@ import {DistanceInput} from "../common/form/DistanceInput";
 import {OnOffSwitch} from "../common/form/OnOffSwitch";
 import {home} from "../../assets/txt/home";
 import {DayCardStateSelect} from "../common/form/day/DayCardStateSelect";
-import {LongTimeInput} from "../common/form/day/LongTimeInput";
 import {FuelInput} from "../common/form/FuelInput";
 import {CircularProgress} from "@mui/material";
 import {SubmitButton} from "../common/form/SubmitButton";
@@ -29,7 +27,6 @@ import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
 import {defaultValues} from "./defaultValues";
 import {areFieldsEqual} from "./areFieldsEqual";
-import {subtractDatesToTime} from "../../utils/subtractDatesToTime";
 import {apiPaths} from "../../config/api";
 
 interface Props {
@@ -46,7 +43,6 @@ export const DaysEdit = (props: Props) => {
     const {loading, fetchData} = useApi();
     const [formData, setFormData] = useState<DayEditData>(defaultValues(props.day));
     const [combustionValue, setCombustionValue] = useState<string>((Number(formData.fuelBurned) / Number(formData.distance) * 100).toFixed(1));
-    const [breakStopDate, setBreakStopDate] = useState<string>('');
 
     const updateForm = (key: keyof DayEditData, subKey: keyof LogEditData | null, value: string | number) => {
         if (subKey) {
@@ -63,30 +59,10 @@ export const DaysEdit = (props: Props) => {
     };
 
     useEffect(() => {
-        const [hours, minutes] = formData.breakTime.split(':').map(Number);
-        const seconds = hours * 3600 + minutes * 60;
-        setBreakStopDate((new Date(formData.stopData.date).getTime() + seconds * 1000).toString());
-        // eslint-disable-next-line
-    }, []);
-
-    useEffect(() => {
-        if (!isNaN(Date.parse(formData.startData.date)) && !isNaN(Date.parse(formData.stopData.date))) {
-            updateForm('workTime', null, subtractDatesToTime(formData.stopData.date, formData.startData.date));
-        }
-        //eslint-disable-next-line
-    }, [formData.startData.date, formData.stopData.date]);
-
-    useEffect(() => {
         if (Number(formData.startData.odometer) && Number(formData.stopData.odometer)) {
             updateForm('distance', null, Number(formData.stopData.odometer) - Number(formData.startData.odometer));
         }
     },[formData.startData.odometer, formData.stopData.odometer]);
-    useEffect(() => {
-        if (!isNaN(Date.parse(formData.stopData.date)) && breakStopDate !== '') {
-            updateForm('breakTime', null, subtractDatesToTime(new Date(Number(breakStopDate)).toISOString(), formData.stopData.date + ':00.000Z'));
-        }
-        // eslint-disable-next-line
-    }, [formData.stopData.date]);
 
     const changingCombustion = (v: string): void => {
         const newValue = Number(formData.distance) / 100 * Number(v);
@@ -220,8 +196,7 @@ export const DaysEdit = (props: Props) => {
                     }
                     <br/><br/>
                     <div><DayCardStateSelect lang={props.lang} value={formData.cardState.toString()}
-                                             onChange={e => updateForm('cardState', null, e)}
-                                             disabled={props.day?.status === dayStatusEnum.finished}/></div>
+                                             onChange={e => updateForm('cardState', null, e)}/></div>
                     <br/>
                     <div><OnOffSwitch label={home[props.lang].doubleCrew} value={formData.doubleCrew}
                                       onChange={e => updateForm('doubleCrew', null, e)}/></div>
@@ -238,26 +213,6 @@ export const DaysEdit = (props: Props) => {
                                     <div>
                                         <DriveTimeInput lang={props.lang} value={formData.driveTime2}
                                                         onChange={e => updateForm('driveTime2', null, e)} secDriver/>
-                                    </div>
-                                </>
-                            }
-                            <br/>
-                            <div><LongTimeInput
-                                lang={props.lang}
-                                type='work'
-                                value={formData.workTime}
-                                onChange={e => updateForm('workTime', null, e)}
-                            />
-                            </div>
-                            {props.day.cardState !== dayCardStateEnum.notUsed &&
-                                <>
-                                    <br/>
-                                    <div><LongTimeInput
-                                        lang={props.lang}
-                                        type='break'
-                                        value={formData.breakTime}
-                                        onChange={e => updateForm('breakTime', null, e)}
-                                    />
                                     </div>
                                 </>
                             }
@@ -284,6 +239,7 @@ export const DaysEdit = (props: Props) => {
                     <br/>
                     <div><DistanceInput
                         lang={props.lang}
+                        label={home[props.lang].dayDistanceLabel}
                         value={formData.distance.toString()}
                         onChange={e => changingDistance(e)}
                     />

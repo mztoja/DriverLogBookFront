@@ -23,6 +23,7 @@ export const defaultValues = (tour:TourInterface | null):TourEditData => ({
         odometer: tour?.stopLogData?.odometer ? tour.stopLogData.odometer.toString() : '',
         notes: tour?.stopLogData?.notes ? tour.stopLogData.notes : '',
     },
+    distance: tour?.distance ? tour.distance.toString() : '0',
     fuelStateBefore: tour?.fuelStateBefore ? tour.fuelStateBefore.toString() : '0',
     fuelStateAfter: tour?.fuelStateAfter ? tour.fuelStateAfter.toString() : '0',
     expectedSalary: tour?.expectedSalary ? tour.expectedSalary.toString() : '0',

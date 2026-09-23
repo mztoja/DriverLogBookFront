@@ -6,6 +6,7 @@ export const areFieldsEqual = (data: LoadInterface, formData: LoadEditData): boo
     }
 
     const areLoadingDataEqual: boolean = (
+        data.loadNr.toString() === formData.loadNr.toString() &&
         new Date(data.loadingLogData.date).getTime() + (new Date(data.loadingLogData.date).getTimezoneOffset() * 60 * 1000) === new Date(formData.loadingLogData.date).getTime() &&
         data.loadingLogData.action === formData.loadingLogData.action &&
         data.loadingLogData.country === formData.loadingLogData.country &&

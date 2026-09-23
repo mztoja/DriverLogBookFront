@@ -2,6 +2,7 @@ import {LoadEditData, LoadInterface } from "types";
 
 export const defaultValues = (load: LoadInterface | null): LoadEditData => ({
     id: 0,
+    loadNr: load?.loadNr ? load.loadNr.toString() : '',
     loadingLogData: {
         id: 0,
         date: load?.loadingLogData?.date ? load.loadingLogData.date : '',

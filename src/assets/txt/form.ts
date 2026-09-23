@@ -65,6 +65,7 @@ interface Form {
     loadReference: string;
     loadWeight: string;
     loadQuantity: string;
+    loadNr: string;
     chooseLoad: string;
     paymentSelect: string;
     cash: string;
@@ -155,6 +156,7 @@ export const form: Form[] =
         loadReference: 'Loading reference',
         loadWeight: 'Weight of the goods',
         loadQuantity: 'Quantity of the goods',
+        loadNr: 'Load Nr.',
         chooseLoad: 'Choose your load',
         paymentSelect: 'Payment',
         cash: 'Cash',
@@ -242,6 +244,7 @@ export const form: Form[] =
             loadReference: 'Numer załadunku',
             loadWeight: 'Waga towaru',
             loadQuantity: 'Ilość towaru',
+            loadNr: 'Nr. ład.',
             chooseLoad: 'Wybierz ładunek',
             paymentSelect: 'Płatność',
             cash: 'Gotówka',

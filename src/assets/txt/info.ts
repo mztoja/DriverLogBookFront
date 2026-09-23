@@ -5,8 +5,6 @@ interface Info {
     and: string;
     day: string;
     days: string;
-    in: string;
-    youStartedDayAt: string;
     traveledToday: string;
     workingTimeUntil: string;
     truck: string;
@@ -28,6 +26,7 @@ interface Info {
     breakOver: string;
     breakIn: string;
     carriedLoads: string;
+    workTimeGaugeLabel: string;
 }
 
 export const info: Info[] = [
@@ -38,8 +37,6 @@ export const info: Info[] = [
         and: 'and',
         day: 'day',
         days: 'days',
-        in: 'in',
-        youStartedDayAt: 'You started the day at',
         traveledToday: 'Traveled today',
         workingTimeUntil: 'Working time until',
         truck: 'Truck',
@@ -61,6 +58,7 @@ export const info: Info[] = [
         breakOver: 'The required daily break has been completed',
         breakIn: 'in',
         carriedLoads: 'Carried loads',
+        workTimeGaugeLabel: 'Work time today',
     },
     {//pl
         routeNo: 'Trasa nr.',
@@ -69,8 +67,6 @@ export const info: Info[] = [
         and: 'i',
         days: 'dni',
         day: 'dzień',
-        in: 'w',
-        youStartedDayAt: 'Rozpocząłeś dzień o',
         traveledToday: 'Dziś przejechałeś',
         workingTimeUntil: 'Czas pracy do',
         truck: 'Ciągnik',
@@ -92,5 +88,6 @@ export const info: Info[] = [
         breakOver: 'Wymagany odpoczynek dobowy został już odebrany',
         breakIn: 'za',
         carriedLoads: 'Przewożone ładunki',
+        workTimeGaugeLabel: 'Czas pracy dzisiaj',
     },
 ];
