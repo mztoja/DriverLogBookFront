@@ -7,10 +7,11 @@ import {useAlert} from "../../hooks/useAlert";
 import {EmailInput} from "../common/form/profile/EmailInput";
 import {PasswordInput} from "../common/form/profile/PasswordInput";
 import {SubmitButton} from "../common/form/SubmitButton";
-import {useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {DeleteFromLocalStorage, DownloadFromLocalStorage} from "../../hooks/LocalStorageHook";
 import {useApi} from "../../hooks/useApi";
 import {handleApiResult} from "../../utils/handleApiResult";
+import {ForgotPassword} from "./ForgotPassword";
 
 interface Props {
     lang: userLangEnum;
@@ -44,6 +45,10 @@ export const LoginForm = (props: Props) => {
         email: '',
         password: '',
     });
+    // Pytanie "Zapomniałeś hasła?" pokazuje się dopiero po kilku nieudanych próbach — nie od razu,
+    // żeby nie sugerować go przy zwykłej literówce w haśle.
+    const [failedAttempts, setFailedAttempts] = useState<number>(0);
+    const [showForgotPassword, setShowForgotPassword] = useState<boolean>(false);
 
     const updateForm = (key: string, value: string) => {
         setLoginForm((loginForm: LoginFormInterface) => ({
@@ -56,9 +61,11 @@ export const LoginForm = (props: Props) => {
         e.preventDefault();
 
         const result = await fetchDataOld(apiPaths.login, 'POST', loginForm);
+        const success = !!result?.success && !result?.responseData?.dtc;
         handleApiResult(result, props.lang, setAlert, () => {
             props.setUserData && props.setUserData(result?.responseData);
         });
+        setFailedAttempts(prev => success ? 0 : prev + 1);
     }
 
     if (loading) {
@@ -83,7 +90,16 @@ export const LoginForm = (props: Props) => {
                     <br/>
                     <SubmitButton text={txt.submit}/>
                 </form>
+                {failedAttempts >= 3 &&
+                    <>
+                        <br/>
+                        <Link to="" className="Link" onClick={() => setShowForgotPassword(true)}>
+                            {txt.forgotPasswordQuestion}
+                        </Link>
+                    </>
+                }
             </fieldset>
+            <ForgotPassword lang={props.lang} show={showForgotPassword} setShow={setShowForgotPassword}/>
         </div>
     )
 }
