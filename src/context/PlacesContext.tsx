@@ -49,7 +49,7 @@ export const PlacesContext = createContext<PlacesCtx>({
     startGeocode: () => {},
     mapTab: 'list',
     setMapTab: () => {},
-    showPlacesLayer: true,
+    showPlacesLayer: false,
     setShowPlacesLayer: () => {},
     showFriendsLayer: true,
     setShowFriendsLayer: () => {},
@@ -120,7 +120,8 @@ export const PlacesProvider = ({children}: Props) => {
     const geocodeRunningRef = useRef<boolean>(false);
 
     const [mapTab, setMapTab] = useState<'list' | 'map'>('list');
-    const [showPlacesLayer, setShowPlacesLayer] = useState<boolean>(true);
+    // Domyślnie tylko znajomi — miejsca trzeba świadomie włączyć (przełącznik w PlacesMap).
+    const [showPlacesLayer, setShowPlacesLayer] = useState<boolean>(false);
     const [showFriendsLayer, setShowFriendsLayer] = useState<boolean>(true);
     const [mapFilterType, setMapFilterType] = useState<string>('999');
 
