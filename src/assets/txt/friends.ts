@@ -1,6 +1,14 @@
 interface Friends {
     friendsToggleLabel: string;
+    friendsTab: string;
+    friendsListHeader: string;
+    outgoingRequestsHeader: string;
+    thLp: string;
+    thFriend: string;
+    thInfo: string;
+    noFriends: string;
     placesToggleLabel: string;
+    selfLabel: string;
     addFriend: string;
     addFriendConsentInfo: string;
     inviteSubmit: string;
@@ -28,7 +36,15 @@ interface Friends {
 export const friends: Friends[] =
     [{//en
         friendsToggleLabel: 'Friends',
+        friendsTab: 'Friends',
+        friendsListHeader: 'Friends',
+        outgoingRequestsHeader: 'Sent invitations',
+        thLp: 'No.',
+        thFriend: 'Friend',
+        thInfo: 'Current information',
+        noFriends: 'You have no friends added yet.',
         placesToggleLabel: 'Places',
+        selfLabel: 'You',
         addFriend: 'Add a friend',
         addFriendConsentInfo: 'After your friend accepts the invitation, you will both be able to see ' +
             'each other\'s last known position and information about the destination of the load ' +
@@ -57,7 +73,15 @@ export const friends: Friends[] =
     },
     {//pl
         friendsToggleLabel: 'Znajomi',
+        friendsTab: 'Znajomi',
+        friendsListHeader: 'Znajomi',
+        outgoingRequestsHeader: 'Wysłane zaproszenia',
+        thLp: 'Lp.',
+        thFriend: 'Znajomy',
+        thInfo: 'Aktualne informacje',
+        noFriends: 'Nie masz jeszcze dodanych znajomych.',
         placesToggleLabel: 'Miejsca',
+        selfLabel: 'Ty',
         addFriend: 'Dodaj znajomego',
         addFriendConsentInfo: 'Po zaakceptowaniu zaproszenia przez znajomego będziecie nawzajem mieli ' +
             'dostęp do swojej ostatniej pozycji oraz informacji o celu podróży i miejscach docelowych ' +

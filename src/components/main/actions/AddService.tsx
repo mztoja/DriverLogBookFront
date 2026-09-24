@@ -26,6 +26,9 @@ export const AddService = (props: Props) => {
 
     const {loading, fetchData} = useApi();
     const {setAlert} = useAlert();
+    // smarowanie siodła zawsze dotyczy ciągnika – licznik pokazujemy i zapisujemy jak przy serwisie ciągnika
+    const isTruck = props.serviceType === ServiceEnum.fifthWheelLube
+        || props.formData.serviceVehicleType === vehicleTypeEnum.truck.toString();
 
     const sendService = async (e: FormEvent) => {
         e.preventDefault();
@@ -34,7 +37,7 @@ export const AddService = (props: Props) => {
             country: props.formData.country,
             place: props.formData.place,
             placeId: props.formData.placeId,
-            odometer: props.formData.serviceVehicleType === vehicleTypeEnum.truck.toString() ? props.formData.odometer : '0',
+            odometer: isTruck ? props.formData.odometer : '0',
             notes: props.formData.notes,
             action: home[props.lang].addServiceAction(props.formData.serviceVehicleReg),
             serviceVehicleId: props.formData.serviceVehicleId,
@@ -107,7 +110,7 @@ export const AddService = (props: Props) => {
                     />
                 </div>
                 <br/>
-                {props.formData.serviceVehicleType === vehicleTypeEnum.truck.toString() &&
+                {isTruck &&
                 <>
                     <div><OdometerInput
                         lang={props.lang}

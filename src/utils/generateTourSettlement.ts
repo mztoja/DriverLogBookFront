@@ -18,7 +18,7 @@ const LEG_FIELDS: (keyof TourSettleGeneratorLeg)[] = [
     'startCity', 'startData', 'startOdometer', 'borderDate', 'borderPlace',
     'stopCity', 'stopData', 'stopOdometer', 'distance', 'customer',
 ];
-const MAX_LEG_ROWS = 20;
+export const MAX_LEG_ROWS = 20;
 
 export const generateTourSettlement = async (
     lang: userLangEnum,
@@ -30,6 +30,12 @@ export const generateTourSettlement = async (
         const existingPdfBytes = await fetch(`${REACT_APP_URL}/tourSettlementTemplates/${tourGenerator}.pdf`).then(res => res.arrayBuffer());
         const pdfDoc = await PDFDocument.load(existingPdfBytes);
         const form = pdfDoc.getForm();
+        // ile wierszy odcinków faktycznie ma szablon (np. stertrans.pdf: 10, nie 20) – nadmiarowe
+        // odcinki nie trafią do PDF, więc zgłaszamy ich liczbę zamiast gubić je po cichu
+        const fieldNames = new Set(form.getFields().map((f) => f.getName()));
+        let capacity = 0;
+        while (capacity < MAX_LEG_ROWS && fieldNames.has(`startCity${capacity + 1}`)) capacity++;
+        const skippedLegs = Math.max(0, data.routes.length - capacity);
         Object.keys(data).forEach((fieldName) => {
             if (fieldName === 'routes') return; // odcinki spłaszczamy poniżej
             // @ts-ignore
@@ -58,6 +64,9 @@ export const generateTourSettlement = async (
         const pdfBytes = await pdfDoc.save();
         const blob = new Blob([pdfBytes as BlobPart], {type: 'application/pdf'});
         saveAs(blob, `${title}.pdf`);
+        if (skippedLegs > 0) {
+            setAlert(tours[lang].generatorSkippedLegs(skippedLegs), 'warning');
+        }
     } catch (e) {
         console.log(e);
         setAlert(tours[lang].generatorNotFound, 'info');

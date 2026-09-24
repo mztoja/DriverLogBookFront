@@ -66,6 +66,53 @@ interface Tours {
     deleteConfirm: (x: string) => string;
     deleteSuccess: string;
     generatorTourEdit: string;
+    generatorHint: string;
+    generatorSkippedLegs: (n: number) => string;
+    genSectionDrivers: string;
+    genSectionTour: string;
+    genSectionRefs: string;
+    genSectionFuel: string;
+    genSectionExpenses: string;
+    genSectionLegs: string;
+    genSectionOther: string;
+    genDriver1: string;
+    genDriver2: string;
+    genRouteNr: string;
+    genDestination: string;
+    genTruck: string;
+    genTrailer: string;
+    genDepartureDate: string;
+    genDepartureTime: string;
+    genReturnDate: string;
+    genReturnTime: string;
+    genDepartureOdometer: string;
+    genReturnOdometer: string;
+    genDistance: string;
+    genRef: (n: number) => string;
+    genFuelBefore: string;
+    genFuelAfter: string;
+    genFuelConsumption: string;
+    genRefueled: string;
+    genFuelDate: (n: number) => string;
+    genFuelCity: (n: number) => string;
+    genFuelOdometer: (n: number) => string;
+    genFuelValue: (n: number) => string;
+    genExpense: (n: number) => string;
+    genStops: string;
+    genOther: string;
+    genLeg: (n: number) => string;
+    genAddLeg: string;
+    genEditLeg: string;
+    legStartCity: string;
+    legStartData: string;
+    legStartOdometer: string;
+    legBorderDate: string;
+    legBorderPlace: string;
+    legStopCity: string;
+    legStopData: string;
+    legStopOdometer: string;
+    legDistance: string;
+    legCustomer: string;
     truck: string;
     sectionTime: string;
     sectionFuel: string;
@@ -149,6 +196,53 @@ export const tours: Tours[] = [
         deleteConfirm: (x) => `Are you sure you want to remove the settlement from ${x}? Routes covered by them will be marked as unsettled.`,
         deleteSuccess: 'Monthly settlement was successfully deleted and all routes were marked as unbilled.',
         generatorTourEdit: 'Edit your route',
+        generatorHint: 'Everything below goes to the PDF – check and correct the data, then generate the file.',
+        generatorSkippedLegs: (n) => `The template has no room for all legs – ${n} did not fit in the PDF. Merge or remove some legs.`,
+        genSectionDrivers: 'Drivers',
+        genSectionTour: 'Route',
+        genSectionRefs: 'Load reference numbers',
+        genSectionFuel: 'Fuel',
+        genSectionExpenses: 'Expenses',
+        genSectionLegs: 'Route legs',
+        genSectionOther: 'Other',
+        genDriver1: 'Driver 1',
+        genDriver2: 'Driver 2',
+        genRouteNr: 'Route no.',
+        genDestination: 'Destinations',
+        genTruck: 'Truck',
+        genTrailer: 'Trailer(s)',
+        genDepartureDate: 'Departure date',
+        genDepartureTime: 'Departure time',
+        genReturnDate: 'Return date',
+        genReturnTime: 'Return time',
+        genDepartureOdometer: 'Odometer at departure',
+        genReturnOdometer: 'Odometer at return',
+        genDistance: 'Distance',
+        genRef: (n) => `Reference no. ${n}`,
+        genFuelBefore: 'Fuel before the route',
+        genFuelAfter: 'Fuel after the route',
+        genFuelConsumption: 'Fuel usage (l/100 km)',
+        genRefueled: 'Refueled in total',
+        genFuelDate: (n) => `Refueling ${n} – date`,
+        genFuelCity: (n) => `Refueling ${n} – place`,
+        genFuelOdometer: (n) => `Refueling ${n} – odometer`,
+        genFuelValue: (n) => `Refueling ${n} – quantity`,
+        genExpense: (n) => `Expense ${n}`,
+        genStops: 'Stops',
+        genOther: 'Other remarks',
+        genLeg: (n) => `Leg ${n}`,
+        genAddLeg: 'Add leg',
+        genEditLeg: 'Edit leg',
+        legStartCity: 'From',
+        legStartData: 'Departure (date and time)',
+        legStartOdometer: 'Odometer – start',
+        legBorderDate: 'Border – date',
+        legBorderPlace: 'Border – place',
+        legStopCity: 'To',
+        legStopData: 'Arrival (date and time)',
+        legStopOdometer: 'Odometer – end',
+        legDistance: 'Distance',
+        legCustomer: 'Load',
         truck: 'Truck',
         sectionTime: 'Time',
         sectionFuel: 'Fuel',
@@ -230,6 +324,53 @@ export const tours: Tours[] = [
         deleteConfirm: (x) => `Czy na pewno chcesz usunąć rozliczenie z ${x}? Trasy które pod nie podlegają będą oznaczone jako nie rozliczone.`,
         deleteSuccess: 'Pomyślnie usunięto rozliczenie miesięczne a wszystkie trasy zostały oznaczone jako nierozliczone.',
         generatorTourEdit: 'Edytuj przebieg trasy',
+        generatorHint: 'Wszystko poniżej trafi do PDF – sprawdź i popraw dane, a potem wygeneruj plik.',
+        generatorSkippedLegs: (n) => `Szablon nie mieści wszystkich odcinków – ${n} nie zmieściło się w PDF. Połącz lub usuń część odcinków.`,
+        genSectionDrivers: 'Kierowcy',
+        genSectionTour: 'Trasa',
+        genSectionRefs: 'Numery referencyjne ładunków',
+        genSectionFuel: 'Paliwo',
+        genSectionExpenses: 'Wydatki',
+        genSectionLegs: 'Odcinki trasy',
+        genSectionOther: 'Inne',
+        genDriver1: 'Kierowca 1',
+        genDriver2: 'Kierowca 2',
+        genRouteNr: 'Nr trasy',
+        genDestination: 'Miejsca docelowe',
+        genTruck: 'Ciągnik',
+        genTrailer: 'Naczepa(y)',
+        genDepartureDate: 'Data wyjazdu',
+        genDepartureTime: 'Godzina wyjazdu',
+        genReturnDate: 'Data powrotu',
+        genReturnTime: 'Godzina powrotu',
+        genDepartureOdometer: 'Licznik przy wyjeździe',
+        genReturnOdometer: 'Licznik przy powrocie',
+        genDistance: 'Dystans',
+        genRef: (n) => `Nr referencyjny ${n}`,
+        genFuelBefore: 'Paliwo przed trasą',
+        genFuelAfter: 'Paliwo po trasie',
+        genFuelConsumption: 'Spalanie (l/100 km)',
+        genRefueled: 'Zatankowano łącznie',
+        genFuelDate: (n) => `Tankowanie ${n} – data`,
+        genFuelCity: (n) => `Tankowanie ${n} – miejsce`,
+        genFuelOdometer: (n) => `Tankowanie ${n} – licznik`,
+        genFuelValue: (n) => `Tankowanie ${n} – ilość`,
+        genExpense: (n) => `Wydatek ${n}`,
+        genStops: 'Postoje',
+        genOther: 'Inne uwagi',
+        genLeg: (n) => `Odcinek ${n}`,
+        genAddLeg: 'Dodaj odcinek',
+        genEditLeg: 'Edytuj odcinek',
+        legStartCity: 'Skąd',
+        legStartData: 'Wyjazd (data i godzina)',
+        legStartOdometer: 'Licznik – start',
+        legBorderDate: 'Granica – data',
+        legBorderPlace: 'Granica – miejsce',
+        legStopCity: 'Dokąd',
+        legStopData: 'Przyjazd (data i godzina)',
+        legStopOdometer: 'Licznik – koniec',
+        legDistance: 'Dystans',
+        legCustomer: 'Ładunek',
         truck: 'Ciągnik',
         sectionTime: 'Czas',
         sectionFuel: 'Paliwo',

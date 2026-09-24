@@ -26,8 +26,8 @@ interface PlacesCtx {
     // Stan widoku karty /places (aktywna karta Lista/Mapa, przełączniki warstw pinezek na mapie,
     // filtr kategorii) trzymany tutaj z tego samego powodu co stan geokodowania wyżej — żeby
     // przetrwał odmontowanie PlacesView/PlacesMap (przełączenie na inną trasę i powrót).
-    mapTab: 'list' | 'map';
-    setMapTab: Dispatch<SetStateAction<'list' | 'map'>>;
+    mapTab: 'list' | 'map' | 'friends';
+    setMapTab: Dispatch<SetStateAction<'list' | 'map' | 'friends'>>;
     showPlacesLayer: boolean;
     setShowPlacesLayer: Dispatch<SetStateAction<boolean>>;
     showFriendsLayer: boolean;
@@ -49,7 +49,7 @@ export const PlacesContext = createContext<PlacesCtx>({
     startGeocode: () => {},
     mapTab: 'list',
     setMapTab: () => {},
-    showPlacesLayer: true,
+    showPlacesLayer: false,
     setShowPlacesLayer: () => {},
     showFriendsLayer: true,
     setShowFriendsLayer: () => {},
@@ -119,8 +119,9 @@ export const PlacesProvider = ({children}: Props) => {
     const [geocodeTotal, setGeocodeTotal] = useState<number>(0);
     const geocodeRunningRef = useRef<boolean>(false);
 
-    const [mapTab, setMapTab] = useState<'list' | 'map'>('list');
-    const [showPlacesLayer, setShowPlacesLayer] = useState<boolean>(true);
+    const [mapTab, setMapTab] = useState<'list' | 'map' | 'friends'>('list');
+    // Domyślnie tylko znajomi — miejsca trzeba świadomie włączyć (przełącznik w PlacesMap).
+    const [showPlacesLayer, setShowPlacesLayer] = useState<boolean>(false);
     const [showFriendsLayer, setShowFriendsLayer] = useState<boolean>(true);
     const [mapFilterType, setMapFilterType] = useState<string>('999');
 

@@ -20,6 +20,11 @@ export const handleDtcErrors = (dtc: string, lang: userLangEnum): HandleDtcError
                 message: login[lang].responseError,
                 type: 'warning',
             }
+        case 'invalidResetCode':
+            return {
+                message: login[lang].invalidResetCode,
+                type: 'warning',
+            }
         case 'country':
             return {
                 message: login[lang].registerCountryNotExist,

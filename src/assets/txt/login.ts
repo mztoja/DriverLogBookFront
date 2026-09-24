@@ -24,6 +24,17 @@ interface Login {
     save: string;
     saveApiSuccess: string;
     vehicles: string;
+    forgotPasswordQuestion: string;
+    forgotPasswordTitle: string;
+    forgotPasswordEmailInfo: string;
+    forgotPasswordSubmit: string;
+    forgotPasswordSent: string;
+    resetCodeLabel: string;
+    resetCodeSubmit: string;
+    resetPasswordInfo: string;
+    resetPasswordSubmit: string;
+    resetPasswordSuccess: string;
+    invalidResetCode: string;
 }
 
 
@@ -54,6 +65,18 @@ export const login: Login[] =
         save: 'Save changes',
         saveApiSuccess: 'Profile data has been changed.',
         vehicles: 'Vehicle management',
+        forgotPasswordQuestion: 'Forgot your password?',
+        forgotPasswordTitle: 'Reset password',
+        forgotPasswordEmailInfo: 'Enter your e-mail address. If it is registered in our system, ' +
+            'we will send you a 6-digit code to reset your password.',
+        forgotPasswordSubmit: 'Send code',
+        forgotPasswordSent: 'If this e-mail address is registered, we have sent a code to it.',
+        resetCodeLabel: 'Code from e-mail',
+        resetCodeSubmit: 'Verify code',
+        resetPasswordInfo: 'Enter your new password.',
+        resetPasswordSubmit: 'Set new password',
+        resetPasswordSuccess: 'Your password has been changed. You can log in now.',
+        invalidResetCode: 'The code is incorrect or has expired.',
     },
         {//pl
             welcome: `Witaj w aplikacji "Dziennik Kierowcy".`,
@@ -81,4 +104,16 @@ export const login: Login[] =
             save: 'Zapisz zmiany',
             saveApiSuccess: 'Dane profilu zostały zmienione.',
             vehicles: 'Zarządzanie pojazdami',
+            forgotPasswordQuestion: 'Zapomniałeś hasła?',
+            forgotPasswordTitle: 'Resetowanie hasła',
+            forgotPasswordEmailInfo: 'Podaj swój adres e-mail. Jeśli jest zarejestrowany w naszym ' +
+                'systemie, wyślemy na niego 6-cyfrowy kod do zresetowania hasła.',
+            forgotPasswordSubmit: 'Wyślij kod',
+            forgotPasswordSent: 'Jeśli ten adres e-mail jest zarejestrowany, wysłaliśmy na niego kod.',
+            resetCodeLabel: 'Kod z e-maila',
+            resetCodeSubmit: 'Sprawdź kod',
+            resetPasswordInfo: 'Podaj nowe hasło.',
+            resetPasswordSubmit: 'Ustaw nowe hasło',
+            resetPasswordSuccess: 'Hasło zostało zmienione. Możesz się teraz zalogować.',
+            invalidResetCode: 'Kod jest nieprawidłowy albo wygasł.',
         }];
