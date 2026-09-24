@@ -8,6 +8,8 @@ import {PlacesMap} from "../components/places/PlacesMap";
 import { usePlaces } from "../hooks/usePlaces";
 import {TableTabs} from "../components/common/TableTabs";
 import {places} from "../assets/txt/places";
+import {friends} from "../assets/txt/friends";
+import {FriendsList} from "../components/places/FriendsList";
 
 interface Props extends AppMainElementsTypes {
     userData: UserInterface;
@@ -31,16 +33,18 @@ export const PlacesView = (props: Props) => {
 
             <TableTabs
                 active={mapTab}
-                onChange={(k) => setMapTab(k as "list" | "map")}
+                onChange={(k) => setMapTab(k as "list" | "map" | "friends")}
                 tabs={[
                     {key: "list", label: places[props.userData.lang].tableHeader},
                     {key: "map", label: places[props.userData.lang].mapTab},
+                    {key: "friends", label: friends[props.userData.lang].friendsTab},
                 ]}
             />
 
-            {mapTab === "list"
-                ? <PlacesList userData={props.userData} setUserData={props.setUserData} showAddButton={showAddPlace} setShowAddPlace={setShowAddPlace} />
-                : <PlacesMap userData={props.userData} setUserData={props.setUserData} />}
+            {mapTab === "list" &&
+                <PlacesList userData={props.userData} setUserData={props.setUserData} showAddButton={showAddPlace} setShowAddPlace={setShowAddPlace} />}
+            {mapTab === "map" && <PlacesMap userData={props.userData} setUserData={props.setUserData} />}
+            {mapTab === "friends" && <FriendsList lang={props.userData.lang} />}
         </>
     );
 };

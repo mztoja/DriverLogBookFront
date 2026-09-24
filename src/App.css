@@ -509,6 +509,11 @@ tbody tr:hover, .highlighted {
     white-space: nowrap;
 }
 
+/* zaproszenia na karcie Znajomi (FriendsList) – nad tabelą, z odstępem od krawędzi */
+.FriendsList__requests {
+    padding: 0.6rem 0.8rem;
+}
+
 #Notes {
     padding: 0.4rem;
     margin: 0.5rem auto;

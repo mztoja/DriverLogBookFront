@@ -9,12 +9,13 @@ import {CircularProgress} from "@mui/material";
 import {places} from "../../assets/txt/places";
 import {friends as friendsTxt} from "../../assets/txt/friends";
 import {form} from "../../assets/txt/form";
-import {FriendCargoInterface, FriendPositionInterface, FriendSummaryInterface, PlaceInterface, UserInterface, userLangEnum} from "types";
+import {FriendSummaryInterface, PlaceInterface, UserInterface} from "types";
 import {usePlaces} from "../../hooks/usePlaces";
 import {useFriends} from "../../hooks/useFriends";
 import {PlaceEdit} from "./PlaceEdit";
 import {PlaceDetailCard} from "./PlaceDetailCard";
 import {AddFriend} from "./AddFriend";
+import {FriendPositionInfo} from "./FriendPositionInfo";
 import {Modal, ModalContent, StyledBackdrop} from "../common/Modal";
 import {useAlert} from "../../hooks/useAlert";
 import {useApi} from "../../hooks/useApi";
@@ -46,48 +47,6 @@ interface Props {
     userData: UserInterface;
     setUserData: Dispatch<SetStateAction<UserInterface | null>>;
 }
-
-// Blok "Ostatnia pozycja" + "Cel" — identyczny dla znajomego i dla nas samych, więc wydzielony
-// zamiast powielony w obu modalach.
-const FriendPositionInfo = (props: {
-    lang: userLangEnum;
-    position: FriendPositionInterface | null;
-    cargo: FriendCargoInterface | null;
-}) => (
-    <>
-        <div className="PlacesMap__category">
-            {friendsTxt[props.lang].lastPositionLabel}
-        </div>
-        <div className="PlacesMap__address">
-            {props.position
-                ? `${formatDate(props.position.date, props.lang)} - ` +
-                    `${props.position.placeName}` +
-                    `${props.position.city ? ' - ' + props.position.city : ''}`
-                : friendsTxt[props.lang].noPosition}
-        </div>
-        <br/>
-        <div className="PlacesMap__category">
-            {friendsTxt[props.lang].currentCargoLabel}
-        </div>
-        {props.cargo && (props.cargo.targetPlace || props.cargo.destinations.length > 0)
-            ? (
-                <>
-                    {props.cargo.targetPlace && (
-                        <div className="PlacesMap__address">
-                            {friendsTxt[props.lang].targetPlaceLabel}: {props.cargo.targetPlace}
-                        </div>
-                    )}
-                    {props.cargo.destinations.length > 0 && (
-                        <div className="PlacesMap__address">
-                            {friendsTxt[props.lang].loadDestinationsLabel}: {props.cargo.destinations.join(', ')}
-                        </div>
-                    )}
-                </>
-            )
-            : <div className="PlacesMap__address">{friendsTxt[props.lang].noActiveTour}</div>
-        }
-    </>
-);
 
 // Dopasowuje widoczny obszar mapy do wszystkich pinezek, raz przy pierwszym renderze.
 const FitBounds = ({positions}: { positions: [number, number][] }) => {

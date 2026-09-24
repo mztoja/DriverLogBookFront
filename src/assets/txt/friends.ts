@@ -1,5 +1,12 @@
 interface Friends {
     friendsToggleLabel: string;
+    friendsTab: string;
+    friendsListHeader: string;
+    outgoingRequestsHeader: string;
+    thLp: string;
+    thFriend: string;
+    thInfo: string;
+    noFriends: string;
     placesToggleLabel: string;
     selfLabel: string;
     addFriend: string;
@@ -29,6 +36,13 @@ interface Friends {
 export const friends: Friends[] =
     [{//en
         friendsToggleLabel: 'Friends',
+        friendsTab: 'Friends',
+        friendsListHeader: 'Friends',
+        outgoingRequestsHeader: 'Sent invitations',
+        thLp: 'No.',
+        thFriend: 'Friend',
+        thInfo: 'Current information',
+        noFriends: 'You have no friends added yet.',
         placesToggleLabel: 'Places',
         selfLabel: 'You',
         addFriend: 'Add a friend',
@@ -59,6 +73,13 @@ export const friends: Friends[] =
     },
     {//pl
         friendsToggleLabel: 'Znajomi',
+        friendsTab: 'Znajomi',
+        friendsListHeader: 'Znajomi',
+        outgoingRequestsHeader: 'Wysłane zaproszenia',
+        thLp: 'Lp.',
+        thFriend: 'Znajomy',
+        thInfo: 'Aktualne informacje',
+        noFriends: 'Nie masz jeszcze dodanych znajomych.',
         placesToggleLabel: 'Miejsca',
         selfLabel: 'Ty',
         addFriend: 'Dodaj znajomego',
