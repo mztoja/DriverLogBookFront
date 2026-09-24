@@ -555,3 +555,62 @@ tbody tr:hover, .highlighted {
     line-height: inherit;
     color: inherit;
 }
+
+/* Generator rozliczenia trasy (TourGeneratorSettings) – rozwijane sekcje z polami do edycji */
+.Generator__sectionHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 0.5rem 0.8rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ffffff33;
+    border-radius: 0.5rem;
+    font-weight: bold;
+}
+
+.Generator__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    padding: 0.8rem 0.2rem;
+}
+
+.Generator__grid--single {
+    grid-template-columns: 1fr;
+}
+
+@media (max-width: 600px) {
+    .Generator__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.Generator__legs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.8rem 0.2rem;
+}
+
+.Generator__leg {
+    border: 1px solid #ffffff33;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.5rem;
+}
+
+.Generator__legHead {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.Generator__arrows {
+    display: flex;
+    flex-direction: column;
+}
+
+.Generator__legSummary {
+    flex: 1 1 auto;
+    cursor: pointer;
+}
