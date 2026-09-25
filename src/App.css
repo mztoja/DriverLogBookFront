@@ -94,7 +94,11 @@ a {
 }
 
 /*Fieldset&legend set:*/
-fieldset {
+/* ramki sekcji formularzy – z wyłączeniem obwódki pól MUI (MUI rysuje ją jako
+   <fieldset class="MuiOutlinedInput-notchedOutline">): inaczej max-width 500px, tło i cień
+   trafiały do obwódek pól, a obwódka szerszego pola była węższa niż obszar wpisywania.
+   :where() – zerowa specyficzność, żeby klasy typu .maxWidth dalej nadpisywały te style */
+fieldset:where(:not(.MuiOutlinedInput-notchedOutline)) {
     border: 1px solid #2f6bb3;
     background: linear-gradient(180deg, #ffffff12, #ffffff05);
     border-radius: 0.85rem;
@@ -106,7 +110,7 @@ fieldset {
     box-shadow: 0 0.15rem 0.7rem #00000047;
 }
 
-fieldset legend {
+fieldset:where(:not(.MuiOutlinedInput-notchedOutline)) > legend {
     padding: 0.2rem 0.8rem;
     color: #f0a91e;
     background: #16324f;
