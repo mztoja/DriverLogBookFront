@@ -20,6 +20,10 @@ interface Friends {
     removeFriend: string;
     removeFriendConfirm: (name: string) => string;
     lastPositionLabel: string;
+    lastActivityLabel: string;
+    loadsWithoutReceiverLabel: string;
+    activeTourNoLoads: string;
+    noActivity: string;
     currentCargoLabel: string;
     targetPlaceLabel: string;
     loadDestinationsLabel: string;
@@ -59,6 +63,10 @@ export const friends: Friends[] =
         removeFriendConfirm: (name) => `Are you sure you want to remove ${name} from your friends? ` +
             `You will both lose access to each other's position and cargo destination.`,
         lastPositionLabel: 'Last position',
+        lastActivityLabel: 'Last activity',
+        loadsWithoutReceiverLabel: 'Loads without a receiver',
+        activeTourNoLoads: 'Tour in progress, no load',
+        noActivity: 'No entries yet',
         currentCargoLabel: 'Destination',
         targetPlaceLabel: 'Travel destination',
         loadDestinationsLabel: 'Cargo destination(s)',
@@ -96,6 +104,10 @@ export const friends: Friends[] =
         removeFriendConfirm: (name) => `Czy na pewno chcesz usunąć ${name} ze znajomych? ` +
             `Oboje stracicie dostęp do swojej pozycji i celu ładunku.`,
         lastPositionLabel: 'Ostatnia pozycja',
+        lastActivityLabel: 'Ostatnia czynność',
+        loadsWithoutReceiverLabel: 'Ładunki bez podanego odbiorcy',
+        activeTourNoLoads: 'Trasa w toku, bez ładunku',
+        noActivity: 'Brak wpisów',
         currentCargoLabel: 'Cel',
         targetPlaceLabel: 'Cel podróży',
         loadDestinationsLabel: 'Miejsca docelowe ładunku',

@@ -24,6 +24,7 @@ import {WindowYesNo} from "../common/WindowYesNo";
 import {WindowConfirm} from "../common/WindowConfirm";
 import {getPlaceMarkerIcon} from "./placeMarkerIcon";
 import {getFriendMarkerIcon, getSelfMarkerIcon} from "./friendMarkerIcon";
+import {computeSpreadOffsets, SpreadPoint} from "./markerSpread";
 import {formatDate} from "../../utils/formats/formatDate";
 import {getInitials} from "../../utils/getInitials";
 import {PlaceTypeSelect} from "../common/form/place/PlaceTypeSelect";
@@ -159,6 +160,23 @@ export const PlacesMap = (props: Props) => {
         [pinnedPlaces, friendPositions, showPlaces, showFriends]
     );
 
+    // pinezki w tym samym punkcie rozkładamy w małym okręgu (przesunięcie ikon, nie współrzędnych)
+    const spread = useMemo(() => {
+        const points: SpreadPoint[] = [];
+        if (showPlaces) {
+            pinnedPlaces.forEach((place) => points.push({key: `place-${place.id}`, lat: Number(place.lat), lon: Number(place.lon)}));
+        }
+        if (showFriends) {
+            (friendsData?.accepted ?? []).forEach((friend) => {
+                if (friend.position) points.push({key: `friend-${friend.friendshipId}`, lat: friend.position.lat, lon: friend.position.lon});
+            });
+            if (friendsData?.self.position) {
+                points.push({key: 'self', lat: friendsData.self.position.lat, lon: friendsData.self.position.lon});
+            }
+        }
+        return computeSpreadOffsets(points);
+    }, [pinnedPlaces, friendsData, showPlaces, showFriends]);
+
     // Uruchamia geokodowanie w PlacesContext (patrz komentarz przy destrukturyzacji usePlaces()
     // powyżej) — od tego momentu ten komponent tylko odczytuje współdzielony stan postępu.
     const runGeocode = (mode: 'full' | 'partial'): void => {
@@ -233,7 +251,7 @@ export const PlacesMap = (props: Props) => {
                                 </h2>
                                 <FriendPositionInfo
                                     lang={props.userData.lang}
-                                    position={selectedFriend.position}
+                                    position={selectedFriend.position} lastActivity={selectedFriend.lastActivity}
                                     cargo={selectedFriend.cargo}
                                 />
                                 <br/>
@@ -262,7 +280,7 @@ export const PlacesMap = (props: Props) => {
                                 </h2>
                                 <FriendPositionInfo
                                     lang={props.userData.lang}
-                                    position={friendsData.self.position}
+                                    position={friendsData.self.position} lastActivity={friendsData.self.lastActivity}
                                     cargo={friendsData.self.cargo}
                                 />
                             </ModalContent>
@@ -341,7 +359,7 @@ export const PlacesMap = (props: Props) => {
                                 <Marker
                                     key={place.id}
                                     position={[Number(place.lat), Number(place.lon)]}
-                                    icon={getPlaceMarkerIcon(place.type, isPartial)}
+                                    icon={getPlaceMarkerIcon(place.type, isPartial, spread.get(`place-${place.id}`))}
                                     eventHandlers={{click: () => setSelectedPlace(place)}}
                                 >
                                     <Tooltip>
@@ -355,7 +373,7 @@ export const PlacesMap = (props: Props) => {
                             <Marker
                                 key={friend.friendshipId}
                                 position={[friend.position!.lat, friend.position!.lon]}
-                                icon={getFriendMarkerIcon(getInitials(friend.firstName, friend.lastName), !!friend.cargo?.destinations.length)}
+                                icon={getFriendMarkerIcon(getInitials(friend.firstName, friend.lastName), !!friend.cargo?.activeTour, spread.get(`friend-${friend.friendshipId}`))}
                                 eventHandlers={{click: () => setSelectedFriend(friend)}}
                             >
                                 <Tooltip>
@@ -370,7 +388,8 @@ export const PlacesMap = (props: Props) => {
                                 position={[friendsData.self.position.lat, friendsData.self.position.lon]}
                                 icon={getSelfMarkerIcon(
                                     getInitials(friendsData.self.firstName, friendsData.self.lastName),
-                                    !!friendsData.self.cargo?.destinations.length,
+                                    !!friendsData.self.cargo?.activeTour,
+                                    spread.get('self'),
                                 )}
                                 eventHandlers={{click: () => setShowSelf(true)}}
                             >

@@ -119,7 +119,7 @@ export const FriendsList = (props: Props) => {
                                     {txt.selfLabel} ({friends.self.firstName} {friends.self.lastName})
                                 </td>
                                 <td>
-                                    <FriendPositionInfo lang={props.lang} position={friends.self.position}
+                                    <FriendPositionInfo lang={props.lang} position={friends.self.position} lastActivity={friends.self.lastActivity}
                                                         cargo={friends.self.cargo}/>
                                 </td>
                                 <td></td>
@@ -134,7 +134,7 @@ export const FriendsList = (props: Props) => {
                                     <span className="PlacesMap__address">{friend.email}</span>
                                 </td>
                                 <td>
-                                    <FriendPositionInfo lang={props.lang} position={friend.position}
+                                    <FriendPositionInfo lang={props.lang} position={friend.position} lastActivity={friend.lastActivity}
                                                         cargo={friend.cargo}/>
                                 </td>
                                 <td>

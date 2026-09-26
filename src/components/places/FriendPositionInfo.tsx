@@ -7,6 +7,8 @@ interface Props {
     lang: userLangEnum;
     position: FriendPositionInterface | null;
     cargo: FriendCargoInterface | null;
+    // data i godzina ostatniego wpisu – pokazywana zawsze, także gdy pozycji nie da się ustalić
+    lastActivity: string | null;
 }
 
 // Blok "Ostatnia pozycja" + "Cel" — identyczny dla znajomego i dla nas samych, na mapie
@@ -14,20 +16,25 @@ interface Props {
 export const FriendPositionInfo = (props: Props) => (
     <>
         <div className="PlacesMap__category">
+            {friendsTxt[props.lang].lastActivityLabel}
+        </div>
+        <div className="PlacesMap__address">
+            {props.lastActivity ? formatDate(props.lastActivity, props.lang) : friendsTxt[props.lang].noActivity}
+        </div>
+        <br/>
+        <div className="PlacesMap__category">
             {friendsTxt[props.lang].lastPositionLabel}
         </div>
         <div className="PlacesMap__address">
             {props.position
-                ? `${formatDate(props.position.date, props.lang)} - ` +
-                    `${props.position.placeName}` +
-                    `${props.position.city ? ' - ' + props.position.city : ''}`
+                ? `${props.position.placeName}${props.position.city ? ' - ' + props.position.city : ''}`
                 : friendsTxt[props.lang].noPosition}
         </div>
         <br/>
         <div className="PlacesMap__category">
             {friendsTxt[props.lang].currentCargoLabel}
         </div>
-        {props.cargo && (props.cargo.targetPlace || props.cargo.destinations.length > 0)
+        {props.cargo
             ? (
                 <>
                     {props.cargo.targetPlace && (
@@ -39,6 +46,14 @@ export const FriendPositionInfo = (props: Props) => (
                         <div className="PlacesMap__address">
                             {friendsTxt[props.lang].loadDestinationsLabel}: {props.cargo.destinations.join(', ')}
                         </div>
+                    )}
+                    {props.cargo.loadsWithoutReceiver > 0 && (
+                        <div className="PlacesMap__address">
+                            {friendsTxt[props.lang].loadsWithoutReceiverLabel}: {props.cargo.loadsWithoutReceiver}
+                        </div>
+                    )}
+                    {props.cargo.activeTour && !props.cargo.destinations.length && !props.cargo.loadsWithoutReceiver && (
+                        <div className="PlacesMap__address">{friendsTxt[props.lang].activeTourNoLoads}</div>
                     )}
                 </>
             )
