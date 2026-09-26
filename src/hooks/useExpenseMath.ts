@@ -128,7 +128,9 @@ export const useEditExpenseMath = (
     updateFormData: (key: keyof FinanceEditData, subKey: keyof LogEditData | null, value: string | number) => void,
     prevDep: React.MutableRefObject<Partial<Record<ExpanseChangeType, string>>>,
 ) => {
-    const source = useRef<Source>(null);
+    // w edycji punktem odniesienia jest zapisana kwota (cena jednostkowa jest z niej tylko wyliczana),
+    // więc zmiana ilości przelicza cenę, dopóki użytkownik sam nie wpisze ceny
+    const source = useRef<Source>('amount');
     const written = useRef<Written>({});
 
     useEffect(() => {
