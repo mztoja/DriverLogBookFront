@@ -1,5 +1,6 @@
 import L from "leaflet";
 import {placeTypeEnum} from "types";
+import {PixelOffset} from "./markerSpread";
 
 // Osobny kolor pinezki dla każdej kategorii miejsca (paleta Material Design, spójna z resztą UI).
 const PLACE_TYPE_COLORS: Record<placeTypeEnum, string> = {
@@ -32,8 +33,9 @@ const pinSvg = (color: string, partial: boolean): string => `
 // nie przy każdym renderze markera.
 const iconCache: Map<string, L.DivIcon> = new Map();
 
-export const getPlaceMarkerIcon = (type: placeTypeEnum, partial: boolean = false): L.DivIcon => {
-    const key = `${type}_${partial}`;
+// offset – przesunięcie ikony w pikselach, gdy kilka pinezek wypada w tym samym punkcie (markerSpread.ts)
+export const getPlaceMarkerIcon = (type: placeTypeEnum, partial: boolean = false, offset: PixelOffset = [0, 0]): L.DivIcon => {
+    const key = `${type}_${partial}_${offset[0]}_${offset[1]}`;
     const cached = iconCache.get(key);
     if (cached) {
         return cached;
@@ -43,8 +45,8 @@ export const getPlaceMarkerIcon = (type: placeTypeEnum, partial: boolean = false
         html: pinSvg(color, partial),
         className: 'PlacesMap__pin',
         iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        tooltipAnchor: [0, -34],
+        iconAnchor: [12 - offset[0], 41 - offset[1]],
+        tooltipAnchor: [offset[0], offset[1] - 34],
     });
     iconCache.set(key, icon);
     return icon;

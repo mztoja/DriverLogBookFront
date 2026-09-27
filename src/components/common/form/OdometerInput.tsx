@@ -7,6 +7,7 @@ import {extractDigits} from "../../../utils/extractDigits";
 import InputAdornment from "@mui/material/InputAdornment";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
 import { FormHelperText } from "@mui/material";
 
 interface Props extends InputPropsTypes {
@@ -21,6 +22,11 @@ export const OdometerInput = (props: Props) => {
     }
     const handleClear = ():void => {
         props.onChange('');
+    }
+    // +1 km (jak „+1 min" w DateTimeInput); przy pustym polu startujemy od ostatniego licznika
+    const handleAdd = ():void => {
+        const current = Number(props.value) || Number(props.lastOdometer) || 0;
+        props.onChange(String(current + 1));
     }
 
     return (
@@ -40,6 +46,9 @@ export const OdometerInput = (props: Props) => {
                             <ClearIcon />
                             </IconButton>
                         }
+                        <IconButton onClick={handleAdd} size="small">
+                            <AddIcon />
+                        </IconButton>
                     </>
                 ),}}
             type="text"

@@ -1,4 +1,5 @@
 import L from "leaflet";
+import {PixelOffset} from "./markerSpread";
 
 // Pinezka znajomego/własnej pozycji — okrągły awatar z inicjałami, w odróżnieniu od "łezki"
 // placeMarkerIcon.ts (miejsca). Osoba z aktywną trasą (ma ładunek w drodze) dostaje mały żółty
@@ -26,8 +27,9 @@ const pinSvg = (color: string, initials: string, onActiveTour: boolean): string 
 // ograniczony, ale liczba znajomych w praktyce jest mała.
 const iconCache: Map<string, L.DivIcon> = new Map();
 
-const buildIcon = (color: string, initials: string, onActiveTour: boolean): L.DivIcon => {
-    const key = `${color}_${initials}_${onActiveTour}`;
+// offset – przesunięcie ikony w pikselach, gdy kilka pinezek wypada w tym samym punkcie (markerSpread.ts)
+const buildIcon = (color: string, initials: string, onActiveTour: boolean, offset: PixelOffset): L.DivIcon => {
+    const key = `${color}_${initials}_${onActiveTour}_${offset[0]}_${offset[1]}`;
     const cached = iconCache.get(key);
     if (cached) {
         return cached;
@@ -36,15 +38,15 @@ const buildIcon = (color: string, initials: string, onActiveTour: boolean): L.Di
         html: pinSvg(color, initials, onActiveTour),
         className: 'PlacesMap__pin',
         iconSize: [SIZE, SIZE],
-        iconAnchor: [SIZE / 2, SIZE / 2],
-        tooltipAnchor: [0, -SIZE / 2],
+        iconAnchor: [SIZE / 2 - offset[0], SIZE / 2 - offset[1]],
+        tooltipAnchor: [offset[0], offset[1] - SIZE / 2],
     });
     iconCache.set(key, icon);
     return icon;
 };
 
-export const getFriendMarkerIcon = (initials: string, onActiveTour: boolean = false): L.DivIcon =>
-    buildIcon(FRIEND_COLOR, initials, onActiveTour);
+export const getFriendMarkerIcon = (initials: string, onActiveTour: boolean = false, offset: PixelOffset = [0, 0]): L.DivIcon =>
+    buildIcon(FRIEND_COLOR, initials, onActiveTour, offset);
 
-export const getSelfMarkerIcon = (initials: string, onActiveTour: boolean = false): L.DivIcon =>
-    buildIcon(SELF_COLOR, initials, onActiveTour);
+export const getSelfMarkerIcon = (initials: string, onActiveTour: boolean = false, offset: PixelOffset = [0, 0]): L.DivIcon =>
+    buildIcon(SELF_COLOR, initials, onActiveTour, offset);
